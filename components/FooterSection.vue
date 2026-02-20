@@ -4,23 +4,35 @@
       <div class="grid md:grid-cols-4 gap-8">
         <div>
           <h3 class="text-2xl font-bold mb-4">Berkytt</h3>
-          <p class="text-gray-400">Современная одежда для тех, кто ценит стиль и качество.</p>
+          <p class="text-gray-400">
+            Современная одежда для тех, кто ценит стиль и качество.
+          </p>
         </div>
         <div>
           <h4 class="font-semibold mb-4">Каталог</h4>
           <ul class="space-y-2 text-gray-400">
-            <li><a href="#" class="hover:text-white transition">Женщинам</a></li>
-            <li><a href="#" class="hover:text-white transition">Мужчинам</a></li>
+            <li>
+              <a href="#" class="hover:text-white transition">Женщинам</a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition">Мужчинам</a>
+            </li>
             <li><a href="#" class="hover:text-white transition">Детям</a></li>
-            <li><a href="#" class="hover:text-white transition">Аксессуары</a></li>
+            <li>
+              <a href="#" class="hover:text-white transition">Аксессуары</a>
+            </li>
           </ul>
         </div>
         <div>
           <h4 class="font-semibold mb-4">Компания</h4>
           <ul class="space-y-2 text-gray-400">
             <li><a href="#" class="hover:text-white transition">О нас</a></li>
-            <li><a href="#" class="hover:text-white transition">Контакты</a></li>
-            <li><a href="#" class="hover:text-white transition">Доставка</a></li>
+            <li>
+              <a href="#" class="hover:text-white transition">Контакты</a>
+            </li>
+            <li>
+              <a href="#" class="hover:text-white transition">Доставка</a>
+            </li>
             <li><a href="#" class="hover:text-white transition">Возврат</a></li>
           </ul>
         </div>
