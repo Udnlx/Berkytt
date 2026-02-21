@@ -1,32 +1,80 @@
 <template>
-  <section class="py-16">
+  <section class="py-16 bg-white">
     <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center mb-12">Коллекции</h2>
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <h2 class="text-3xl font-medium text-center mb-10">
+        Explore Collections
+      </h2>
+
+      <!-- Carousel Container -->
+      <div class="relative">
+        <!-- Navigation Arrows -->
+        <button
+          @click="scrollLeft"
+          class="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition"
+        >
+          <svg
+            class="w-5 h-5 text-gray-700"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
+        <button
+          @click="scrollRight"
+          class="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition"
+        >
+          <svg
+            class="w-5 h-5 text-gray-700"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+
+        <!-- Collections Carousel -->
         <div
-          v-for="collection in collections"
-          :key="collection.id"
-          class="group cursor-pointer"
+          ref="carouselRef"
+          class="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-4"
+          style="scrollbar-width: none; -ms-overflow-style: none"
         >
           <div
-            class="relative overflow-hidden rounded-lg bg-gray-200 aspect-square flex items-center justify-center"
+            v-for="collection in collections"
+            :key="collection.id"
+            class="group cursor-pointer relative overflow-hidden rounded-xl flex-shrink-0 w-[320px]"
           >
-            <span class="text-gray-400">Изображение</span>
-            <div
-              class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition flex items-center justify-center"
-            >
+            <!-- Image -->
+            <div class="aspect-[3/4] overflow-hidden bg-gray-100">
+              <img
+                :src="collection.image"
+                :alt="collection.name"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+
+            <!-- Label -->
+            <div class="absolute bottom-4 left-0 right-0 flex justify-center">
               <span
-                class="text-white opacity-0 group-hover:opacity-100 transition font-semibold"
-                >{{ collection.name }}</span
+                class="px-6 py-2 bg-white text-gray-900 text-sm font-medium rounded-lg shadow-sm"
               >
+                {{ collection.name }}
+              </span>
             </div>
           </div>
-          <h3 class="mt-4 text-lg font-medium text-center">
-            {{ collection.name }}
-          </h3>
-          <p class="text-gray-500 text-center text-sm">
-            {{ collection.count }} товаров
-          </p>
         </div>
       </div>
     </div>
@@ -34,10 +82,64 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+
+const carouselRef = ref<HTMLElement | null>(null);
+
 const collections = [
-  { id: 1, name: "Женщинам", count: 245 },
-  { id: 2, name: "Мужчинам", count: 189 },
-  { id: 3, name: "Детям", count: 156 },
-  { id: 4, name: "Аксессуары", count: 78 },
+  {
+    id: 1,
+    name: "Swimwear",
+    image:
+      "https://images.unsplash.com/photo-1545959734-921e252f2c3c?w=600&h=800&fit=crop",
+  },
+  {
+    id: 2,
+    name: "Top",
+    image:
+      "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600&h=800&fit=crop",
+  },
+  {
+    id: 3,
+    name: "Sets",
+    image:
+      "https://images.unsplash.com/photo-1518049362265-d5b2a6467637?w=600&h=800&fit=crop",
+  },
+  {
+    id: 4,
+    name: "Outerwear",
+    image:
+      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop",
+  },
+  {
+    id: 5,
+    name: "OuterwearNew",
+    image:
+      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop",
+  },
+  {
+    id: 6,
+    name: "OuterwearNew2",
+    image:
+      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&h=800&fit=crop",
+  },
 ];
+
+const scrollLeft = () => {
+  if (carouselRef.value) {
+    carouselRef.value.scrollBy({ left: -300, behavior: "smooth" });
+  }
+};
+
+const scrollRight = () => {
+  if (carouselRef.value) {
+    carouselRef.value.scrollBy({ left: 300, behavior: "smooth" });
+  }
+};
 </script>
+
+<style scoped>
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+</style>
