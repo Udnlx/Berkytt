@@ -15,7 +15,7 @@
         <div class="container mx-auto px-3 sm:px-4 h-full">
           <div class="flex items-center h-full">
             <div
-              class="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-8 items-center w-full"
+              class="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-8 items-center w-full h-full"
             >
               <!-- Текст слева -->
               <div class="order-2 md:order-1 text-center md:text-left">
@@ -39,12 +39,12 @@
 
               <!-- Изображение справа -->
               <div
-                class="order-1 md:order-2 flex justify-center items-center h-full"
+                class="order-1 md:order-2 flex justify-center items-end h-full"
               >
                 <img
                   :src="slide.image"
                   :alt="slide.title"
-                  class="h-auto w-auto max-h-full object-contain"
+                  class="h-auto w-auto max-h-full object-contain md:absolute md:h-full"
                 />
               </div>
             </div>
