@@ -1,15 +1,15 @@
 <template>
-  <section class="relative h-screen overflow-hidden bg-gray-50">
+  <section class="relative h-screen overflow-hidden bg-gray-50 pt-[100px]">
     <!-- Слайды -->
-    <div class="relative h-full">
+    <div class="relative" style="height: calc(100vh - 100px)">
       <div
         v-for="(slide, index) in slides"
         :key="index"
         class="absolute inset-0 transition-opacity duration-700"
         :class="currentSlide === index ? 'opacity-100' : 'opacity-0'"
       >
-        <div class="container mx-auto px-4 h-full">
-          <div class="flex items-center h-full">
+        <div class="container mx-auto px-4" style="height: calc(100vh - 100px)">
+          <div class="flex items-center" style="height: calc(100vh - 100px)">
             <div class="grid md:grid-cols-2 gap-8 items-center w-full">
               <!-- Текст слева -->
               <div class="order-2 md:order-1">

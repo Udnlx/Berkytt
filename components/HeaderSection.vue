@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white">
+  <header class="bg-white fixed top-0 left-0 right-0 z-50">
     <!-- Верхняя полоса -->
     <div class="text-white py-2" style="background-color: #ec018c">
       <div class="container mx-auto px-4">
