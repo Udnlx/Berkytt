@@ -14,7 +14,7 @@
       >
         <div class="container mx-auto px-4 h-full">
           <div class="flex items-center h-full">
-            <div class="grid md:grid-cols-2 gap-8 items-center w-full">
+            <div class="grid md:grid-cols-2 gap-8 items-center w-full h-full">
               <!-- Текст слева -->
               <div class="order-2 md:order-1">
                 <p
