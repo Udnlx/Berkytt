@@ -70,104 +70,95 @@
     <div class="border-b border-gray-100">
       <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
-          <!-- Логотип -->
-          <div class="flex items-center space-x-8">
+          <!-- Логотип и кнопка меню -->
+          <div class="flex items-center">
+            <!-- Кнопка бургер для мобильных и планшетов -->
+            <button
+              @click="toggleMobileMenu"
+              class="lg:hidden text-gray-700 hover:text-gray-900 transition mr-4"
+            >
+              <svg
+                class="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  v-if="!isMobileMenuOpen"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+                <path
+                  v-else
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <!-- Логотип -->
             <a href="/">
-              <img src="/images/logo.png" alt="Berkytt" class="h-10 w-auto" />
+              <img
+                src="/images/logo.png"
+                alt="Berkytt"
+                class="h-8 lg:h-10 w-auto"
+              />
             </a>
 
-            <!-- Меню -->
-            <nav class="hidden md:flex items-center space-x-6">
-              <a
-                href="#"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
-                >О БРЕНДЕ</a
-              >
-              <!-- Выпадающее меню ДЛЯ МУЖЧИН -->
-              <div class="relative group">
-                <button
-                  class="text-sm font-medium text-gray-600 hover:text-gray-900 transition flex items-center"
+            <!-- Меню для десктопа (от lg и выше) -->
+            <nav class="hidden lg:flex items-center space-x-6 ml-6">
+              <template v-for="(item, index) in menuItems" :key="index">
+                <!-- Обычная ссылка -->
+                <a
+                  v-if="!item.type"
+                  :href="item.href"
+                  class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
                 >
-                  ДЛЯ МУЖЧИН
-                  <svg
-                    class="w-4 h-4 ml-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                  {{ item.label }}
+                </a>
+                <!-- Выпадающее меню -->
+                <div v-else class="relative group">
+                  <button
+                    class="text-sm font-medium text-gray-600 hover:text-gray-900 transition flex items-center"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
-                <div
-                  class="absolute left-0 mt-2 w-48 bg-white border border-gray-100 shadow-lg rounded-md py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
-                >
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition"
-                    >ПУНКТ 1</a
+                    {{ item.label }}
+                    <svg
+                      class="w-4 h-4 ml-1"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    class="absolute left-0 mt-2 w-48 bg-white border border-gray-100 shadow-lg rounded-md py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
                   >
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition"
-                    >ПУНКТ 2</a
-                  >
-                  <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition"
-                    >ПУНКТ 3</a
-                  >
+                    <a
+                      v-for="(subItem, subIndex) in item.items"
+                      :key="subIndex"
+                      :href="subItem.href"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition"
+                    >
+                      {{ subItem.label }}
+                    </a>
+                  </div>
                 </div>
-              </div>
-              <a
-                href="#"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
-                >ДЛЯ ЖЕНЩИН</a
-              >
-              <a
-                href="#"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
-                >ГДЕ КУПИTЬ</a
-              >
-              <a
-                href="#"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
-                >УХОД-ХРАНЕНИЕ</a
-              >
-              <a
-                href="#"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
-                >ДОКУМЕНТЫ</a
-              >
-              <a
-                href="#"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
-                >ДОСТАВКА</a
-              >
-              <a
-                href="#"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
-                >ВОЗВРАТ</a
-              >
-              <a
-                href="#"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
-                >КОНТАКТЫ</a
-              >
-              <a
-                href="#"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
-                >ПОИСК</a
-              >
+              </template>
             </nav>
           </div>
 
           <!-- Иконки справа -->
-          <div class="flex items-center space-x-6">
+          <div class="flex items-center space-x-4 lg:space-x-6">
+            <!-- Кнопка поиска -->
             <button class="text-gray-700 hover:text-gray-900 transition">
               <svg
                 class="w-5 h-5"
@@ -247,7 +238,117 @@
             </button>
           </div>
         </div>
+
+        <!-- Мобильное меню (для экранов меньше lg) -->
+        <div
+          v-if="isMobileMenuOpen"
+          class="lg:hidden mt-4 pb-4 border-t border-gray-100 pt-4"
+        >
+          <nav class="flex flex-col space-y-3">
+            <template v-for="(item, index) in menuItems" :key="index">
+              <!-- Обычная ссылка -->
+              <a
+                v-if="!item.type"
+                :href="item.href"
+                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition py-2"
+              >
+                {{ item.label }}
+              </a>
+              <!-- Выпадающее меню для мобильных -->
+              <div v-else>
+                <button
+                  @click="toggleDropdown(index)"
+                  class="text-sm font-medium text-gray-600 hover:text-gray-900 transition flex items-center justify-between w-full py-2"
+                >
+                  {{ item.label }}
+                  <svg
+                    class="w-4 h-4 ml-1 transition-transform duration-200"
+                    :class="{ 'rotate-180': openDropdown === index }"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+                <div
+                  v-show="openDropdown === index"
+                  class="pl-4 mt-2 space-y-2"
+                >
+                  <a
+                    v-for="(subItem, subIndex) in item.items"
+                    :key="subIndex"
+                    :href="subItem.href"
+                    class="block text-sm text-gray-500 hover:text-gray-900 transition py-1"
+                  >
+                    {{ subItem.label }}
+                  </a>
+                </div>
+              </div>
+            </template>
+          </nav>
+        </div>
       </div>
     </div>
   </header>
 </template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+
+const isMobileMenuOpen = ref(false);
+const openDropdown = ref<number | null>(null);
+
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+};
+
+const toggleDropdown = (menuIndex: number) => {
+  openDropdown.value = openDropdown.value === menuIndex ? null : menuIndex;
+};
+
+// Единый массив пунктов меню
+const menuItems = [
+  { label: "О БРЕНДЕ", href: "#" },
+  {
+    label: "ДЛЯ МУЖЧИН",
+    type: "dropdown",
+    items: [
+      { label: "ПАЛЬТО", href: "#" },
+      { label: "ПОЛУПАЛЬТО", href: "#" },
+      { label: "ПЛАЩИ", href: "#" },
+      { label: "КУРТКИ", href: "#" },
+      { label: "ПИДЖАКИ", href: "#" },
+      { label: "БРЮКИ", href: "#" },
+      { label: "ЖИЛЕТЫ", href: "#" },
+      { label: "ИЗДЕЛИЯ С МЕХОМ", href: "#" },
+      { label: "БЕЙСБОЛКИ И КЕПКИ", href: "#" },
+    ],
+  },
+  {
+    label: "ДЛЯ ЖЕНЩИН",
+    type: "dropdown",
+    items: [
+      { label: "ПАЛЬТО", href: "#" },
+      { label: "ПЛАЩИ", href: "#" },
+    ],
+  },
+  {
+    label: "ИНФОРМАЦИЯ",
+    type: "dropdown",
+    items: [
+      { label: "ГДЕ КУПИТЬ", href: "#" },
+      { label: "УХОД-ХРАНЕНИЕ", href: "#" },
+      { label: "ДОКУМЕНТЫ", href: "#" },
+      { label: "ДОСТАВКА", href: "#" },
+      { label: "ВОЗВРАТ", href: "#" },
+    ],
+  },
+  { label: "КОНТАКТЫ", href: "#" },
+];
+</script>
