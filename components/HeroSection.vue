@@ -1,15 +1,19 @@
 <template>
-  <section class="relative h-screen overflow-hidden bg-gray-50 pt-[100px]">
+  <section class="relative h-screen overflow-hidden bg-gray-50">
     <!-- Слайды -->
-    <div class="relative" style="height: calc(100vh - 100px)">
+    <div class="relative h-full pt-[100px]">
       <div
         v-for="(slide, index) in slides"
         :key="index"
-        class="absolute inset-0 transition-opacity duration-700"
-        :class="currentSlide === index ? 'opacity-100' : 'opacity-0'"
+        class="absolute inset-0 top-[100px] transition-opacity duration-700"
+        :class="[
+          currentSlide === index
+            ? 'opacity-100 z-10'
+            : 'opacity-0 z-0 pointer-events-none',
+        ]"
       >
-        <div class="container mx-auto px-4" style="height: calc(100vh - 100px)">
-          <div class="flex items-center" style="height: calc(100vh - 100px)">
+        <div class="container mx-auto px-4 h-full">
+          <div class="flex items-center h-full">
             <div class="grid md:grid-cols-2 gap-8 items-center w-full">
               <!-- Текст слева -->
               <div class="order-2 md:order-1">
@@ -19,28 +23,27 @@
                   {{ slide.subtitle }}
                 </p>
                 <h1
-                  class="text-5xl md:text-6xl font-semibold text-gray-900 mb-8 leading-tight"
+                  class="text-5xl md:text-7xl font-semibold text-gray-900 mb-8 leading-tight"
                 >
                   {{ slide.title }}
                 </h1>
                 <button
-                  class="bg-gray-900 text-white px-8 py-3 rounded-md font-medium hover:bg-gray-800 transition"
+                  class="text-white px-8 py-3 rounded-md font-medium transition transform hover:scale-105 hover:shadow-lg"
+                  style="background-color: #ec018c"
                 >
                   {{ slide.buttonText }}
                 </button>
               </div>
 
               <!-- Изображение справа -->
-              <div class="order-1 md:order-2 flex justify-center">
-                <div class="relative w-full max-w-lg">
-                  <div
-                    class="aspect-[3/4] bg-gray-200 rounded-lg flex items-center justify-center"
-                  >
-                    <span class="text-gray-400"
-                      >Изображение {{ index + 1 }}</span
-                    >
-                  </div>
-                </div>
+              <div
+                class="order-1 md:order-2 flex justify-start items-start h-full"
+              >
+                <img
+                  :src="slide.image"
+                  :alt="slide.title"
+                  class="h-full w-full object-cover object-top rounded-lg"
+                />
               </div>
             </div>
           </div>
@@ -50,14 +53,18 @@
 
     <!-- Навигация (точки) -->
     <div
-      class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3"
+      class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3 z-50"
     >
       <button
         v-for="(slide, index) in slides"
         :key="index"
         @click="currentSlide = index"
-        class="w-3 h-3 rounded-full border-2 border-gray-900 transition-all"
-        :class="currentSlide === index ? 'bg-gray-900' : 'bg-transparent'"
+        class="w-3 h-3 rounded-full border-2 transition-all cursor-pointer"
+        :class="
+          currentSlide === index
+            ? 'bg-[#ec018c] border-[#000000]'
+            : 'bg-transparent border-gray-900 hover:border-[#ec018c]'
+        "
         :aria-label="'Перейти к слайду ' + (index + 1)"
       />
     </div>
@@ -65,7 +72,7 @@
     <!-- Кнопки навигации -->
     <button
       @click="prevSlide"
-      class="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition"
+      class="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-50"
       aria-label="Предыдущий слайд"
     >
       <svg
@@ -85,7 +92,7 @@
 
     <button
       @click="nextSlide"
-      class="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition"
+      class="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-50"
       aria-label="Следующий слайд"
     >
       <svg
@@ -113,19 +120,22 @@ let autoplayInterval: ReturnType<typeof setInterval> | null = null;
 
 const slides = [
   {
-    subtitle: "SALE! UP TO 50% OFF!",
-    title: "Fashion For Every Occasion",
-    buttonText: "SHOP NOW",
+    subtitle: "СКИДКИ ДО 50%!",
+    title: "Стильная верхняя одежда для вас",
+    buttonText: "В КАТАЛОГ",
+    image: "/images/slide_men.png",
   },
   {
-    subtitle: "NEW COLLECTION 2026",
-    title: "Discover Your Style",
-    buttonText: "EXPLORE",
+    subtitle: "НОВАЯ КОЛЛЕКЦИЯ 2026",
+    title: "Откройте свой идеальный образ",
+    buttonText: "СМОТРЕТЬ",
+    image: "/images/slide_woman.png",
   },
   {
-    subtitle: "LIMITED EDITION",
-    title: "Exclusive Designs",
-    buttonText: "VIEW MORE",
+    subtitle: "ОГРАНИЧЕННАЯ СЕРИЯ",
+    title: "Эксклюзивные модели курток",
+    buttonText: "ПОДРОБНЕЕ",
+    image: "/images/slide_men2.png",
   },
 ];
 
