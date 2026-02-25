@@ -73,7 +73,7 @@
             :key="product.id"
             class="group cursor-pointer flex-shrink-0 snap-start"
             :class="[
-              'w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(33.333%-18px)] xl:w-[calc(25%-18px)]',
+              'w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(50%-16px)] lg:w-[calc(33.333%-18px)] xl:w-[calc(25%-18px)]',
             ]"
           >
             <!-- Image Container -->
@@ -156,14 +156,14 @@
                   class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
                   @click.stop
                 >
-                  QUICK VIEW
+                  ПРОСМОТР
                 </a>
                 <a
                   :href="`/cart?add=${product.id}`"
                   class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
                   @click.stop
                 >
-                  QUICK SHOP
+                  В КОРЗИНУ
                 </a>
               </div>
 
@@ -187,12 +187,12 @@
 
               <!-- Sale Timer (for sale items) -->
               <div
-                v-if="product.timer"
+                v-if="product.endDate"
                 class="absolute bottom-0 left-0 right-0 bg-black/30 px-3 py-2 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-300"
               >
-                <span class="text-xs text-white font-medium">{{
-                  product.timer
-                }}</span>
+                <span class="text-xs text-white font-medium">
+                  {{ formatTimeLeft(product.endDate) }}
+                </span>
               </div>
             </div>
 
@@ -202,16 +202,16 @@
                 {{ product.name }}
               </h3>
               <div class="flex items-center gap-2 mt-1">
-                <span class="text-sm font-medium">${{ product.price }}</span>
+                <span class="text-sm font-medium">₽{{ product.price }}</span>
                 <span
                   v-if="product.oldPrice"
                   class="text-sm text-gray-400 line-through"
                 >
-                  ${{ product.oldPrice }}
+                  ₽{{ product.oldPrice }}
                 </span>
                 <span
                   v-if="product.discount"
-                  class="px-2 py-0.5 text-xs font-medium bg-lime-200 text-gray-900 rounded-full"
+                  class="px-2 py-0.5 text-xs font-medium bg-[#ec018c] text-[#ffffff] rounded-full"
                 >
                   {{ product.discount }}
                 </span>
@@ -225,10 +225,44 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 
 const filters = ["TOP", "T-SHIRT", "DRESS", "SETS", "SHIRT"];
 const activeFilter = ref("T-SHIRT");
+const currentTime = ref(Date.now());
+
+// Update timer every second
+let timerInterval: ReturnType<typeof setInterval> | null = null;
+
+onMounted(() => {
+  timerInterval = setInterval(() => {
+    currentTime.value = Date.now();
+  }, 1000);
+});
+
+onUnmounted(() => {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+  }
+});
+
+// Format time left until endDate
+const formatTimeLeft = (endDate: string) => {
+  const end = new Date(endDate).getTime();
+  const now = currentTime.value;
+  const diff = end - now;
+
+  if (diff <= 0) {
+    return "РАСПРОДАЖА ЗАКОНЧЕНА";
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+  return `${days}Д : ${String(hours).padStart(2, "0")}Ч : ${String(minutes).padStart(2, "0")}M : ${String(seconds).padStart(2, "0")}С`;
+};
 
 const products = [
   {
@@ -253,7 +287,7 @@ const products = [
     badge: "SALE",
     badgeType: "sale" as const,
     category: "T-SHIRT",
-    timer: "0-480 D : 0-16 H : 0-35 M : 0-3 S",
+    endDate: "2026-03-15T23:59:59",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
