@@ -73,7 +73,7 @@
             :key="product.id"
             class="group cursor-pointer flex-shrink-0 snap-start"
             :class="[
-              'w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)]',
+              'w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(33.333%-18px)] xl:w-[calc(25%-18px)]',
             ]"
           >
             <!-- Image Container -->
