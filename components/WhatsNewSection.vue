@@ -26,6 +26,7 @@
       <div class="relative">
         <!-- Navigation Arrows -->
         <button
+          v-if="showArrows"
           @click="scrollLeft"
           class="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition"
         >
@@ -45,6 +46,7 @@
         </button>
 
         <button
+          v-if="showArrows"
           @click="scrollRight"
           class="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition"
         >
@@ -225,11 +227,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
 
-const filters = ["TOP", "T-SHIRT", "DRESS", "SETS", "SHIRT"];
+const filters = ["TOP", "T-SHIRT", "SHIRT"];
 const activeFilter = ref("T-SHIRT");
 const currentTime = ref(Date.now());
+
+watch(activeFilter, () => {
+  nextTick(() => {
+    checkArrows();
+  });
+});
 
 // Update timer every second
 let timerInterval: ReturnType<typeof setInterval> | null = null;
@@ -341,6 +349,32 @@ const filteredProducts = computed(() => {
 });
 
 const carouselRef = ref<HTMLElement | null>(null);
+const showArrows = ref(false);
+
+const checkArrows = () => {
+  if (carouselRef.value) {
+    // Стрелки нужны, если контент прокручивается (scrollWidth > clientWidth)
+    showArrows.value =
+      carouselRef.value.scrollWidth > carouselRef.value.clientWidth;
+  }
+};
+
+onMounted(() => {
+  timerInterval = setInterval(() => {
+    currentTime.value = Date.now();
+  }, 1000);
+
+  // Проверяем, нужны ли стрелки при загрузке и при изменении размера окна
+  checkArrows();
+  window.addEventListener("resize", checkArrows);
+});
+
+onUnmounted(() => {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+  }
+  window.removeEventListener("resize", checkArrows);
+});
 
 const scrollLeft = () => {
   if (carouselRef.value) {
