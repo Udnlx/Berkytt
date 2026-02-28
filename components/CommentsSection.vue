@@ -1,9 +1,7 @@
 <template>
   <section class="py-16 bg-gray-50">
     <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-medium text-center mb-12">
-        What People Are Saying
-      </h2>
+      <h2 class="text-3xl font-medium text-center mb-12">Что говорят люди</h2>
 
       <!-- Reviews Carousel -->
       <div class="relative">
@@ -56,7 +54,7 @@
             :key="review.id"
             class="bg-white p-6 rounded-2xl shadow-sm flex-shrink-0 snap-start"
             :class="[
-              'w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)]',
+              'w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(50%-16px)] lg:w-[calc(33.333%-18px)]',
             ]"
           >
             <!-- Stars -->
@@ -103,21 +101,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Pagination Dots -->
-      <div class="flex justify-center gap-2 mt-10">
-        <button
-          v-for="i in totalPages"
-          :key="i"
-          :class="[
-            'w-2.5 h-2.5 rounded-full transition-all',
-            i === currentPage
-              ? 'bg-gray-900 w-6'
-              : 'bg-gray-300 hover:bg-gray-400',
-          ]"
-          @click="goToPage(i)"
-        />
-      </div>
     </div>
   </section>
 </template>
@@ -131,45 +114,45 @@ const totalPages = 3;
 const reviews = [
   {
     id: 1,
-    title: "Quality Of Clothing!",
-    text: "I can't get enough of Anvouge's high-quality clothing. It's comfortable, stylish, and always on-trend. The products are high-quality and the customer service is excellent.",
-    author: "Emily G.",
-    date: "August 13, 2024",
+    title: "Качество одежды!",
+    text: "Я не могу нарадоваться на высококачественную одежду Berkytt. Она удобная, стильная и всегда соответствует трендам. Продукты высокого качества, а обслуживание клиентов превосходное.",
+    author: "Елена Г.",
+    date: "13 августа 2024",
   },
   {
     id: 2,
-    title: "Customer Service!",
-    text: "I love this shop! The products are always top-quality, and the staff is incredibly friendly and helpful. They go out of their way to make sure that I'm satisfied my purchase.",
-    author: "Carolina C.",
-    date: "August 13, 2024",
+    title: "Обслуживание клиентов!",
+    text: "Я обожаю этот магазин! Продукты всегда высшего качества, а персонал невероятно дружелюбный и отзывчивый. Они делают всё возможное, чтобы я была довольна покупкой.",
+    author: "Каролина К.",
+    date: "13 августа 2024",
   },
   {
     id: 3,
-    title: "Variety Of Styles!",
-    text: "Fantastic shop! Great selection, fair prices, and friendly staff. Highly recommended. The quality of the products is exceptional, and the prices are very reasonable!",
-    author: "Lisa K.",
-    date: "August 13, 2024",
+    title: "Разнообразие стилей!",
+    text: "Фантастический магазин! Отличный выбор, справедливые цены и дружелюбный персонал. Очень рекомендую. Качество продуктов исключительное, а цены очень доступные!",
+    author: "Лиза К.",
+    date: "13 августа 2024",
   },
   {
     id: 4,
-    title: "Variety Of Styles!",
-    text: "Fantastic shop! Great selection, fair prices, and friendly staff. Highly recommended. The quality of the products is exceptional, and the prices are very reasonable!",
-    author: "Lisa K.",
-    date: "August 13, 2024",
+    title: "Разнообразие стилей!",
+    text: "Фантастический магазин! Отличный выбор, справедливые цены и дружелюбный персонал. Очень рекомендую. Качество продуктов исключительное, а цены очень доступные!",
+    author: "Лиза К.",
+    date: "13 августа 2024",
   },
   {
     id: 5,
-    title: "Variety Of Styles!",
-    text: "Fantastic shop! Great selection, fair prices, and friendly staff. Highly recommended. The quality of the products is exceptional, and the prices are very reasonable!",
-    author: "Lisa K.",
-    date: "August 13, 2024",
+    title: "Разнообразие стилей!",
+    text: "Фантастический магазин! Отличный выбор, справедливые цены и дружелюбный персонал. Очень рекомендую. Качество продуктов исключительное, а цены очень доступные!",
+    author: "Лиза К.",
+    date: "13 августа 2024",
   },
   {
     id: 6,
-    title: "Variety Of Styles!",
-    text: "Fantastic shop! Great selection, fair prices, and friendly staff. Highly recommended. The quality of the products is exceptional, and the prices are very reasonable!",
-    author: "Lisa K.",
-    date: "August 13, 2024",
+    title: "Разнообразие стилей!",
+    text: "Фантастический магазин! Отличный выбор, справедливые цены и дружелюбный персонал. Очень рекомендую. Качество продуктов исключительное, а цены очень доступные!",
+    author: "Лиза К.",
+    date: "13 августа 2024",
   },
 ];
 
@@ -184,17 +167,6 @@ const scrollLeft = () => {
 const scrollRight = () => {
   if (carouselRef.value) {
     carouselRef.value.scrollBy({ left: 300, behavior: "smooth" });
-  }
-};
-
-const goToPage = (page: number) => {
-  currentPage.value = page;
-  const cardWidth = 320; // примерная ширина карточки + gap
-  if (carouselRef.value) {
-    carouselRef.value.scrollTo({
-      left: (page - 1) * cardWidth * 3, // 3 карточки на странице
-      behavior: "smooth",
-    });
   }
 };
 </script>
