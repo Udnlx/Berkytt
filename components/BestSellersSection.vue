@@ -85,7 +85,7 @@
                 v-if="product.badge"
                 :class="[
                   'absolute top-3 left-3 px-2 py-1 text-xs font-medium rounded-md z-10',
-                  product.badgeType === 'new'
+                  product.badgeType === 'top' || product.badgeType === 'new'
                     ? 'bg-[#ec018c] text-[#ffffff]'
                     : 'bg-[#303030] text-[#ffffff]',
                 ]"
@@ -227,8 +227,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
 
-const filters = ["BEST SELLERS", "ON SALE", "NEW ARRIVALS"];
-const activeFilter = ref("BEST SELLERS");
+const filters = ["ТОП", "РАСПРОДАЖИ", "НОВИНКИ"];
+const activeFilter = ref("ТОП");
 const currentTime = ref(Date.now());
 
 watch(activeFilter, () => {
@@ -277,9 +277,9 @@ const products = [
     price: 28.0,
     oldPrice: 36.0,
     discount: "-22%",
-    badge: "NEW",
-    badgeType: "new" as const,
-    category: "BEST SELLERS",
+    badge: "ТОП",
+    badgeType: "top" as const,
+    category: "ТОП",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
@@ -290,9 +290,9 @@ const products = [
     price: 24.0,
     oldPrice: 32.0,
     discount: "-25%",
-    badge: "SALE",
+    badge: "РАСПРОДАЖА",
     badgeType: "sale" as const,
-    category: "ON SALE",
+    category: "РАСПРОДАЖИ",
     endDate: "2026-03-15T23:59:59",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
@@ -304,9 +304,9 @@ const products = [
     price: 35.0,
     oldPrice: 45.0,
     discount: "-22%",
-    badge: "NEW",
-    badgeType: "new" as const,
-    category: "BEST SELLERS",
+    badge: "ТОП",
+    badgeType: "top" as const,
+    category: "ТОП",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
@@ -317,9 +317,10 @@ const products = [
     price: 28.0,
     oldPrice: 36.0,
     discount: "-22%",
-    badge: "NEW",
-    badgeType: "new" as const,
-    category: "ON SALE",
+    badge: "РАСПРОДАЖА",
+    badgeType: "sale" as const,
+    category: "РАСПРОДАЖИ",
+    endDate: "2026-03-15T23:59:59",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
@@ -330,9 +331,9 @@ const products = [
     price: 28.0,
     oldPrice: 36.0,
     discount: "-22%",
-    badge: "NEW",
+    badge: "НОВИНКА",
     badgeType: "new" as const,
-    category: "NEW ARRIVALS",
+    category: "НОВИНКИ",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
@@ -343,9 +344,9 @@ const products = [
     price: 28.0,
     oldPrice: 36.0,
     discount: "-22%",
-    badge: "NEW",
-    badgeType: "new" as const,
-    category: "BEST SELLERS",
+    badge: "ТОП",
+    badgeType: "top" as const,
+    category: "ТОП",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
@@ -356,9 +357,9 @@ const products = [
     price: 28.0,
     oldPrice: 36.0,
     discount: "-22%",
-    badge: "NEW",
-    badgeType: "new" as const,
-    category: "BEST SELLERS",
+    badge: "ТОП",
+    badgeType: "top" as const,
+    category: "ТОП",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
@@ -369,9 +370,9 @@ const products = [
     price: 28.0,
     oldPrice: 36.0,
     discount: "-22%",
-    badge: "NEW",
-    badgeType: "new" as const,
-    category: "BEST SELLERS",
+    badge: "ТОП",
+    badgeType: "top" as const,
+    category: "ТОП",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],

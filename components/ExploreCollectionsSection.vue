@@ -1,9 +1,7 @@
 <template>
   <section class="py-16 bg-white">
     <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-medium text-center mb-10">
-        Explore Collections
-      </h2>
+      <h2 class="text-3xl font-medium text-center mb-10">Наши коллекции</h2>
 
       <!-- Carousel Container -->
       <div class="relative">
@@ -80,7 +78,7 @@
                 class="px-6 py-2 bg-[#ec018c] text-white text-sm font-medium rounded-lg shadow-sm hover:bg-[#ff43b2] transition"
                 @click.stop="onCollectionClick(collection)"
               >
-                Shop Now
+                Купить
               </button>
             </div>
           </div>
@@ -98,32 +96,38 @@ const carouselRef = ref<HTMLElement | null>(null);
 const collections = [
   {
     id: 1,
-    name: "Swimwear",
+    name: "ПАЛЬТО",
+    label: "coat",
     image: "/images/forcards.jpg",
   },
   {
     id: 2,
-    name: "Top",
+    name: "ПОЛУПАЛЬТО",
+    label: "halfcoat",
     image: "/images/forcards.jpg",
   },
   {
     id: 3,
-    name: "Sets",
+    name: "ПЛАЩИ",
+    label: "raincoats",
     image: "/images/forcards.jpg",
   },
   {
     id: 4,
-    name: "Outerwear",
+    name: "КУРТКИ",
+    label: "jackets",
     image: "/images/forcards.jpg",
   },
   {
     id: 5,
-    name: "OuterwearNew",
+    name: "ПИДЖАКИ",
+    label: "manjackets",
     image: "/images/forcards.jpg",
   },
   {
     id: 6,
-    name: "OuterwearNew2",
+    name: "БРЮКИ",
+    label: "trousers",
     image: "/images/forcards.jpg",
   },
 ];
@@ -141,7 +145,7 @@ const scrollRight = () => {
 };
 
 const onCollectionClick = (collection: (typeof collections)[number]) => {
-  navigateTo(`/collections/${collection.name.toLowerCase()}`);
+  navigateTo(`/collections/${collection.label.toLowerCase()}`);
 };
 </script>
 

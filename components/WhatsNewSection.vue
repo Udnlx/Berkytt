@@ -1,7 +1,7 @@
 <template>
   <section class="py-16 bg-white">
     <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-medium text-center mb-6">What's New</h2>
+      <h2 class="text-3xl font-medium text-center mb-6">Наши новинки</h2>
 
       <!-- Filters -->
       <div class="flex justify-center mb-10">
@@ -229,8 +229,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
 
-const filters = ["TOP", "T-SHIRT", "SHIRT"];
-const activeFilter = ref("T-SHIRT");
+const filters = ["ТОП", "ПАЛЬТО", "КУРТКИ"];
+const activeFilter = ref("ПАЛЬТО");
 const currentTime = ref(Date.now());
 
 watch(activeFilter, () => {
@@ -279,9 +279,9 @@ const products = [
     price: 28.0,
     oldPrice: 36.0,
     discount: "-22%",
-    badge: "NEW",
+    badge: "НОВИНКА",
     badgeType: "new" as const,
-    category: "T-SHIRT",
+    category: "ПАЛЬТО",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
@@ -292,9 +292,9 @@ const products = [
     price: 24.0,
     oldPrice: 32.0,
     discount: "-25%",
-    badge: "SALE",
+    badge: "РАСПРОДАЖА",
     badgeType: "sale" as const,
-    category: "T-SHIRT",
+    category: "ПАЛЬТО",
     endDate: "2026-03-15T23:59:59",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
@@ -306,9 +306,9 @@ const products = [
     price: 35.0,
     oldPrice: 45.0,
     discount: "-22%",
-    badge: "NEW",
+    badge: "НОВИНКА",
     badgeType: "new" as const,
-    category: "SHIRT",
+    category: "КУРТКИ",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
@@ -319,9 +319,9 @@ const products = [
     price: 28.0,
     oldPrice: 36.0,
     discount: "-22%",
-    badge: "NEW",
+    badge: "НОВИНКА",
     badgeType: "new" as const,
-    category: "T-SHIRT",
+    category: "ПАЛЬТО",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
@@ -332,9 +332,9 @@ const products = [
     price: 28.0,
     oldPrice: 36.0,
     discount: "-22%",
-    badge: "NEW",
+    badge: "НОВИНКА",
     badgeType: "new" as const,
-    category: "T-SHIRT",
+    category: "ПАЛЬТО",
     image: "/images/forcards.jpg",
     hoverImage: "/images/forcardshover.jpg",
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
@@ -342,7 +342,7 @@ const products = [
 ];
 
 const filteredProducts = computed(() => {
-  if (activeFilter.value === "TOP") {
+  if (activeFilter.value === "ТОП") {
     return products;
   }
   return products.filter((p) => p.category === activeFilter.value);
