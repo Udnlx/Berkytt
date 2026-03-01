@@ -183,92 +183,46 @@
                 href="#"
                 class="flex items-center gap-1 text-gray-700 hover:underline"
               >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                Delivery & Return
+                <img
+                  src="/images/check.svg"
+                  alt="Rating Star"
+                  class="w-5 h-5 fill-current"
+                />
+                При доставке и возврате
               </a>
               <a
                 href="#"
                 class="flex items-center gap-1 text-gray-700 hover:underline"
               >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="1.5"
-                    d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                Ask A Question
+                <img
+                  src="/images/info.svg"
+                  alt="Rating Star"
+                  class="w-5 h-5 fill-current"
+                />
+                Задать вопрос
               </a>
             </div>
             <p class="flex items-center gap-1 text-gray-600">
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>Estimated Delivery:</span>
-              <span class="text-gray-500">14 January - 18 January</span>
-            </p>
-            <p class="flex items-center gap-1 text-gray-600">
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1.5"
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                />
-              </svg>
-              <span>38 people viewing this product right now!</span>
+              <img
+                src="/images/calendar.svg"
+                alt="Rating Star"
+                class="w-5 h-5 fill-current"
+              />
+              <span>Предполагаемая доставка:</span>
+              <span class="text-gray-500">14 января - 18 января</span>
             </p>
           </div>
 
           <!-- SKU и категории -->
           <div class="text-sm space-y-2 text-gray-600">
             <p><span class="font-medium">SKU:</span> 53453412</p>
-            <p><span class="font-medium">Categories:</span> fashion, women</p>
-            <p><span class="font-medium">Tag:</span> t-shirt</p>
+            <p><span class="font-medium">Категории:</span> пальто, женское</p>
+            <p><span class="font-medium">Тэг:</span> ПАЛЬТО</p>
           </div>
 
           <!-- Get It Today -->
           <div class="pt-4 border-t border-gray-100">
-            <h3 class="text-lg font-medium mb-4">Get It Today</h3>
+            <h3 class="text-lg font-medium mb-4">Получите это сегодня</h3>
             <div class="space-y-4">
               <div class="flex gap-3">
                 <svg
@@ -285,9 +239,9 @@
                   />
                 </svg>
                 <div>
-                  <p class="font-medium text-sm">Free Shipping</p>
+                  <p class="font-medium text-sm">Бесплатная доставка</p>
                   <p class="text-sm text-gray-500">
-                    Free shipping on orders over $75.
+                    Бесплатная доставка для заказов от ₽7500.00.
                   </p>
                 </div>
               </div>
@@ -306,9 +260,9 @@
                   />
                 </svg>
                 <div>
-                  <p class="font-medium text-sm">Support Everyday</p>
+                  <p class="font-medium text-sm">Поддержка каждый день</p>
                   <p class="text-sm text-gray-500">
-                    Support from 8:30 AM to 10:00 PM everyday
+                    Поддержка с 8:30 до 22:00 каждый день
                   </p>
                 </div>
               </div>
@@ -327,10 +281,9 @@
                   />
                 </svg>
                 <div>
-                  <p class="font-medium text-sm">100 Day Returns</p>
+                  <p class="font-medium text-sm">Возврат в течение 100 дней</p>
                   <p class="text-sm text-gray-500">
-                    Not impressed? Get a refund. You have 100 days to break our
-                    hearts.
+                    Не понравилось? Вернём деньги. У вас есть 100 дней.
                   </p>
                 </div>
               </div>
