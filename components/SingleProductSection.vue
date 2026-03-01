@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Галерея изображений -->
-        <div class="space-y-3">
+        <div class="relative">
           <!-- Основное изображение -->
           <div
             class="bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center"
@@ -14,12 +14,13 @@
               class="w-full h-auto object-contain"
             />
           </div>
-          <!-- Миниатюры -->
-          <div class="grid grid-cols-4 gap-3">
+          <!-- Миниатюры поверх изображения (слева) -->
+          <div class="absolute left-3 top-3 bottom-3 flex flex-col gap-3">
             <div
               v-for="(thumb, index) in thumbnails"
               :key="index"
-              class="aspect-[3/4] bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition flex items-center justify-center"
+              class="w-20 h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition flex items-center justify-center flex-shrink-0"
+              :class="{ 'ring-2 ring-[#ec018c]': index === 0 }"
             >
               <img
                 :src="thumb"
