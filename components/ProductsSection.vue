@@ -270,16 +270,16 @@
                   {{ product.name }}
                 </h3>
                 <div class="flex items-center gap-2 mt-1">
-                  <span class="text-sm font-medium">${{ product.price }}</span>
+                  <span class="text-sm font-medium">₽{{ product.price }}</span>
                   <span
                     v-if="product.oldPrice"
                     class="text-sm text-gray-400 line-through"
                   >
-                    ${{ product.oldPrice }}
+                    ₽{{ product.oldPrice }}
                   </span>
                   <span
                     v-if="product.discount"
-                    class="px-2 py-0.5 text-xs font-medium bg-green-100 text-green-700 rounded-full"
+                    class="px-2 py-0.5 text-xs font-medium bg-[#ec018c] text-[#ffffff] rounded-full"
                   >
                     {{ product.discount }}
                   </span>
