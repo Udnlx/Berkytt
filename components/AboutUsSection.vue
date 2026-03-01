@@ -40,14 +40,14 @@ const features = [
     title: "Возврат в течение 14 дней",
     description:
       "Если вы не довольны покупкой, просто верните товар в течение 14 дней для возврата средств.",
-    iconSrc: "/images/box.svg",
+    iconSrc: "/images/shopping-bag.svg",
   },
   {
     id: 3,
     title: "Наша гарантия",
     description:
       "Мы отвечаем за наши продукты и услуги и гарантируем ваше удовлетворение.",
-    iconSrc: "/images/guarantee.svg",
+    iconSrc: "/images/shield.svg",
   },
   {
     id: 4,
