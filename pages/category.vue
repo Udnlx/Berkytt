@@ -3,6 +3,7 @@
     <HeaderSection />
     <main class="pt-[80px] min-h-screen">
       <UpNavigationSection />
+      <ProductsSection />
     </main>
     <FooterSection />
   </div>
