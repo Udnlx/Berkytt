@@ -9,7 +9,7 @@
             class="bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center"
           >
             <img
-              src="/images/forcards.jpg?w=800"
+              :src="currentImage"
               alt="Kimono Sleeve Top"
               class="w-full h-auto object-contain"
             />
@@ -19,8 +19,9 @@
             <div
               v-for="(thumb, index) in thumbnails"
               :key="index"
-              class="w-20 h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition flex items-center justify-center flex-shrink-0"
-              :class="{ 'ring-2 ring-[#ec018c]': index === 0 }"
+              class="w-20 h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0"
+              :class="{ 'ring-2 ring-black': currentIndex === index }"
+              @click="selectImage(index)"
             >
               <img
                 :src="thumb"
@@ -37,7 +38,7 @@
           <div class="flex justify-between items-start">
             <div>
               <p class="text-sm text-gray-500 uppercase tracking-wide">
-                FASHION
+                ПАЛЬТО
               </p>
               <h1 class="text-2xl font-semibold mt-1">Kimono Sleeve Top</h1>
             </div>
@@ -79,8 +80,8 @@
 
           <!-- Цена -->
           <div class="flex items-center gap-3">
-            <span class="text-2xl font-medium">$24.00</span>
-            <span class="text-lg text-gray-400 line-through">$32.00</span>
+            <span class="text-2xl font-medium">₽24.00</span>
+            <span class="text-lg text-gray-400 line-through">₽32.00</span>
             <span
               class="bg-green-200 text-green-800 text-sm px-2 py-1 rounded-full font-medium"
               >-25%</span
@@ -326,15 +327,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
+
+// Полноразмерные изображения для галереи
+const images = ref([
+  "/images/forcards.jpg?w=800",
+  "/images/forcardshover.jpg?w=800",
+]);
 
 // Миниатюры изображений
 const thumbnails = ref([
   "/images/forcards.jpg?w=200",
-  "/images/forcards.jpg?w=200",
-  "/images/forcards.jpg?w=200",
-  "/images/forcards.jpg?w=200",
+  "/images/forcardshover.jpg?w=200",
 ]);
+
+// Индекс текущего изображения
+const currentIndex = ref(0);
+
+// Текущее изображение (вычисляемое)
+const currentImage = computed(() => images.value[currentIndex.value]);
+
+// Выбор изображения по индексу
+const selectImage = (index: number) => {
+  currentIndex.value = index;
+};
 
 // Доступные цвета (hex или названия)
 const colors = ref(["#FFB6C1", "#F5F5DC", "#87CEEB"]);
