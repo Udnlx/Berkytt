@@ -1,10 +1,8 @@
 <template>
   <div>
     <HeaderSection />
-    <main class="pt-[140px] min-h-screen">
-      <div class="container mx-auto px-4 py-8">
-        <!-- Место для будущих секций раздела -->
-      </div>
+    <main class="pt-[80px] min-h-screen">
+      <UpNavigationSection />
     </main>
     <FooterSection />
   </div>

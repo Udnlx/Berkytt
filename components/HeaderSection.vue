@@ -4,7 +4,10 @@
     <div class="text-white py-2" style="background-color: #ec018c">
       <div class="container mx-auto px-4">
         <div class="flex items-center justify-between">
-          <p class="text-sm font-medium" style="text-transform: uppercase">
+          <p
+            class="text-xs sm:text-sm font-medium"
+            style="text-transform: uppercase"
+          >
             Berkytt - Интернет магазин
           </p>
           <div class="flex items-center space-x-4">
