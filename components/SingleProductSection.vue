@@ -19,7 +19,7 @@
             <div
               v-for="(thumb, index) in thumbnails"
               :key="index"
-              class="w-20 h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0"
+              class="w-12 h-30 sm:w-20 sm:h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0"
               :class="{ 'ring-2 ring-black': currentIndex === index }"
               @click="selectImage(index)"
             >
@@ -142,9 +142,11 @@
 
           <!-- Количество и кнопки -->
           <div class="space-y-3">
-            <div class="flex gap-4">
+            <div class="flex flex-col sm:flex-row gap-4">
               <p class="text-sm font-medium self-center">Колличество:</p>
-              <div class="flex border-2 border-gray-300 rounded">
+              <div
+                class="flex border-2 border-gray-300 rounded max-[640px]:mx-auto max-[640px]:w-fit"
+              >
                 <button
                   class="w-10 h-10 flex items-center justify-center text-gray-500 hover:bg-gray-100"
                   @click="decrementQuantity"
