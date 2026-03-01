@@ -14,8 +14,14 @@
                 class="flex justify-between items-center"
               >
                 <a
-                  :href="item.href"
-                  class="text-sm text-gray-600 hover:text-gray-900 transition"
+                  href="#"
+                  @click.prevent="activeCategory = item.label"
+                  :class="[
+                    'text-sm transition',
+                    activeCategory === item.label
+                      ? 'text-[#ec018c] font-medium'
+                      : 'text-gray-600 hover:text-gray-900',
+                  ]"
                 >
                   {{ item.label }}
                 </a>
@@ -31,7 +37,13 @@
               <button
                 v-for="size in sizes"
                 :key="size"
-                class="w-10 h-10 rounded-full border border-gray-200 text-xs font-medium text-gray-700 hover:border-gray-900 hover:text-gray-900 transition"
+                @click="activeSize = size"
+                :class="[
+                  'w-10 h-10 rounded-full border text-xs font-medium transition',
+                  activeSize === size
+                    ? 'bg-[#ec018c] border-[#ec018c] text-white'
+                    : 'border-gray-200 text-gray-700 hover:border-gray-900 hover:text-gray-900',
+                ]"
               >
                 {{ size }}
               </button>
@@ -81,10 +93,12 @@
                   </svg>
                 </button>
               </div> -->
-              <label class="flex items-center gap-2 text-sm text-gray-600">
+              <label
+                class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"
+              >
                 <input
                   type="checkbox"
-                  class="w-4 h-4 border-gray-300 rounded text-gray-900 focus:ring-gray-900"
+                  class="w-4 h-4 border-2 border-gray-300 rounded appearance-none cursor-pointer bg-white checked:bg-[#ec018c] checked:border-[#ec018c] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%2220%206%209%2017%204%2013%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] checked:bg-no-repeat checked:bg-center"
                 />
                 Показать только товары распродаж
               </label>
@@ -307,6 +321,10 @@ const productTypes = [
 ];
 
 const sizes = ["XS", "S", "M", "L", "XL", "2XL", "FSize"];
+
+const activeSize = ref<string | null>(null);
+
+const activeCategory = ref("ПАЛЬТО");
 
 const currentTime = ref(Date.now());
 
