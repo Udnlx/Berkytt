@@ -45,7 +45,7 @@
           <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
             <!-- View Mode & Sale Filter -->
             <div class="flex items-center gap-4">
-              <div class="flex items-center gap-2">
+              <!-- <div class="flex items-center gap-2">
                 <button
                   class="w-8 h-8 bg-gray-900 text-white rounded flex items-center justify-center"
                 >
@@ -80,7 +80,7 @@
                     />
                   </svg>
                 </button>
-              </div>
+              </div> -->
               <label class="flex items-center gap-2 text-sm text-gray-600">
                 <input
                   type="checkbox"
@@ -219,6 +219,16 @@
                     ]"
                   ></div>
                 </div>
+
+                <!-- Sale Timer (for sale items) -->
+                <div
+                  v-if="product.endDate"
+                  class="absolute bottom-0 left-0 right-0 bg-black/30 px-3 py-2 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-300"
+                >
+                  <span class="text-xs text-white font-medium">
+                    {{ formatTimeLeft(product.endDate) }}
+                  </span>
+                </div>
               </div>
 
               <!-- Product Info -->
@@ -282,6 +292,8 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
+
 const productTypes = [
   { label: "ПАЛЬТО", count: 12, href: "#" },
   { label: "ПОЛУПАЛЬТО", count: 4, href: "#" },
@@ -295,6 +307,29 @@ const productTypes = [
 ];
 
 const sizes = ["XS", "S", "M", "L", "XL", "2XL", "FSize"];
+
+const currentTime = ref(Date.now());
+
+// Update timer every second
+let timerInterval: ReturnType<typeof setInterval> | null = null;
+
+// Format time left until endDate
+const formatTimeLeft = (endDate: string) => {
+  const end = new Date(endDate).getTime();
+  const now = currentTime.value;
+  const diff = end - now;
+
+  if (diff <= 0) {
+    return "РАСПРОДАЖА ЗАКОНЧЕНА";
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+  return `${days}Д : ${String(hours).padStart(2, "0")}Ч : ${String(minutes).padStart(2, "0")}М : ${String(seconds).padStart(2, "0")}С`;
+};
 
 const products = [
   {
@@ -416,4 +451,16 @@ const products = [
     colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
   },
 ];
+
+onMounted(() => {
+  timerInterval = setInterval(() => {
+    currentTime.value = Date.now();
+  }, 1000);
+});
+
+onUnmounted(() => {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+  }
+});
 </script>
