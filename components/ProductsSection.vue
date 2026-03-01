@@ -94,11 +94,11 @@
                 </button>
               </div> -->
               <label
-                class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer"
+                class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer text-sm text-gray-900 font-medium"
               >
                 <input
                   type="checkbox"
-                  class="w-4 h-4 border-2 border-gray-300 rounded appearance-none cursor-pointer bg-white checked:bg-[#ec018c] checked:border-[#ec018c] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%2220%206%209%2017%204%2013%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] checked:bg-no-repeat checked:bg-center"
+                  class="w-4 h-4 border-2 border-gray-900 rounded appearance-none cursor-pointer bg-white checked:bg-[#ec018c] checked:border-[#ec018c] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%2220%206%209%2017%204%2013%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] checked:bg-no-repeat checked:bg-center"
                 />
                 Показать только товары распродаж
               </label>
@@ -106,15 +106,34 @@
 
             <!-- Sort Dropdown -->
             <div class="flex items-center gap-2">
-              <span class="text-sm text-gray-600">Сортировка</span>
-              <select
-                class="text-sm border border-gray-200 rounded px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900"
-              >
-                <option>По умолчанию</option>
-                <option>Цена: от низкой к высокой</option>
-                <option>Цена: от высокой к низкой</option>
-                <option>Новинки</option>
-              </select>
+              <span class="text-sm text-gray-900 font-medium">Сортировка</span>
+              <div class="relative">
+                <select
+                  class="appearance-none text-sm border-2 border-gray-900 rounded px-4 py-2 pr-8 text-gray-900 font-medium focus:outline-none focus:border-[#ec018c] cursor-pointer bg-white"
+                >
+                  <option>По умолчанию</option>
+                  <option>Цена: от низкой к высокой</option>
+                  <option>Цена: от высокой к низкой</option>
+                  <option>Новинки</option>
+                </select>
+                <div
+                  class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                >
+                  <svg
+                    class="w-4 h-4 text-gray-900"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
 
