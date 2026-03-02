@@ -4,6 +4,7 @@
     <main class="pt-[80px] min-h-screen">
       <TitlePageSection />
       <SingleProductSection />
+      <OptionProductSection />
       <YouLikeItSection />
     </main>
     <FooterSection />
