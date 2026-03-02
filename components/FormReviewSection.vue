@@ -1,7 +1,9 @@
 <template>
   <section class="py-10 bg-gray-50">
     <div class="max-w-[1200px] mx-auto container mx-auto px-4">
-      <h2 class="text-2xl font-bold text-black mb-6">Оставьте комментарий</h2>
+      <h2 class="text-2xl font-bold text-black mb-6">
+        Оставьте отзыв о товаре
+      </h2>
 
       <form @submit.prevent="submitForm" class="space-y-5">
         <!-- Name and Email Row -->
@@ -45,7 +47,7 @@
             <input
               v-model="form.saveData"
               type="checkbox"
-              class="w-4 h-4 border-2 border-gray-900 rounded appearance-none cursor-pointer bg-white checked:bg-[#ec018c] checked:border-[#ec018c] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%2220%206%209%2017%204%2013%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] checked:bg-no-repeat checked:bg-center"
+              class="min-w-4 w-4 h-4 border-2 border-gray-900 rounded appearance-none cursor-pointer bg-white checked:bg-[#ec018c] checked:border-[#ec018c] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%2220%206%209%2017%204%2013%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] checked:bg-no-repeat checked:bg-center"
             />
             <span>
               Нажимая кнопку, вы соглашаетесь с нашими условиями и политикой
