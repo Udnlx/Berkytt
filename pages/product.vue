@@ -5,6 +5,7 @@
       <TitlePageSection />
       <SingleProductSection />
       <OptionProductSection />
+      <ReviewProductSection />
       <YouLikeItSection />
     </main>
     <FooterSection />
