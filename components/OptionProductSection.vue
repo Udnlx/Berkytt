@@ -4,25 +4,33 @@
     <div class="flex justify-center gap-10 mb-10 border-b border-gray-200">
       <button
         :class="[
-          'text-base font-bold pb-3 cursor-pointer transition-colors duration-300',
+          'text-xl font-bold pb-3 cursor-pointer transition-colors duration-300 relative',
           activeTab === 'description'
-            ? 'text-black'
+            ? 'text-[#ec018c]'
             : 'text-gray-400 hover:text-gray-600',
         ]"
         @click="activeTab = 'description'"
       >
-        Description
+        Описание
+        <span
+          v-if="activeTab === 'description'"
+          class="absolute bottom-0 left-0 w-full h-0.5 bg-[#ec018c]"
+        ></span>
       </button>
       <button
         :class="[
-          'text-base font-bold pb-3 cursor-pointer transition-colors duration-300',
+          'text-xl font-bold pb-3 cursor-pointer transition-colors duration-300 relative',
           activeTab === 'specifications'
-            ? 'text-black'
+            ? 'text-[#ec018c]'
             : 'text-gray-400 hover:text-gray-600',
         ]"
         @click="activeTab = 'specifications'"
       >
-        Specifications
+        Спецификации
+        <span
+          v-if="activeTab === 'specifications'"
+          class="absolute bottom-0 left-0 w-full h-0.5 bg-[#ec018c]"
+        ></span>
       </button>
     </div>
 
@@ -31,50 +39,50 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
         <!-- Description Main -->
         <div>
-          <h3 class="text-lg font-semibold text-black mb-4">Description</h3>
+          <h3 class="text-lg font-semibold text-black mb-4">Описание</h3>
           <p class="text-sm text-gray-600 leading-relaxed">
-            Keep your home organized, yet elegant with storage cabinets by Onita
-            Patio Furniture. These cabinets not only make a great storage units,
-            but also bring a great decorative accent to your decor.
-            Traditionally designed, they are perfect to be used in the hallway,
-            living room, bedroom, office or any place where you need to store or
-            display things. Made of high quality materials, they are sturdy and
-            durable for years. Bring one-of-a-kind look to your interior with
-            furniture from Onita Furniture!
+            Женское пальто, которое легко впишется в любой гардероб и будет
+            уместно и в городе, и в поездках. Лаконичный крой подчёркивает
+            силуэт, а продуманные детали делают образ собранным и элегантным.
+            Пальто хорошо держит форму, комфортно садится по фигуре и подходит
+            как для деловых комплектов, так и для повседневных. Практичные
+            карманы, аккуратная линия плеч и универсальная длина позволяют
+            сочетать его с джинсами, платьями и классическими брюками. Добавьте
+            шарф и ботильоны — и получите готовый стильный образ на прохладный
+            сезон.
           </p>
         </div>
 
         <!-- Specifications List -->
         <div>
-          <h4 class="text-lg font-semibold text-black mb-4">
-            About This Products
-          </h4>
+          <h4 class="text-lg font-semibold text-black mb-4">О продукте</h4>
           <ul class="space-y-1.5">
             <li
               class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Универсальное женское пальто на каждый день и для более формальных
+              образов
             </li>
             <li
               class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
             >
-              Nulla luctus libero quis mauris vestibulum dapibus.
+              Лаконичный крой: аккуратно подчёркивает силуэт, не сковывает
+              движения
             </li>
             <li
               class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
             >
-              Maecenas ullamcorper erat mi, vel consequat enim suscipit at.
+              Материал хорошо держит форму и выглядит опрятно в течение дня
             </li>
             <li
               class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
             >
-              Quisque consectetur nibh ac urna molestie scelerisque.
+              Комфортная посадка по плечам и в зоне талии
             </li>
             <li
               class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
             >
-              Mauris in nisl scelerisque massa consectetur pretium sed et
-              mauris.
+              Практичные боковые карманы для мелочей и тепла рук
             </li>
           </ul>
         </div>
@@ -104,11 +112,11 @@
             </svg>
           </div>
           <h4 class="text-base font-semibold text-black mb-2">
-            Shipping Faster
+            Быстрая доставка
           </h4>
           <p class="text-xs text-gray-600 leading-relaxed">
-            Use on walls, furniture, doors and many more surfaces. The
-            possibilities are endless.
+            Оперативно доставим ваш заказ в любую точку страны. Надёжная
+            упаковка и отслеживание отправки.
           </p>
         </div>
 
@@ -129,11 +137,11 @@
             </svg>
           </div>
           <h4 class="text-base font-semibold text-black mb-2">
-            Cotton Material
+            Натуральные материалы
           </h4>
           <p class="text-xs text-gray-600 leading-relaxed">
-            Use on walls, furniture, doors and many more surfaces. The
-            possibilities are endless.
+            Используем только качественные и экологичные ткани, которые приятны
+            к телу и долговечны в носке.
           </p>
         </div>
 
@@ -154,10 +162,12 @@
               <path d="M9 12l2 2 4-4"></path>
             </svg>
           </div>
-          <h4 class="text-base font-semibold text-black mb-2">High Quality</h4>
+          <h4 class="text-base font-semibold text-black mb-2">
+            Высокое качество
+          </h4>
           <p class="text-xs text-gray-600 leading-relaxed">
-            Use on walls, furniture, doors and many more surfaces. The
-            possibilities are endless.
+            Контроль качества на каждом этапе производства. Гарантия на все
+            изделия и внимательное отношение к деталям.
           </p>
         </div>
 
@@ -183,11 +193,11 @@
             </svg>
           </div>
           <h4 class="text-base font-semibold text-black mb-2">
-            Highly Compatible
+            Универсальность
           </h4>
           <p class="text-xs text-gray-600 leading-relaxed">
-            Use on walls, furniture, doors and many more surfaces. The
-            possibilities are endless.
+            Лёгкая сочетаемость с другими вещами гардероба. Подходит для разных
+            образов и ситуаций.
           </p>
         </div>
       </div>
@@ -200,63 +210,20 @@
     >
       <table class="w-full max-w-[800px] mx-auto border-collapse">
         <tbody>
-          <tr class="odd:bg-gray-50">
-            <th
-              class="py-4 px-5 text-left font-medium text-black w-[30%] rounded"
-            >
-              Rating
+          <tr class="odd:bg-[#ffddf1]">
+            <th class="py-4 px-5 text-left font-medium text-black rounded">
+              Внешняя оболочка
             </th>
             <td class="py-4 px-5 text-left text-gray-600 rounded">
-              <span class="text-yellow-400 text-base">★★★★★</span>
-              <span class="text-gray-400 text-xs ml-2">(1,234)</span>
+              100% полиэстер
             </td>
           </tr>
-          <tr class="odd:bg-gray-50">
+          <tr class="odd:bg-[#ffddf1]">
             <th class="py-4 px-5 text-left font-medium text-black rounded">
-              Outer Shell
+              Подкладка
             </th>
             <td class="py-4 px-5 text-left text-gray-600 rounded">
-              100% polyester
-            </td>
-          </tr>
-          <tr class="odd:bg-gray-50">
-            <th class="py-4 px-5 text-left font-medium text-black rounded">
-              Lining
-            </th>
-            <td class="py-4 px-5 text-left text-gray-600 rounded">
-              100% polyurethane
-            </td>
-          </tr>
-          <tr class="odd:bg-gray-50">
-            <th class="py-4 px-5 text-left font-medium text-black rounded">
-              Size
-            </th>
-            <td class="py-4 px-5 text-left text-gray-600 rounded">
-              S, M, L, XL
-            </td>
-          </tr>
-          <tr class="odd:bg-gray-50">
-            <th class="py-4 px-5 text-left font-medium text-black rounded">
-              Colors
-            </th>
-            <td class="py-4 px-5 text-left text-gray-600 rounded">
-              Grey, Red, Blue, Black
-            </td>
-          </tr>
-          <tr class="odd:bg-gray-50">
-            <th class="py-4 px-5 text-left font-medium text-black rounded">
-              Care
-            </th>
-            <td class="py-4 px-5 text-left text-gray-600 rounded">
-              <div class="flex gap-3">
-                <span class="text-xl cursor-help" title="Do not bleach"
-                  >🚫</span
-                >
-                <span class="text-xl cursor-help" title="Iron low">⚡</span>
-                <span class="text-xl cursor-help" title="Do not tumble dry"
-                  >❌</span
-                >
-              </div>
+              100% полиуретан
             </td>
           </tr>
         </tbody>

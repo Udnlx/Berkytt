@@ -87,13 +87,15 @@
 
           <!-- Описание -->
           <p class="text-gray-600 leading-relaxed">
-            Contrary to popular belief, Lorem Ipsum is not simply random text.
-            It has roots in a piece of classical Latin literature from 45 BC,
-            making it over 2000 years old. Richard McClintock, a Latin professor
-            at Hampden-Sydney College in Virginia, looked up one of the more
-            obscure Latin words, consectetur, from a Lorem Ipsum passage, and
-            going through the cites of the word in classical literature,
-            discovered the undoubtable source.
+            Женское пальто, которое легко впишется в любой гардероб и будет
+            уместно и в городе, и в поездках. Лаконичный крой подчёркивает
+            силуэт, а продуманные детали делают образ собранным и элегантным.
+            Пальто хорошо держит форму, комфортно садится по фигуре и подходит
+            как для деловых комплектов, так и для повседневных. Практичные
+            карманы, аккуратная линия плеч и универсальная длина позволяют
+            сочетать его с джинсами, платьями и классическими брюками. Добавьте
+            шарф и ботильоны — и получите готовый стильный образ на прохладный
+            сезон.
           </p>
 
           <hr class="border-gray-100" />
