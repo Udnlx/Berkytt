@@ -33,20 +33,53 @@
           <!-- Size Filter -->
           <div class="mb-8">
             <h3 class="text-sm font-medium text-gray-900 mb-4">Размеры</h3>
-            <div class="flex flex-wrap gap-2">
-              <button
-                v-for="size in sizes"
-                :key="size"
-                @click="activeSize = size"
-                :class="[
-                  'w-10 h-10 rounded-full border text-xs font-medium transition',
-                  activeSize === size
-                    ? 'bg-[#ec018c] border-[#ec018c] text-white'
-                    : 'border-gray-200 text-gray-700 hover:border-gray-900 hover:text-gray-900',
-                ]"
-              >
-                {{ size }}
-              </button>
+            <div class="size-table">
+              <table>
+                <tbody>
+                  <tr v-for="row in sizeGrid" :key="row.size">
+                    <td class="size-label">{{ row.size }}</td>
+                    <td
+                      v-if="row.bust"
+                      @click="
+                        !row.bustUnavailable &&
+                        selectSize(row.size, 'bust', row.bust)
+                      "
+                      :class="[
+                        getActiveClass(row.size, 'bust'),
+                        { unavailable: row.bustUnavailable },
+                      ]"
+                    >
+                      {{ row.bust }}
+                    </td>
+                    <td
+                      v-if="row.waist"
+                      @click="
+                        !row.waistUnavailable &&
+                        selectSize(row.size, 'waist', row.waist)
+                      "
+                      :class="[
+                        getActiveClass(row.size, 'waist'),
+                        { unavailable: row.waistUnavailable },
+                      ]"
+                    >
+                      {{ row.waist }}
+                    </td>
+                    <td
+                      v-if="row.hips"
+                      @click="
+                        !row.hipsUnavailable &&
+                        selectSize(row.size, 'hips', row.hips)
+                      "
+                      :class="[
+                        getActiveClass(row.size, 'hips'),
+                        { unavailable: row.hipsUnavailable },
+                      ]"
+                    >
+                      {{ row.hips }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </aside>
@@ -339,9 +372,77 @@ const productTypes = [
   { label: "БЕЙСБОЛКИ И КЕПКИ", count: 6, href: "#" },
 ];
 
-const sizes = ["XS", "S", "M", "L", "XL", "2XL", "FSize"];
+const sizeGrid = [
+  {
+    size: "46",
+    bust: "92/176",
+    bustUnavailable: true,
+    waist: "92/182",
+    waistUnavailable: true,
+    hips: "",
+  },
+  {
+    size: "48",
+    bust: "96/176",
+    bustUnavailable: true,
+    waist: "96/182",
+    waistUnavailable: true,
+    hips: "",
+  },
+  {
+    size: "50",
+    bust: "100/176",
+    bustUnavailable: true,
+    waist: "100/182",
+    hips: "100/188",
+    hipsUnavailable: true,
+  },
+  {
+    size: "52",
+    bust: "104/176",
+    bustUnavailable: true,
+    waist: "104/182",
+    waistUnavailable: true,
+    hips: "104/188",
+    hipsUnavailable: true,
+  },
+  {
+    size: "54",
+    bust: "108/176",
+    bustUnavailable: true,
+    waist: "108/182",
+    hips: "108/188",
+    hipsUnavailable: true,
+  },
+  {
+    size: "56",
+    bust: "112/176",
+    waist: "112/182",
+    hips: "112/188",
+  },
+  {
+    size: "58",
+    bust: "116/176",
+    waist: "116/182",
+    hips: "116/188",
+  },
+];
 
 const activeSize = ref<string | null>(null);
+const activeSizeParam = ref<string | null>(null);
+const activeValue = ref<string | null>(null);
+
+const selectSize = (size: string, param: string, value: string) => {
+  activeSize.value = size;
+  activeSizeParam.value = param;
+  activeValue.value = value;
+};
+
+const getActiveClass = (size: string, param: string) => {
+  return activeSize.value === size && activeSizeParam.value === param
+    ? "active"
+    : "";
+};
 
 const activeCategory = ref("ПАЛЬТО");
 
@@ -501,3 +602,66 @@ onUnmounted(() => {
   }
 });
 </script>
+
+<style scoped>
+.size-table {
+  overflow-x: auto;
+}
+
+.size-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  table-layout: fixed;
+}
+
+.size-table td {
+  padding: 10px 6px;
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+  word-break: break-word;
+}
+
+.size-table td:first-child {
+  width: 50px;
+}
+
+.size-table .size-label {
+  background-color: #f5f5f5;
+  color: #666;
+  font-weight: 500;
+  border-right: 1px solid #d0d0d0;
+}
+
+.size-table td:not(.size-label) {
+  color: #ec018c;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.size-table td:not(.size-label):hover {
+  background-color: #fff0f6;
+}
+
+.size-table td.unavailable {
+  color: #ccc;
+  text-decoration: line-through;
+  cursor: not-allowed;
+  background-color: #fafafa;
+}
+
+.size-table td.unavailable:hover {
+  background-color: #fafafa;
+}
+
+.size-table td.active {
+  background-color: #fce7f3;
+  color: #ec018c;
+  font-weight: 600;
+}
+
+.size-table td:empty {
+  background-color: #fafafa;
+  cursor: default;
+}
+</style>
