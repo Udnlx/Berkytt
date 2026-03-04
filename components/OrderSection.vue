@@ -110,7 +110,7 @@
                   v-model="form.paymentMethod"
                   type="radio"
                   value="card"
-                  class="w-4 h-4 text-[#ec018c] border-gray-300 focus:ring-[#ec018c]"
+                  class="w-4 h-4 border-2 border-gray-900 rounded-full appearance-none cursor-pointer bg-white checked:bg-[#ec018c] checked:border-[#ec018c] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E')] checked:bg-no-repeat checked:bg-center"
                 />
                 <span class="text-sm text-gray-700">
                   Оплата картой при доставке
@@ -122,7 +122,7 @@
                   v-model="form.paymentMethod"
                   type="radio"
                   value="cash"
-                  class="w-4 h-4 text-[#ec018c] border-gray-300 focus:ring-[#ec018c]"
+                  class="w-4 h-4 border-2 border-gray-900 rounded-full appearance-none cursor-pointer bg-white checked:bg-[#ec018c] checked:border-[#ec018c] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E')] checked:bg-no-repeat checked:bg-center"
                 />
                 <span class="text-sm text-gray-700">
                   Оплата наличными при доставке
@@ -145,7 +145,7 @@
                     v-model="form.deliveryMethod"
                     type="radio"
                     value="pickup"
-                    class="w-4 h-4 text-[#ec018c] border-gray-300 focus:ring-[#ec018c]"
+                    class="w-4 h-4 border-2 border-gray-900 rounded-full appearance-none cursor-pointer bg-white checked:bg-[#ec018c] checked:border-[#ec018c] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E')] checked:bg-no-repeat checked:bg-center"
                   />
                   <span class="text-sm font-medium text-gray-700">
                     Забрать со склада
@@ -170,7 +170,7 @@
                     v-model="form.deliveryMethod"
                     type="radio"
                     value="cdek"
-                    class="w-4 h-4 text-[#ec018c] border-gray-300 focus:ring-[#ec018c]"
+                    class="w-4 h-4 border-2 border-gray-900 rounded-full appearance-none cursor-pointer bg-white checked:bg-[#ec018c] checked:border-[#ec018c] checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%225%22%20fill%3D%22%23ffffff%22%2F%3E%3C%2Fsvg%3E')] checked:bg-no-repeat checked:bg-center"
                   />
                   <span class="text-sm font-medium text-gray-700">
                     Доставка с помощью службы СДЭК
