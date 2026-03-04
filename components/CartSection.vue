@@ -8,9 +8,9 @@
             ТОВАРЫ В КОРЗИНЕ
           </h2>
 
-          <!-- Cart Header -->
+          <!-- Cart Header - скрыт на мобильных -->
           <div
-            class="grid grid-cols-12 gap-4 pb-4 border-b border-gray-200 text-sm text-gray-400 font-medium"
+            class="hidden md:grid grid-cols-12 gap-4 pb-4 border-b border-gray-200 text-sm text-gray-400 font-medium"
           >
             <div class="col-span-5">ТОВАР</div>
             <div class="col-span-2 text-center">ЦЕНА</div>
@@ -22,65 +22,200 @@
           <div
             v-for="item in cartItems"
             :key="item.id"
-            class="grid grid-cols-12 gap-4 py-6 border-b border-gray-200 items-center"
+            class="py-6 border-b border-gray-200"
           >
-            <!-- Product Info -->
-            <div class="col-span-5 flex gap-4">
-              <div class="w-20 h-28 flex-shrink-0">
-                <img
-                  :src="item.image"
-                  :alt="item.name"
-                  class="w-full h-full object-cover"
-                />
+            <!-- Mobile Layout -->
+            <div class="md:hidden">
+              <!-- Product Row -->
+              <div class="flex gap-4 mb-4">
+                <div class="w-20 h-28 flex-shrink-0">
+                  <img
+                    :src="item.image"
+                    :alt="item.name"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="flex flex-col justify-center flex-1">
+                  <h3 class="text-sm font-medium text-[#ec018c] mb-1">
+                    {{ item.name }}
+                  </h3>
+                  <p class="text-xs text-gray-400">РАЗМЕР: {{ item.size }}</p>
+                </div>
               </div>
-              <div class="flex flex-col justify-center">
-                <h3 class="text-sm font-medium text-[#ec018c] mb-1">
-                  {{ item.name }}
-                </h3>
-                <p class="text-xs text-gray-400">РАЗМЕР: {{ item.size }}</p>
-              </div>
-            </div>
 
-            <!-- Price -->
-            <div class="col-span-2 text-center">
-              <span class="text-sm text-gray-800">
-                {{ formatPrice(item.price) }} ₽
-              </span>
-            </div>
+              <!-- Price, Quantity, Total Row -->
+              <div class="flex items-center justify-between gap-3">
+                <!-- Price -->
+                <div class="flex flex-col items-center">
+                  <span class="text-xs text-gray-500 mb-1">Цена</span>
+                  <span class="text-sm text-gray-800 whitespace-nowrap">
+                    {{ formatPrice(item.price) }} ₽
+                  </span>
+                </div>
 
-            <!-- Quantity Controls -->
-            <div class="col-span-3 flex justify-center">
-              <div class="inline-flex items-center border border-gray-300">
-                <button
-                  @click="decreaseQuantity(item.id)"
-                  class="w-10 h-9 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  :disabled="item.quantity <= 1"
-                >
-                  <svg
-                    class="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                <!-- Quantity Controls -->
+                <div class="inline-flex items-center border border-gray-300">
+                  <button
+                    @click="decreaseQuantity(item.id)"
+                    class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    :disabled="item.quantity <= 1"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M20 12H4"
-                    />
-                  </svg>
-                </button>
-                <span
-                  class="w-12 h-9 flex items-center justify-center text-sm text-gray-800 border-x border-gray-300"
-                >
-                  {{ item.quantity }}
+                    <svg
+                      class="w-3 h-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M20 12H4"
+                      />
+                    </svg>
+                  </button>
+                  <span
+                    class="w-10 h-8 flex items-center justify-center text-sm text-gray-800 border-x border-gray-300"
+                  >
+                    {{ item.quantity }}
+                  </span>
+                  <button
+                    @click="increaseQuantity(item.id)"
+                    class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors"
+                  >
+                    <svg
+                      class="w-3 h-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Total & Remove -->
+                <div class="flex items-center gap-2">
+                  <div class="flex flex-col items-center">
+                    <span class="text-xs text-gray-500 mb-1">Итого</span>
+                    <span
+                      class="text-sm font-medium text-gray-800 whitespace-nowrap"
+                    >
+                      {{ formatPrice(item.price * item.quantity) }} ₽
+                    </span>
+                  </div>
+                  <button
+                    @click="removeItem(item.id)"
+                    class="text-gray-400 hover:text-[#ec018c] transition-colors"
+                  >
+                    <svg
+                      class="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Desktop Layout -->
+            <div class="hidden md:grid grid-cols-12 gap-4 items-center">
+              <!-- Product Info -->
+              <div class="col-span-5 flex gap-4">
+                <div class="w-20 h-28 flex-shrink-0">
+                  <img
+                    :src="item.image"
+                    :alt="item.name"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div class="flex flex-col justify-center">
+                  <h3 class="text-sm font-medium text-[#ec018c] mb-1">
+                    {{ item.name }}
+                  </h3>
+                  <p class="text-xs text-gray-400">РАЗМЕР: {{ item.size }}</p>
+                </div>
+              </div>
+
+              <!-- Price -->
+              <div class="col-span-2 text-center">
+                <span class="text-sm text-gray-800">
+                  {{ formatPrice(item.price) }} ₽
+                </span>
+              </div>
+
+              <!-- Quantity Controls -->
+              <div class="col-span-3 flex justify-center">
+                <div class="inline-flex items-center border border-gray-300">
+                  <button
+                    @click="decreaseQuantity(item.id)"
+                    class="w-10 h-9 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    :disabled="item.quantity <= 1"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M20 12H4"
+                      />
+                    </svg>
+                  </button>
+                  <span
+                    class="w-12 h-9 flex items-center justify-center text-sm text-gray-800 border-x border-gray-300"
+                  >
+                    {{ item.quantity }}
+                  </span>
+                  <button
+                    @click="increaseQuantity(item.id)"
+                    class="w-10 h-9 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors"
+                  >
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Total & Remove -->
+              <div class="col-span-2 flex items-center justify-center gap-3">
+                <span class="text-sm font-medium text-gray-800">
+                  {{ formatPrice(item.price * item.quantity) }} ₽
                 </span>
                 <button
-                  @click="increaseQuantity(item.id)"
-                  class="w-10 h-9 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors"
+                  @click="removeItem(item.id)"
+                  class="text-gray-400 hover:text-[#ec018c] transition-colors"
                 >
                   <svg
-                    class="w-4 h-4"
+                    class="w-5 h-5"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -89,36 +224,11 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M12 4v16m8-8H4"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                     />
                   </svg>
                 </button>
               </div>
-            </div>
-
-            <!-- Total & Remove -->
-            <div class="col-span-2 flex items-center justify-center gap-3">
-              <span class="text-sm font-medium text-gray-800">
-                {{ formatPrice(item.price * item.quantity) }} ₽
-              </span>
-              <button
-                @click="removeItem(item.id)"
-                class="text-gray-400 hover:text-[#ec018c] transition-colors"
-              >
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
             </div>
           </div>
 
@@ -228,6 +338,14 @@ const cartItems = ref<CartItem[]>([
     name: "ПАЛЬТО 102/1 Т1673.2",
     size: "92/176",
     price: 13934,
+    quantity: 1,
+    image: "/images/forcards.jpg",
+  },
+  {
+    id: 2,
+    name: "ПАЛЬТО 202/1 Т1673.2",
+    size: "92/176",
+    price: 10000,
     quantity: 1,
     image: "/images/forcards.jpg",
   },
