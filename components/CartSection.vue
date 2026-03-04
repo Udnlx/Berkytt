@@ -1,0 +1,277 @@
+<template>
+  <section class="py-12 bg-white">
+    <div class="max-w-[1200px] mx-auto container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Cart Items -->
+        <div class="lg:col-span-2">
+          <h2 class="text-2xl font-bold text-gray-800 mb-6">
+            ТОВАРЫ В КОРЗИНЕ
+          </h2>
+
+          <!-- Cart Header -->
+          <div
+            class="grid grid-cols-12 gap-4 pb-4 border-b border-gray-200 text-sm text-gray-400 font-medium"
+          >
+            <div class="col-span-5">ТОВАР</div>
+            <div class="col-span-2 text-center">ЦЕНА</div>
+            <div class="col-span-3 text-center">КОЛИЧЕСТВО</div>
+            <div class="col-span-2 text-center">СТОИМОСТЬ</div>
+          </div>
+
+          <!-- Cart Item -->
+          <div
+            v-for="item in cartItems"
+            :key="item.id"
+            class="grid grid-cols-12 gap-4 py-6 border-b border-gray-200 items-center"
+          >
+            <!-- Product Info -->
+            <div class="col-span-5 flex gap-4">
+              <div class="w-20 h-28 flex-shrink-0">
+                <img
+                  :src="item.image"
+                  :alt="item.name"
+                  class="w-full h-full object-cover"
+                />
+              </div>
+              <div class="flex flex-col justify-center">
+                <h3 class="text-sm font-medium text-[#ec018c] mb-1">
+                  {{ item.name }}
+                </h3>
+                <p class="text-xs text-gray-400">РАЗМЕР: {{ item.size }}</p>
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="col-span-2 text-center">
+              <span class="text-sm text-gray-800">
+                {{ formatPrice(item.price) }} ₽
+              </span>
+            </div>
+
+            <!-- Quantity Controls -->
+            <div class="col-span-3 flex justify-center">
+              <div class="inline-flex items-center border border-gray-300">
+                <button
+                  @click="decreaseQuantity(item.id)"
+                  class="w-10 h-9 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  :disabled="item.quantity <= 1"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M20 12H4"
+                    />
+                  </svg>
+                </button>
+                <span
+                  class="w-12 h-9 flex items-center justify-center text-sm text-gray-800 border-x border-gray-300"
+                >
+                  {{ item.quantity }}
+                </span>
+                <button
+                  @click="increaseQuantity(item.id)"
+                  class="w-10 h-9 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors"
+                >
+                  <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Total & Remove -->
+            <div class="col-span-2 flex items-center justify-center gap-3">
+              <span class="text-sm font-medium text-gray-800">
+                {{ formatPrice(item.price * item.quantity) }} ₽
+              </span>
+              <button
+                @click="removeItem(item.id)"
+                class="text-gray-400 hover:text-[#ec018c] transition-colors"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Back to Catalog Button -->
+          <div class="mt-8">
+            <a
+              href="/catalog"
+              class="inline-flex items-center gap-2 px-6 py-3 border border-gray-200 text-gray-700 text-sm font-medium hover:border-[#ec018c] hover:text-[#ec018c] transition-colors"
+            >
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+              В КАТАЛОГ
+            </a>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+          <div class="pl-0 lg:pl-8 lg:border-l border-gray-200">
+            <h3 class="text-lg font-bold text-gray-800 mb-6">СУММА ЗАКАЗА:</h3>
+
+            <div class="space-y-4">
+              <!-- Total Items -->
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-600">Всего наименований</span>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="flex-1 border-b border-dotted border-gray-300"
+                  ></span>
+                  <span class="text-gray-800 font-medium whitespace-nowrap">
+                    {{ totalItems }} шт.
+                  </span>
+                </div>
+              </div>
+
+              <!-- Subtotal -->
+              <div class="flex justify-between items-center text-sm">
+                <span class="text-gray-600">Стоимость</span>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="flex-1 border-b border-dotted border-gray-300"
+                  ></span>
+                  <span class="text-gray-800 font-medium whitespace-nowrap">
+                    {{ formatPrice(subtotal) }} ₽
+                  </span>
+                </div>
+              </div>
+
+              <!-- Total -->
+              <div
+                class="flex justify-between items-center pt-4 border-t border-gray-200"
+              >
+                <span class="text-[#ec018c] font-bold">ИТОГО</span>
+                <div class="flex items-center gap-2">
+                  <span
+                    class="flex-1 border-b border-dotted border-[#ec018c]"
+                  ></span>
+                  <span class="text-[#ec018c] font-bold whitespace-nowrap">
+                    {{ formatPrice(total) }} ₽
+                  </span>
+                </div>
+              </div>
+
+              <!-- Checkout Button -->
+              <div class="mt-8">
+                <button
+                  @click="checkout"
+                  class="w-full py-4 bg-[#0a0a0a] text-white text-sm font-medium hover:bg-[#ec018c] transition-colors duration-300"
+                >
+                  ОФОРМИТЬ ЗАКАЗ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { ref, computed } from "vue";
+
+interface CartItem {
+  id: number;
+  name: string;
+  size: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
+
+const cartItems = ref<CartItem[]>([
+  {
+    id: 1,
+    name: "ПАЛЬТО 102/1 Т1673.2",
+    size: "92/176",
+    price: 13934,
+    quantity: 1,
+    image: "/images/forcards.jpg",
+  },
+]);
+
+const totalItems = computed(() => {
+  return cartItems.value.reduce((sum, item) => sum + item.quantity, 0);
+});
+
+const subtotal = computed(() => {
+  return cartItems.value.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
+});
+
+const total = computed(() => {
+  return subtotal.value;
+});
+
+const formatPrice = (price: number): string => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
+
+const increaseQuantity = (id: number) => {
+  const item = cartItems.value.find((i) => i.id === id);
+  if (item) {
+    item.quantity++;
+  }
+};
+
+const decreaseQuantity = (id: number) => {
+  const item = cartItems.value.find((i) => i.id === id);
+  if (item && item.quantity > 1) {
+    item.quantity--;
+  }
+};
+
+const removeItem = (id: number) => {
+  cartItems.value = cartItems.value.filter((i) => i.id !== id);
+};
+
+const checkout = () => {
+  console.log("Checkout:", cartItems.value);
+  // Здесь будет логика оформления заказа
+};
+</script>
