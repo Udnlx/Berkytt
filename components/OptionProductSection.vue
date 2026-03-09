@@ -210,20 +210,16 @@
     >
       <table class="w-full max-w-[800px] mx-auto border-collapse">
         <tbody>
-          <tr class="odd:bg-[#ffddf1]">
+          <tr
+            v-for="(spec, index) in specifications"
+            :key="index"
+            class="odd:bg-[#ffddf1]"
+          >
             <th class="py-4 px-5 text-left font-medium text-black rounded">
-              Внешняя оболочка
+              {{ spec.name }}
             </th>
             <td class="py-4 px-5 text-left text-gray-600 rounded">
-              100% полиэстер
-            </td>
-          </tr>
-          <tr class="odd:bg-[#ffddf1]">
-            <th class="py-4 px-5 text-left font-medium text-black rounded">
-              Подкладка
-            </th>
-            <td class="py-4 px-5 text-left text-gray-600 rounded">
-              100% полиуретан
+              {{ spec.value }}
             </td>
           </tr>
         </tbody>
@@ -236,6 +232,11 @@
 import { ref } from "vue";
 
 const activeTab = ref<"description" | "specifications">("description");
+
+const specifications = [
+  { name: "Внешняя оболочка", value: "100% полиэстер" },
+  { name: "Подкладка", value: "100% полиуретан" },
+];
 </script>
 
 <style scoped>
