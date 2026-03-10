@@ -103,19 +103,20 @@
           <!-- Цвета -->
           <div>
             <p class="text-sm font-medium mb-3">Цвета:</p>
-            <div class="flex gap-3">
+            <div class="flex flex-wrap gap-2">
               <button
-                v-for="color in colors"
-                :key="color"
-                class="w-10 h-10 rounded-full border-2 transition"
+                v-for="item in sameModels"
+                :key="item.name"
+                class="px-4 py-2 border-2 rounded transition text-sm"
                 :class="
-                  selectedColor === color
-                    ? 'border-black'
-                    : 'border-gray-200 hover:border-gray-400'
+                  selectedColorName === item.color
+                    ? 'border-[#ec018c] bg-[#ec018c] text-white'
+                    : 'border-gray-200 hover:border-gray-400 text-gray-700'
                 "
-                :style="{ backgroundColor: color }"
-                @click="selectColor(color)"
-              ></button>
+                @click="selectColor(item.color)"
+              >
+                {{ item.color }}
+              </button>
             </div>
           </div>
 
@@ -337,14 +338,30 @@ const selectImage = (index: number) => {
 };
 
 // Выбранный цвет
-const selectedColor = ref("#FFB6C1");
+const selectedColorName = ref("темно-синий");
 
-// Доступные цвета (hex коды)
-const colors = ref(["#FFB6C1", "#F5F5DC", "#87CEEB"]);
+// Массив похожих моделей с разными цветами
+const sameModels = ref([
+  {
+    title: "Пальто 102/1 Т1673.2",
+    name: "pal-to-102-1-t1673",
+    color: "темно-синий",
+  },
+  {
+    title: "Пальто 102/1 Т1673.2",
+    name: "pal-to-102-1-t1673",
+    color: "черный",
+  },
+  {
+    title: "Пальто 102/1 Т1673.2",
+    name: "pal-to-102-1-t1673",
+    color: "зеленый",
+  },
+]);
 
 // Выбор цвета
 const selectColor = (color: string) => {
-  selectedColor.value = color;
+  selectedColorName.value = color;
 };
 
 // Массив размеров с сервера
