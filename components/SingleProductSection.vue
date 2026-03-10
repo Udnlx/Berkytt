@@ -39,22 +39,30 @@
             </div>
             <!-- Миниатюра видео (последняя) -->
             <div
-              class="w-12 h-30 sm:w-20 sm:h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0"
+              class="w-12 h-30 sm:w-20 sm:h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0 relative"
               :class="{
                 'ring-2 ring-black': currentIndex === thumbnails.length,
               }"
               @click="selectVideo"
             >
+              <video
+                src="/images/video.mp4"
+                class="w-full h-full object-cover"
+              ></video>
               <div
-                class="w-8 h-8 bg-black rounded-full flex items-center justify-center"
+                class="absolute inset-0 flex items-center justify-center bg-black/30"
               >
-                <svg
-                  class="w-4 h-4 text-white ml-1"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
+                <div
+                  class="w-6 h-6 bg-white/90 rounded-full flex items-center justify-center"
                 >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+                  <svg
+                    class="w-3 h-3 text-[#ec018c] ml-0.5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M8 5v14l11-7z" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
