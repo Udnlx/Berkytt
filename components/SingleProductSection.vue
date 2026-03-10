@@ -128,46 +128,21 @@
             <div class="size-table">
               <table>
                 <tbody>
-                  <tr v-for="row in sizeGrid" :key="row.size">
-                    <td class="size-label">{{ row.size }}</td>
+                  <tr v-for="row in sizeGrid" :key="row.russianSize">
+                    <td class="size-label">{{ row.russianSize }}</td>
                     <td
-                      v-if="row.bust"
+                      v-for="(cell, index) in row.cells"
+                      :key="index"
                       @click="
-                        !row.bustUnavailable &&
-                        selectSize(row.size, 'bust', row.bust)
+                        !cell.unavailable &&
+                        selectSize(row.russianSize, cell.size)
                       "
                       :class="[
-                        getActiveClass(row.size, 'bust'),
-                        { unavailable: row.bustUnavailable },
+                        getActiveClass(row.russianSize, cell.size),
+                        { unavailable: cell.unavailable },
                       ]"
                     >
-                      {{ row.bust }}
-                    </td>
-                    <td
-                      v-if="row.waist"
-                      @click="
-                        !row.waistUnavailable &&
-                        selectSize(row.size, 'waist', row.waist)
-                      "
-                      :class="[
-                        getActiveClass(row.size, 'waist'),
-                        { unavailable: row.waistUnavailable },
-                      ]"
-                    >
-                      {{ row.waist }}
-                    </td>
-                    <td
-                      v-if="row.hips"
-                      @click="
-                        !row.hipsUnavailable &&
-                        selectSize(row.size, 'hips', row.hips)
-                      "
-                      :class="[
-                        getActiveClass(row.size, 'hips'),
-                        { unavailable: row.hipsUnavailable },
-                      ]"
-                    >
-                      {{ row.hips }}
+                      {{ cell.size }}
                     </td>
                   </tr>
                 </tbody>
@@ -369,78 +344,201 @@ const selectColor = (color: string) => {
   selectedColor.value = color;
 };
 
-// Размерная сетка
-const sizeGrid = [
+// Массив размеров с сервера
+const sizesData = ref([
   {
-    size: "46",
-    bust: "92/176",
-    bustUnavailable: true,
-    waist: "92/182",
-    waistUnavailable: true,
-    hips: "",
+    scancode: "4640238864034",
+    storage: false,
+    russianSize: "50",
+    size: "100/176",
+    quantity: 1,
+    price: "",
   },
   {
-    size: "48",
-    bust: "96/176",
-    bustUnavailable: true,
-    waist: "96/182",
-    waistUnavailable: true,
-    hips: "",
+    scancode: "4620164558689",
+    storage: false,
+    russianSize: "50",
+    size: "100/182",
+    quantity: "",
+    price: "",
   },
   {
-    size: "50",
-    bust: "100/176",
-    bustUnavailable: true,
-    waist: "100/182",
-    hips: "100/188",
-    hipsUnavailable: true,
+    scancode: "4640238864041",
+    storage: false,
+    russianSize: "50",
+    size: "100/188",
+    quantity: "",
+    price: "",
   },
   {
-    size: "52",
-    bust: "104/176",
-    waist: "104/182",
-    waistUnavailable: true,
-    hips: "104/188",
-    hipsUnavailable: true,
+    scancode: "4640238864058",
+    storage: false,
+    russianSize: "52",
+    size: "104/176",
+    quantity: "",
+    price: "",
   },
   {
-    size: "54",
-    bust: "108/176",
-    bustUnavailable: true,
-    waist: "108/182",
-    waistUnavailable: true,
-    hips: "108/188",
-    hipsUnavailable: true,
+    scancode: "4620164558696",
+    storage: false,
+    russianSize: "52",
+    size: "104/182",
+    quantity: "",
+    price: "",
   },
   {
-    size: "56",
-    bust: "112/176",
-    waist: "112/182",
-    hips: "112/188",
+    scancode: "4620164558702",
+    storage: false,
+    russianSize: "52",
+    size: "104/188",
+    quantity: "",
+    price: "",
   },
   {
-    size: "58",
-    bust: "116/176",
-    waist: "116/182",
-    hips: "116/188",
+    scancode: "4620164558719",
+    storage: false,
+    russianSize: "54",
+    size: "108/176",
+    quantity: "",
+    price: "",
   },
-];
+  {
+    scancode: "4620164558726",
+    storage: false,
+    russianSize: "54",
+    size: "108/182",
+    quantity: "",
+    price: "",
+  },
+  {
+    scancode: "4640238864065",
+    storage: false,
+    russianSize: "54",
+    size: "108/188",
+    quantity: "",
+    price: "",
+  },
+  {
+    scancode: "4620164558733",
+    storage: false,
+    russianSize: "56",
+    size: "112/176",
+    quantity: 5,
+    price: "",
+  },
+  {
+    scancode: "4620164558740",
+    storage: false,
+    russianSize: "56",
+    size: "112/182",
+    quantity: 3,
+    price: "",
+  },
+  {
+    scancode: "4640238864072",
+    storage: false,
+    russianSize: "56",
+    size: "112/188",
+    quantity: "",
+    price: "",
+  },
+  {
+    scancode: "4640238864102",
+    storage: false,
+    russianSize: "58",
+    size: "116/176",
+    quantity: 4,
+    price: "",
+  },
+  {
+    scancode: "4640238864089",
+    storage: false,
+    russianSize: "58",
+    size: "116/182",
+    quantity: "",
+    price: "",
+  },
+  {
+    scancode: "4640238864096",
+    storage: false,
+    russianSize: "58",
+    size: "116/188",
+    quantity: "",
+    price: "",
+  },
+  {
+    scancode: "4640238864003",
+    storage: false,
+    russianSize: "48",
+    size: "96/170",
+    quantity: "",
+    price: "",
+  },
+  {
+    scancode: "4640238864010",
+    storage: false,
+    russianSize: "48",
+    size: "96/176",
+    quantity: "",
+    price: "",
+  },
+  {
+    scancode: "4640238864027",
+    storage: false,
+    russianSize: "48",
+    size: "96/182",
+    quantity: "",
+    price: "",
+  },
+]);
 
-// Выбранный размер и параметр
+// Размерная сетка - группируем по russianSize и сортируем
+const sizeGrid = computed(() => {
+  const grouped = sizesData.value.reduce(
+    (acc, item) => {
+      if (!acc[item.russianSize]) {
+        acc[item.russianSize] = [];
+      }
+      acc[item.russianSize].push({
+        size: item.size,
+        unavailable: item.quantity === "" || item.quantity === 0,
+      });
+      return acc;
+    },
+    {} as Record<string, { size: string; unavailable: boolean }[]>,
+  );
+
+  // Сортируем russianSize по возрастанию
+  const sortedSizes = Object.keys(grouped).sort(
+    (a, b) => Number(a) - Number(b),
+  );
+
+  // Преобразуем в массив строк таблицы
+  const result = [];
+  for (const russianSize of sortedSizes) {
+    // Сортируем размеры внутри группы
+    grouped[russianSize].sort((a, b) => a.size.localeCompare(b.size));
+    result.push({
+      russianSize,
+      cells: grouped[russianSize],
+    });
+  }
+  return result;
+});
+
+// Выбранный размер
 const selectedSize = ref<string | null>(null);
-const selectedSizeParam = ref<string | null>(null);
 const selectedSizeValue = ref<string | null>(null);
 
 // Выбор размера
-const selectSize = (size: string, param: string, value: string) => {
-  selectedSize.value = size;
-  selectedSizeParam.value = param;
-  selectedSizeValue.value = value;
+const selectSize = (russianSize: string, size: string) => {
+  selectedSize.value = russianSize;
+  selectedSizeValue.value = size;
 };
 
 // Получить класс для активной ячейки
-const getActiveClass = (size: string, param: string) => {
-  return selectedSize.value === size && selectedSizeParam.value === param
+const getActiveClass = (russianSize: string, size: string) => {
+  return selectedSize.value === russianSize && selectedSizeValue.value === size
     ? "active"
     : "";
 };
