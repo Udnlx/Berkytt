@@ -141,6 +141,9 @@
                         getActiveClass(row.russianSize, cell.size),
                         { unavailable: cell.unavailable },
                       ]"
+                      :title="
+                        cell.unavailable ? '' : `Количество: ${cell.quantity}`
+                      "
                     >
                       {{ cell.size }}
                     </td>
@@ -501,11 +504,15 @@ const sizeGrid = computed(() => {
       }
       acc[item.russianSize].push({
         size: item.size,
+        quantity: item.quantity,
         unavailable: item.quantity === "" || item.quantity === 0,
       });
       return acc;
     },
-    {} as Record<string, { size: string; unavailable: boolean }[]>,
+    {} as Record<
+      string,
+      { size: string; quantity: number | string; unavailable: boolean }[]
+    >,
   );
 
   // Сортируем russianSize по возрастанию
