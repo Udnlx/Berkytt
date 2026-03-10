@@ -382,7 +382,7 @@ const currentMedia = computed(() => {
 // Выбор видео
 const selectVideo = () => {
   currentMediaType.value = "video";
-  currentIndex.value = thumbnails.length;
+  currentIndex.value = thumbnails.value.length;
 };
 
 // Выбор изображения по индексу
@@ -573,7 +573,7 @@ const sizeGrid = computed(() => {
       if (!acc[item.russianSize]) {
         acc[item.russianSize] = [];
       }
-      acc[item.russianSize].push({
+      acc[item.russianSize]!.push({
         size: item.size,
         quantity: item.quantity,
         unavailable: item.quantity === "" || item.quantity === 0,
@@ -595,7 +595,7 @@ const sizeGrid = computed(() => {
   const result = [];
   for (const russianSize of sortedSizes) {
     // Сортируем размеры внутри группы
-    grouped[russianSize].sort((a, b) => a.size.localeCompare(b.size));
+    grouped[russianSize]!.sort((a, b) => a.size.localeCompare(b.size));
     result.push({
       russianSize,
       cells: grouped[russianSize],
