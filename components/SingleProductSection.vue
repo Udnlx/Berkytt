@@ -4,18 +4,26 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Галерея изображений -->
         <div class="relative">
-          <!-- Основное изображение -->
+          <!-- Основное изображение или видео -->
           <div
             class="bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center"
           >
+            <video
+              v-if="currentMediaType === 'video'"
+              :src="currentMedia"
+              controls
+              class="w-full h-auto object-contain"
+            ></video>
             <img
-              :src="currentImage"
+              v-else
+              :src="currentMedia"
               alt="Kimono Sleeve Top"
               class="w-full h-auto object-contain"
             />
           </div>
           <!-- Миниатюры поверх изображения (слева) -->
           <div class="absolute left-3 top-3 bottom-3 flex flex-col gap-3">
+            <!-- Миниатюры изображений -->
             <div
               v-for="(thumb, index) in thumbnails"
               :key="index"
@@ -28,6 +36,26 @@
                 :alt="`Thumbnail ${index + 1}`"
                 class="w-full h-full object-cover"
               />
+            </div>
+            <!-- Миниатюра видео (последняя) -->
+            <div
+              class="w-12 h-30 sm:w-20 sm:h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0"
+              :class="{
+                'ring-2 ring-black': currentIndex === thumbnails.length,
+              }"
+              @click="selectVideo"
+            >
+              <div
+                class="w-8 h-8 bg-black rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4 text-white ml-1"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
             </div>
           </div>
         </div>
@@ -314,6 +342,9 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
+// Видео для галереи
+const video = ref("/images/video.mp4");
+
 // Полноразмерные изображения для галереи
 const images = ref([
   "/images/forcards.jpg?w=800",
@@ -326,14 +357,29 @@ const thumbnails = ref([
   "/images/forcardshover.jpg?w=200",
 ]);
 
-// Индекс текущего изображения
+// Индекс текущего изображения (-1 для видео, которое в конце)
 const currentIndex = ref(0);
 
-// Текущее изображение (вычисляемое)
-const currentImage = computed(() => images.value[currentIndex.value]);
+// Тип текущего медиа (video или image)
+const currentMediaType = ref<"video" | "image">("image");
+
+// Текущее медиа (вычисляемое)
+const currentMedia = computed(() => {
+  if (currentMediaType.value === "video") {
+    return video.value;
+  }
+  return images.value[currentIndex.value];
+});
+
+// Выбор видео
+const selectVideo = () => {
+  currentMediaType.value = "video";
+  currentIndex.value = thumbnails.length;
+};
 
 // Выбор изображения по индексу
 const selectImage = (index: number) => {
+  currentMediaType.value = "image";
   currentIndex.value = index;
 };
 
