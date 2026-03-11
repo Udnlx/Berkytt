@@ -41,15 +41,7 @@
         <div>
           <h3 class="text-lg font-semibold text-black mb-4">Описание</h3>
           <p class="text-sm text-gray-600 leading-relaxed">
-            Женское пальто, которое легко впишется в любой гардероб и будет
-            уместно и в городе, и в поездках. Лаконичный крой подчёркивает
-            силуэт, а продуманные детали делают образ собранным и элегантным.
-            Пальто хорошо держит форму, комфортно садится по фигуре и подходит
-            как для деловых комплектов, так и для повседневных. Практичные
-            карманы, аккуратная линия плеч и универсальная длина позволяют
-            сочетать его с джинсами, платьями и классическими брюками. Добавьте
-            шарф и ботильоны — и получите готовый стильный образ на прохладный
-            сезон.
+            {{ product?.description || "Описание продукта" }}
           </p>
         </div>
 
@@ -58,31 +50,11 @@
           <h4 class="text-lg font-semibold text-black mb-4">О продукте</h4>
           <ul class="space-y-1.5">
             <li
+              v-for="(feature, index) in product?.features || defaultFeatures"
+              :key="index"
               class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
             >
-              Универсальное женское пальто на каждый день и для более формальных
-              образов
-            </li>
-            <li
-              class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
-            >
-              Лаконичный крой: аккуратно подчёркивает силуэт, не сковывает
-              движения
-            </li>
-            <li
-              class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
-            >
-              Материал хорошо держит форму и выглядит опрятно в течение дня
-            </li>
-            <li
-              class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
-            >
-              Комфортная посадка по плечам и в зоне талии
-            </li>
-            <li
-              class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
-            >
-              Практичные боковые карманы для мелочей и тепла рук
+              {{ feature.description }}
             </li>
           </ul>
         </div>
@@ -211,7 +183,8 @@
       <table class="w-full max-w-[800px] mx-auto border-collapse">
         <tbody>
           <tr
-            v-for="(spec, index) in specifications"
+            v-for="(spec, index) in product?.specifications ||
+            defaultSpecifications"
             :key="index"
             class="odd:bg-[#ffddf1]"
           >
@@ -231,11 +204,89 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
+interface ProductData {
+  name: string;
+  title: string;
+  category: string;
+  description: string;
+  price: number;
+  oldPrice: number;
+  discount: number;
+  rating: number;
+  reviewsCount: number;
+  sku: string;
+  tags: string[];
+  categories: string[];
+  images: string[];
+  thumbnails: string[];
+  video?: string;
+  colors: { name: string; code: string }[];
+  sizes: {
+    scancode: string;
+    storage: boolean;
+    russianSize: string;
+    size: string;
+    quantity: number | string;
+    price: string;
+  }[];
+  specifications: { name: string; value: string }[];
+  features: {
+    icon: string;
+    title: string;
+    description: string;
+  }[];
+  deliveryInfo: {
+    freeShipping: boolean;
+    freeShippingThreshold: number;
+    supportHours: string;
+    returnDays: number;
+  };
+  estimatedDelivery: {
+    from: string;
+    to: string;
+  };
+}
+
+defineProps<{
+  product?: ProductData | null;
+}>();
+
 const activeTab = ref<"description" | "specifications">("description");
 
-const specifications = [
+const defaultSpecifications = [
   { name: "Внешняя оболочка", value: "100% полиэстер" },
   { name: "Подкладка", value: "100% полиуретан" },
+];
+
+const defaultFeatures = [
+  {
+    icon: "",
+    title: "Универсальность",
+    description:
+      "Универсальное женское пальто на каждый день и для более формальных образов",
+  },
+  {
+    icon: "",
+    title: "Лаконичный крой",
+    description:
+      "Лаконичный крой: аккуратно подчёркивает силуэт, не сковывает движения",
+  },
+  {
+    icon: "",
+    title: "Качественный материал",
+    description:
+      "Материал хорошо держит форму и выглядит опрятно в течение дня",
+  },
+  {
+    icon: "",
+    title: "Комфортная посадка",
+    description: "Комфортная посадка по плечам и в зоне талии",
+  },
+  {
+    icon: "",
+    title: "Практичность",
+    description: "Практичные боковые карманы для мелочей и тепла рук",
+  },
 ];
 </script>
 

@@ -9,15 +9,15 @@
             class="bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center"
           >
             <video
-              v-if="currentMediaType === 'video'"
-              :src="currentMedia"
+              v-if="currentMediaType === 'video' && product?.video"
+              :src="product.video"
               controls
               class="w-full h-auto object-contain"
             ></video>
             <img
               v-else
               :src="currentMedia"
-              alt="Kimono Sleeve Top"
+              :alt="product?.name || 'Product image'"
               class="w-full h-auto object-contain"
             />
           </div>
@@ -25,7 +25,7 @@
           <div class="absolute left-3 top-3 bottom-3 flex flex-col gap-3">
             <!-- Миниатюры изображений -->
             <div
-              v-for="(thumb, index) in thumbnails"
+              v-for="(thumb, index) in product?.thumbnails || thumbnails"
               :key="index"
               class="w-12 h-30 sm:w-20 sm:h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0"
               :class="{ 'ring-2 ring-black': currentIndex === index }"
@@ -39,14 +39,17 @@
             </div>
             <!-- Миниатюра видео (последняя) -->
             <div
+              v-if="product?.video"
               class="w-12 h-30 sm:w-20 sm:h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0 relative"
               :class="{
-                'ring-2 ring-black': currentIndex === thumbnails.length,
+                'ring-2 ring-black':
+                  currentIndex ===
+                  (product?.thumbnails?.length || thumbnails.length),
               }"
               @click="selectVideo"
             >
               <video
-                src="/images/video.mp4"
+                :src="product.video"
                 class="w-full h-full object-cover"
               ></video>
               <div
@@ -74,9 +77,11 @@
           <div class="flex justify-between items-start">
             <div>
               <p class="text-sm text-gray-500 uppercase tracking-wide">
-                ПАЛЬТО
+                {{ (product?.tags && product.tags[0]) || "ПРОДУКТ" }}
               </p>
-              <h1 class="text-2xl font-semibold mt-1">Kimono Sleeve Top</h1>
+              <h1 class="text-2xl font-semibold mt-1">
+                {{ product?.name || "Название продукта" }}
+              </h1>
             </div>
             <button
               class="p-2 border border-gray-200 rounded hover:border-gray-400 transition"
@@ -108,56 +113,55 @@
                 class="w-5 h-5 fill-current"
               />
             </div>
-            <span class="text-sm text-gray-500">(1234 reviews)</span>
+            <span class="text-sm text-gray-500"
+              >({{ product?.reviewsCount || 1234 }} reviews)</span
+            >
           </div>
 
           <!-- Цена -->
           <div class="flex items-center gap-3">
-            <span class="text-2xl font-medium">₽24.00</span>
-            <span class="text-lg text-gray-400 line-through">₽32.00</span>
+            <span class="text-2xl font-medium">₽{{ product?.price || 0 }}</span>
             <span
+              v-if="product?.oldPrice"
+              class="text-lg text-gray-400 line-through"
+              >₽{{ product.oldPrice }}</span
+            >
+            <span
+              v-if="product?.discount"
               class="bg-[#ec018c] text-white text-sm px-2 py-1 rounded-full font-medium"
-              >-25%</span
+              >-{{ product.discount }}%</span
             >
           </div>
 
           <!-- Описание -->
           <p class="text-gray-600 leading-relaxed">
-            Женское пальто, которое легко впишется в любой гардероб и будет
-            уместно и в городе, и в поездках. Лаконичный крой подчёркивает
-            силуэт, а продуманные детали делают образ собранным и элегантным.
-            Пальто хорошо держит форму, комфортно садится по фигуре и подходит
-            как для деловых комплектов, так и для повседневных. Практичные
-            карманы, аккуратная линия плеч и универсальная длина позволяют
-            сочетать его с джинсами, платьями и классическими брюками. Добавьте
-            шарф и ботильоны — и получите готовый стильный образ на прохладный
-            сезон.
+            {{ product?.description || "Описание продукта" }}
           </p>
 
           <hr class="border-gray-100" />
 
           <!-- Цвета -->
-          <div>
+          <div v-if="product?.colors && product.colors.length > 0">
             <p class="text-sm font-medium mb-3">Цвета:</p>
             <div class="flex flex-wrap gap-2">
               <button
-                v-for="item in sameModels"
-                :key="item.name"
+                v-for="item in product.colors"
+                :key="item.code"
                 class="px-4 py-2 border-2 rounded transition text-sm"
                 :class="
-                  selectedColorName === item.color
+                  selectedColorName === item.name
                     ? 'border-[#ec018c] bg-[#ec018c] text-white'
                     : 'border-gray-200 hover:border-gray-400 text-gray-700'
                 "
-                @click="selectColor(item.color)"
+                @click="selectColor(item.name)"
               >
-                {{ item.color }}
+                {{ item.name }}
               </button>
             </div>
           </div>
 
           <!-- Размер -->
-          <div>
+          <div v-if="product?.sizes && product.sizes.length > 0">
             <div class="flex justify-between items-center mb-3">
               <p class="text-sm font-medium">Размер:</p>
               <a href="#" class="text-sm text-black underline">О размерах</a>
@@ -254,29 +258,46 @@
                 Задать вопрос
               </a>
             </div>
-            <p class="flex items-center gap-1 text-gray-600">
+            <p
+              v-if="product?.estimatedDelivery"
+              class="flex items-center gap-1 text-gray-600"
+            >
               <img
                 src="/images/calendar.svg"
                 alt="Rating Star"
                 class="w-5 h-5 fill-current"
               />
               <span>Предполагаемая доставка:</span>
-              <span class="text-gray-500">14 января - 18 января</span>
+              <span class="text-gray-500"
+                >{{ product.estimatedDelivery.from }} -
+                {{ product.estimatedDelivery.to }}</span
+              >
             </p>
           </div>
 
           <!-- SKU и категории -->
           <div class="text-sm space-y-2 text-gray-600">
-            <p><span class="font-medium">SKU:</span> 53453412</p>
-            <p><span class="font-medium">Категории:</span> пальто, женское</p>
-            <p><span class="font-medium">Тэг:</span> ПАЛЬТО</p>
+            <p>
+              <span class="font-medium">SKU:</span> {{ product?.sku || "N/A" }}
+            </p>
+            <p>
+              <span class="font-medium">Категории:</span>
+              {{ product?.categories?.join(", ") || "N/A" }}
+            </p>
+            <p>
+              <span class="font-medium">Тэг:</span>
+              {{ product?.tags?.join(", ") || "N/A" }}
+            </p>
           </div>
 
           <!-- Get It Today -->
           <div class="pt-4 border-t border-gray-100">
             <h3 class="text-lg font-medium mb-4">Получите это сегодня</h3>
             <div class="space-y-4">
-              <div class="flex gap-3">
+              <div
+                v-if="product?.deliveryInfo?.freeShipping"
+                class="flex gap-3"
+              >
                 <svg
                   class="w-8 h-8 text-gray-600 flex-shrink-0"
                   fill="none"
@@ -293,7 +314,9 @@
                 <div>
                   <p class="font-medium text-sm">Бесплатная доставка</p>
                   <p class="text-sm text-gray-500">
-                    Бесплатная доставка для заказов от ₽7500.00.
+                    Бесплатная доставка для заказов от ₽{{
+                      product.deliveryInfo.freeShippingThreshold
+                    }}.
                   </p>
                 </div>
               </div>
@@ -314,7 +337,10 @@
                 <div>
                   <p class="font-medium text-sm">Поддержка каждый день</p>
                   <p class="text-sm text-gray-500">
-                    Поддержка с 8:30 до 22:00 каждый день
+                    {{
+                      product?.deliveryInfo?.supportHours ||
+                      "Поддержка с 8:30 до 22:00 каждый день"
+                    }}
                   </p>
                 </div>
               </div>
@@ -333,9 +359,13 @@
                   />
                 </svg>
                 <div>
-                  <p class="font-medium text-sm">Возврат в течение 100 дней</p>
+                  <p class="font-medium text-sm">
+                    Возврат в течение
+                    {{ product?.deliveryInfo?.returnDays || 100 }} дней
+                  </p>
                   <p class="text-sm text-gray-500">
-                    Не понравилось? Вернём деньги. У вас есть 100 дней.
+                    Не понравилось? Вернём деньги. У вас есть
+                    {{ product?.deliveryInfo?.returnDays || 100 }} дней.
                   </p>
                 </div>
               </div>
@@ -350,16 +380,57 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
+interface ProductData {
+  name: string;
+  title: string;
+  category: string;
+  description: string;
+  price: number;
+  oldPrice: number;
+  discount: number;
+  rating: number;
+  reviewsCount: number;
+  sku: string;
+  tags: string[];
+  categories: string[];
+  images: string[];
+  thumbnails: string[];
+  video?: string;
+  colors: { name: string; code: string }[];
+  sizes: {
+    scancode: string;
+    storage: boolean;
+    russianSize: string;
+    size: string;
+    quantity: number | string;
+    price: string;
+  }[];
+  specifications: { name: string; value: string }[];
+  features: {
+    icon: string;
+    title: string;
+    description: string;
+  }[];
+  deliveryInfo: {
+    freeShipping: boolean;
+    freeShippingThreshold: number;
+    supportHours: string;
+    returnDays: number;
+  };
+  estimatedDelivery: {
+    from: string;
+    to: string;
+  };
+}
+
+const props = defineProps<{
+  product?: ProductData | null;
+}>();
+
 // Видео для галереи
 const video = ref("/images/video.mp4");
 
-// Полноразмерные изображения для галереи
-const images = ref([
-  "/images/forcards.jpg?w=800",
-  "/images/forcardshover.jpg?w=800",
-]);
-
-// Миниатюры изображений
+// Миниатюры изображений (дефолтные)
 const thumbnails = ref([
   "/images/forcards.jpg?w=200",
   "/images/forcardshover.jpg?w=200",
@@ -374,15 +445,20 @@ const currentMediaType = ref<"video" | "image">("image");
 // Текущее медиа (вычисляемое)
 const currentMedia = computed(() => {
   if (currentMediaType.value === "video") {
-    return video.value;
+    return props.product?.video || video.value;
   }
-  return images.value[currentIndex.value];
+  return (
+    (props.product?.images && props.product.images[currentIndex.value]) ||
+    thumbnails.value[currentIndex.value] ||
+    "/images/forcards.jpg?w=800"
+  );
 });
 
 // Выбор видео
 const selectVideo = () => {
   currentMediaType.value = "video";
-  currentIndex.value = thumbnails.value.length;
+  currentIndex.value =
+    props.product?.thumbnails?.length || thumbnails.value.length;
 };
 
 // Выбор изображения по индексу
@@ -392,26 +468,7 @@ const selectImage = (index: number) => {
 };
 
 // Выбранный цвет
-const selectedColorName = ref("темно-синий");
-
-// Массив похожих моделей с разными цветами
-const sameModels = ref([
-  {
-    title: "Пальто 102/1 Т1673.2",
-    name: "pal-to-102-1-t1673",
-    color: "темно-синий",
-  },
-  {
-    title: "Пальто 102/1 Т1673.2",
-    name: "pal-to-102-1-t1673",
-    color: "черный",
-  },
-  {
-    title: "Пальто 102/1 Т1673.2",
-    name: "pal-to-102-1-t1673",
-    color: "зеленый",
-  },
-]);
+const selectedColorName = ref("");
 
 // Выбор цвета
 const selectColor = (color: string) => {
@@ -419,152 +476,9 @@ const selectColor = (color: string) => {
 };
 
 // Массив размеров с сервера
-const sizesData = ref([
-  {
-    scancode: "4640238864034",
-    storage: false,
-    russianSize: "50",
-    size: "100/176",
-    quantity: 1,
-    price: "",
-  },
-  {
-    scancode: "4620164558689",
-    storage: false,
-    russianSize: "50",
-    size: "100/182",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4640238864041",
-    storage: false,
-    russianSize: "50",
-    size: "100/188",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4640238864058",
-    storage: false,
-    russianSize: "52",
-    size: "104/176",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4620164558696",
-    storage: false,
-    russianSize: "52",
-    size: "104/182",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4620164558702",
-    storage: false,
-    russianSize: "52",
-    size: "104/188",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4620164558719",
-    storage: false,
-    russianSize: "54",
-    size: "108/176",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4620164558726",
-    storage: false,
-    russianSize: "54",
-    size: "108/182",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4640238864065",
-    storage: false,
-    russianSize: "54",
-    size: "108/188",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4620164558733",
-    storage: false,
-    russianSize: "56",
-    size: "112/176",
-    quantity: 5,
-    price: "",
-  },
-  {
-    scancode: "4620164558740",
-    storage: false,
-    russianSize: "56",
-    size: "112/182",
-    quantity: 3,
-    price: "",
-  },
-  {
-    scancode: "4640238864072",
-    storage: false,
-    russianSize: "56",
-    size: "112/188",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4640238864102",
-    storage: false,
-    russianSize: "58",
-    size: "116/176",
-    quantity: 4,
-    price: "",
-  },
-  {
-    scancode: "4640238864089",
-    storage: false,
-    russianSize: "58",
-    size: "116/182",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4640238864096",
-    storage: false,
-    russianSize: "58",
-    size: "116/188",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4640238864003",
-    storage: false,
-    russianSize: "48",
-    size: "96/170",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4640238864010",
-    storage: false,
-    russianSize: "48",
-    size: "96/176",
-    quantity: "",
-    price: "",
-  },
-  {
-    scancode: "4640238864027",
-    storage: false,
-    russianSize: "48",
-    size: "96/182",
-    quantity: "",
-    price: "",
-  },
-]);
+const sizesData = computed(() => {
+  return props.product?.sizes || [];
+});
 
 // Размерная сетка - группируем по russianSize и сортируем
 const sizeGrid = computed(() => {
