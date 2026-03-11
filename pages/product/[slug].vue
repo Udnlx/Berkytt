@@ -110,7 +110,7 @@
 // @ts-nocheck
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { useRuntimeConfig } from "#app";
+import { useRuntimeConfig, useHead } from "#app";
 
 // Интерфейс ответа от API
 interface ApiProductData {
@@ -194,6 +194,7 @@ const productSlug = computed(() => route.params.slug as string);
 
 const apiBase = config.public.apiBase || "http://berkytt/api";
 const apiHost = "http://berkytt"; // Базовый хост для изображений и видео
+const siteUrl = "http://localhost:3000"; // URL сайта для canonical
 
 const apiUrl = computed(
   () => `${apiBase}/getproductname/${productSlug.value}/`,
@@ -315,4 +316,47 @@ const mappedProduct = computed<ProductData | null>(() => {
     slug: productSlug.value,
   };
 });
+
+// Динамические SEO теги
+useHead(() => ({
+  title: mappedProduct.value?.title
+    ? `${mappedProduct.value.title} — BERKYTT`
+    : "Товар не найден — BERKYTT",
+  meta: [
+    {
+      name: "description",
+      content: mappedProduct.value?.description || "",
+    },
+    {
+      property: "og:type",
+      content: "product",
+    },
+    {
+      property: "og:title",
+      content: mappedProduct.value?.title || "",
+    },
+    {
+      property: "og:description",
+      content: mappedProduct.value?.description || "",
+    },
+    {
+      property: "og:image",
+      content: mappedProduct.value?.images?.[0] || "",
+    },
+    {
+      property: "product:price:amount",
+      content: mappedProduct.value?.price?.toString() || "",
+    },
+    {
+      property: "product:price:currency",
+      content: "RUB",
+    },
+  ],
+  link: [
+    {
+      rel: "canonical",
+      href: `${siteUrl}/product/${productSlug.value}`,
+    },
+  ],
+}));
 </script>
