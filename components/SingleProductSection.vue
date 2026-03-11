@@ -469,8 +469,8 @@ const selectImage = (index: number) => {
   currentIndex.value = index;
 };
 
-// Выбранный цвет
-const selectedColorName = ref("");
+// Выбранный цвет - по умолчанию первый цвет (черный для текущего товара)
+const selectedColorName = ref("черный");
 
 // Выбор цвета
 const selectColor = (color: string) => {
