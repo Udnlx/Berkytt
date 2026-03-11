@@ -147,11 +147,11 @@
             <p class="text-sm font-medium mb-3">Цвета:</p>
             <div class="flex flex-wrap gap-2">
               <button
-                v-for="item in product.colors"
+                v-for="(item, index) in product.colors"
                 :key="item.code + item.name"
                 class="px-4 py-2 border-2 rounded transition text-sm"
                 :class="
-                  selectedColorName === item.name
+                  index === 0
                     ? 'border-[#ec018c] bg-[#ec018c] text-white'
                     : 'border-gray-200 hover:border-gray-400 text-gray-700'
                 "
@@ -472,9 +472,6 @@ const selectImage = (index: number) => {
   currentIndex.value = index;
 };
 
-// Выбранный цвет - по умолчанию первый цвет (черный для текущего товара)
-const selectedColorName = ref("черный");
-
 // Выбор цвета с переходом на страницу товара
 const router = useRouter();
 
@@ -482,9 +479,6 @@ const selectColor = (color: string, slug?: string) => {
   if (slug && slug !== productSlug.value) {
     // Переход на другую страницу товара
     router.push(`/product/${slug}`);
-  } else {
-    // Оставляем текущий цвет
-    selectedColorName.value = color;
   }
 };
 

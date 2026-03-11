@@ -160,9 +160,17 @@ const mappedProduct = computed<ProductData | null>(() => {
       ? `${apiHost}${data.video[0]}`
       : undefined;
 
+  // Находим цвет текущего товара из спецификации
+  const currentColorSpec = data.specifications.find(
+    (spec) => spec.name === "Цвет",
+  );
+  const currentColor = currentColorSpec
+    ? String(currentColorSpec.value)
+    : "черный";
+
   // Создаем цвета из sameModels + текущий товар
   const colors = [
-    { name: "черный", code: "#000000", slug: productSlug.value }, // текущий товар
+    { name: currentColor, code: "", slug: productSlug.value }, // текущий товар
     ...data.sameModels.map((m) => ({ name: m.color, code: "", slug: m.name })),
   ];
 
