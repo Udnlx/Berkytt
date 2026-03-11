@@ -120,11 +120,13 @@
 
           <!-- Цена -->
           <div class="flex items-center gap-3">
-            <span class="text-2xl font-medium">₽{{ product?.price || 0 }}</span>
+            <span class="text-2xl font-medium"
+              >₽{{ formatPrice(product?.price) }}</span
+            >
             <span
               v-if="product?.oldPrice"
               class="text-lg text-gray-400 line-through"
-              >₽{{ product.oldPrice }}</span
+              >₽{{ formatPrice(product.oldPrice) }}</span
             >
             <span
               v-if="product?.discount"
@@ -548,6 +550,12 @@ const decrementQuantity = () => {
   if (quantity.value > 1) {
     quantity.value--;
   }
+};
+
+// Форматирование цены с разделителем тысяч
+const formatPrice = (price: number | undefined | null) => {
+  if (!price) return "0";
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 </script>
 
