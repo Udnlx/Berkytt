@@ -147,6 +147,7 @@ interface ProductData {
   name: string;
   title: string;
   category: string;
+  productSection: string;
   description: string;
   price: number;
   oldPrice: number;
@@ -287,6 +288,7 @@ const mappedProduct = computed<ProductData | null>(() => {
     name: data.title,
     title: data.title,
     category: data.productCategory,
+    productSection: data.productSection,
     description: data.description,
     price: data.price,
     oldPrice: data.fullPrice,

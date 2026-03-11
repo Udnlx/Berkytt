@@ -10,6 +10,10 @@
           <a href="/" class="hover:text-gray-900 transition"> Домой </a>
           <span class="mx-2">›</span>
           <a href="/category" class="hover:text-gray-900 transition">
+            {{ product?.productSection || "Раздел" }}
+          </a>
+          <span class="mx-2">›</span>
+          <a href="/category" class="hover:text-gray-900 transition">
             {{ product?.category || "Категория" }}
           </a>
           <span class="mx-2">›</span>
@@ -27,6 +31,7 @@ interface ProductData {
   name: string;
   title: string;
   category: string;
+  productSection: string;
   description: string;
   price: number;
   oldPrice: number;
@@ -39,7 +44,7 @@ interface ProductData {
   images: string[];
   thumbnails: string[];
   video?: string;
-  colors: { name: string; code: string }[];
+  colors: { name: string; code: string; slug?: string }[];
   sizes: {
     scancode: string;
     storage: boolean;
