@@ -148,14 +148,14 @@
             <div class="flex flex-wrap gap-2">
               <button
                 v-for="item in product.colors"
-                :key="item.code"
+                :key="item.code + item.name"
                 class="px-4 py-2 border-2 rounded transition text-sm"
                 :class="
                   selectedColorName === item.name
                     ? 'border-[#ec018c] bg-[#ec018c] text-white'
                     : 'border-gray-200 hover:border-gray-400 text-gray-700'
                 "
-                @click="selectColor(item.name)"
+                @click="selectColor(item.name, item.slug)"
               >
                 {{ item.name }}
               </button>
@@ -381,6 +381,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
 
 interface ProductData {
   name: string;
@@ -398,7 +399,7 @@ interface ProductData {
   images: string[];
   thumbnails: string[];
   video?: string;
-  colors: { name: string; code: string }[];
+  colors: { name: string; code: string; slug?: string }[];
   sizes: {
     scancode: string;
     storage: boolean;
@@ -426,8 +427,10 @@ interface ProductData {
 }
 
 const props = defineProps<{
-  product?: ProductData | null;
+  product?: (ProductData & { slug?: string }) | null;
 }>();
+
+const productSlug = computed(() => props.product?.slug || "");
 
 // Видео для галереи
 const video = ref("/images/video.mp4");
@@ -472,9 +475,17 @@ const selectImage = (index: number) => {
 // Выбранный цвет - по умолчанию первый цвет (черный для текущего товара)
 const selectedColorName = ref("черный");
 
-// Выбор цвета
-const selectColor = (color: string) => {
-  selectedColorName.value = color;
+// Выбор цвета с переходом на страницу товара
+const router = useRouter();
+
+const selectColor = (color: string, slug?: string) => {
+  if (slug && slug !== productSlug.value) {
+    // Переход на другую страницу товара
+    router.push(`/product/${slug}`);
+  } else {
+    // Оставляем текущий цвет
+    selectedColorName.value = color;
+  }
 };
 
 // Массив размеров с сервера

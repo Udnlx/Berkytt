@@ -88,7 +88,7 @@ interface ProductData {
   images: string[];
   thumbnails: string[];
   video?: string;
-  colors: { name: string; code: string }[];
+  colors: { name: string; code: string; slug?: string }[];
   sizes: {
     scancode: string;
     storage: boolean;
@@ -113,6 +113,7 @@ interface ProductData {
     from: string;
     to: string;
   };
+  slug?: string;
 }
 
 const route = useRoute();
@@ -161,8 +162,8 @@ const mappedProduct = computed<ProductData | null>(() => {
 
   // Создаем цвета из sameModels + текущий товар
   const colors = [
-    { name: "черный", code: "#000000" }, // текущий товар
-    ...data.sameModels.map((m) => ({ name: m.color, code: "" })),
+    { name: "черный", code: "#000000", slug: productSlug.value }, // текущий товар
+    ...data.sameModels.map((m) => ({ name: m.color, code: "", slug: m.name })),
   ];
 
   // Маппинг спецификаций
@@ -230,6 +231,7 @@ const mappedProduct = computed<ProductData | null>(() => {
       returnDays: 100,
     },
     estimatedDelivery,
+    slug: productSlug.value,
   };
 });
 </script>
