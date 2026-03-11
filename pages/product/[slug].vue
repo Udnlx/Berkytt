@@ -11,14 +11,85 @@
     </div>
   </div>
   <div
-    v-else-if="error"
+    v-else-if="error || !mappedProduct"
     class="pt-[80px] min-h-screen flex items-center justify-center"
   >
-    <div class="text-center">
-      <p class="text-red-600">Ошибка: {{ error }}</p>
-      <a href="/" class="mt-4 inline-block text-[#ec018c] hover:underline"
-        >Вернуться на главную</a
+    <div class="text-center max-w-md mx-auto px-4">
+      <!-- Иконка ошибки -->
+      <div class="mb-6">
+        <svg
+          class="w-24 h-24 mx-auto text-[#ec018c] opacity-20"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1.5"
+            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+          />
+        </svg>
+      </div>
+
+      <!-- Заголовок -->
+      <h1 class="text-3xl font-semibold text-gray-900 mb-3">Товар не найден</h1>
+
+      <!-- Описание -->
+      <p class="text-gray-600 mb-8">
+        К сожалению, товар с таким артикулом не существует или был удален из
+        каталога.
+      </p>
+
+      <!-- Кнопка -->
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-[#ec018c] text-white font-medium rounded hover:bg-[#d4007c] transition"
       >
+        <svg
+          class="w-5 h-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+          />
+        </svg>
+        Вернуться на главную
+      </a>
+
+      <!-- Дополнительные ссылки -->
+      <div class="mt-8 pt-8 border-t border-gray-200">
+        <p class="text-sm text-gray-500 mb-4">
+          Или посмотрите другие категории:
+        </p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <a
+            href="/category/for-men"
+            class="text-sm text-[#ec018c] hover:underline"
+          >
+            Для мужчин
+          </a>
+          <span class="text-gray-300">•</span>
+          <a
+            href="/category/for-women"
+            class="text-sm text-[#ec018c] hover:underline"
+          >
+            Для женщин
+          </a>
+          <span class="text-gray-300">•</span>
+          <a
+            href="/category/new"
+            class="text-sm text-[#ec018c] hover:underline"
+          >
+            Новинки
+          </a>
+        </div>
+      </div>
     </div>
   </div>
   <div v-else>
