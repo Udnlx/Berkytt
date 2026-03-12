@@ -7,6 +7,7 @@
       <div class="relative">
         <!-- Navigation Arrows -->
         <button
+          v-if="showArrows"
           @click="scrollLeft"
           class="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition"
         >
@@ -26,6 +27,7 @@
         </button>
 
         <button
+          v-if="showArrows"
           @click="scrollRight"
           class="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition"
         >
@@ -52,7 +54,7 @@
           <div
             v-for="review in comments"
             :key="review.id"
-            class="bg-white p-6 rounded-2xl shadow-sm flex-shrink-0 snap-start"
+            class="bg-white p-6 rounded-2xl shadow-sm flex-shrink-0 snap-start flex flex-col"
             :class="[
               'w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(50%-16px)] lg:w-[calc(33.333%-18px)]',
             ]"
@@ -78,12 +80,12 @@
             </h3>
 
             <!-- Text -->
-            <p class="text-sm text-gray-600 leading-relaxed mb-6">
+            <p class="text-sm text-gray-600 leading-relaxed mb-6 flex-grow">
               {{ review.text }}
             </p>
 
             <!-- Author -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 mt-auto">
               <div
                 class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 font-medium text-sm"
               >
@@ -106,7 +108,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 interface Comment {
   id: number;
@@ -121,6 +123,24 @@ defineProps<{
 }>();
 
 const carouselRef = ref<HTMLElement | null>(null);
+const showArrows = ref(false);
+
+const checkArrows = () => {
+  if (carouselRef.value) {
+    // Стрелки нужны, если контент прокручивается (scrollWidth > clientWidth)
+    showArrows.value =
+      carouselRef.value.scrollWidth > carouselRef.value.clientWidth;
+  }
+};
+
+onMounted(() => {
+  checkArrows();
+  window.addEventListener("resize", checkArrows);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", checkArrows);
+});
 
 const scrollLeft = () => {
   if (carouselRef.value) {
