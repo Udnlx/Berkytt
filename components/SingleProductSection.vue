@@ -129,12 +129,12 @@
               >₽{{ formatPrice(product?.price) }}</span
             >
             <span
-              v-if="product?.oldPrice"
+              v-if="product?.discount && product.discount > 0"
               class="text-lg text-gray-400 line-through"
               >₽{{ formatPrice(product.oldPrice) }}</span
             >
             <span
-              v-if="product?.discount"
+              v-if="product?.discount && product.discount > 0"
               class="bg-[#ec018c] text-white text-sm px-2 py-1 rounded-full font-medium"
               >-{{ product.discount }}%</span
             >
