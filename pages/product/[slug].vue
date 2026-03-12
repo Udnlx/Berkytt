@@ -140,6 +140,7 @@ interface ApiProductData {
   tag: string;
   about: string;
   specifications: { name: string; value: string | number }[];
+  totalComments: number;
   comments: {
     id: number;
     title: string;
@@ -309,7 +310,7 @@ const mappedProduct = computed<ProductData | null>(() => {
     oldPrice: data.fullPrice,
     discount: data.discount,
     rating: 5,
-    reviewsCount: 0,
+    reviewsCount: data.totalComments || 0,
     sku: data.sku,
     tags: [data.tag],
     categories: data.category.split(", ").map((c) => c.trim()),

@@ -108,13 +108,18 @@
               <img
                 v-for="i in 5"
                 :key="i"
-                src="/images/star.svg"
+                :src="
+                  product?.reviewsCount && product.reviewsCount > 0
+                    ? '/images/star.svg'
+                    : '/images/star-outline.svg'
+                "
                 alt="Rating Star"
                 class="w-5 h-5 fill-current"
               />
             </div>
             <span class="text-sm text-gray-500"
-              >({{ product?.reviewsCount || 1234 }} reviews)</span
+              >({{ product?.reviewsCount || 0 }}
+              {{ getReviewDeclension(product?.reviewsCount || 0) }})</span
             >
           </div>
 
@@ -561,6 +566,26 @@ const decrementQuantity = () => {
 const formatPrice = (price: number | undefined | null) => {
   if (!price) return "0";
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
+
+// Склонение слова "отзыв" по числам
+const getReviewDeclension = (count: number): string => {
+  const lastDigit = count % 10;
+  const lastTwoDigits = count % 100;
+
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
+    return "отзывов";
+  }
+
+  if (lastDigit === 1) {
+    return "отзыв";
+  }
+
+  if (lastDigit >= 2 && lastDigit <= 4) {
+    return "отзыва";
+  }
+
+  return "отзывов";
 };
 </script>
 
