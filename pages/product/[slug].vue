@@ -98,7 +98,7 @@
       <TitlePageSection :product="mappedProduct" />
       <SingleProductSection :product="mappedProduct" />
       <OptionProductSection :product="mappedProduct" />
-      <ReviewProductSection />
+      <ReviewProductSection :comments="mappedProduct.comments" />
       <FormReviewSection />
       <YouLikeItSection />
     </main>
@@ -140,6 +140,13 @@ interface ApiProductData {
   tag: string;
   about: string;
   specifications: { name: string; value: string | number }[];
+  comments: {
+    id: number;
+    title: string;
+    text: string;
+    author: string;
+    date: string;
+  }[];
 }
 
 // Интерфейс для компонентов
@@ -186,6 +193,13 @@ interface ProductData {
     to: string;
   };
   slug?: string;
+  comments: {
+    id: number;
+    title: string;
+    text: string;
+    author: string;
+    date: string;
+  }[];
 }
 
 const route = useRoute();
@@ -314,6 +328,7 @@ const mappedProduct = computed<ProductData | null>(() => {
     },
     estimatedDelivery,
     slug: productSlug.value,
+    comments: data.comments || [],
   };
 });
 
