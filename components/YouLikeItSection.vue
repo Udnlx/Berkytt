@@ -104,24 +104,6 @@
               </a>
             </div>
 
-            <!-- Color Swatches -->
-            <div
-              class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-16 group-hover:-translate-y-11 transition-all duration-300 delay-75"
-            >
-              <div
-                v-for="color in product.colors || [
-                  'bg-gray-200',
-                  'bg-pink-200',
-                  'bg-blue-100',
-                ]"
-                :key="color"
-                :class="[
-                  'w-8 h-8 rounded-full cursor-pointer border-2 border-white shadow-md hover:scale-110 transition',
-                  color,
-                ]"
-              ></div>
-            </div>
-
             <!-- Sale Timer (for sale items) -->
             <div
               v-if="
