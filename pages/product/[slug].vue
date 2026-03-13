@@ -100,7 +100,7 @@
       <OptionProductSection :product="mappedProduct" />
       <ReviewProductSection :comments="mappedProduct.comments" />
       <FormReviewSection />
-      <YouLikeItSection />
+      <YouLikeItSection :products="mappedProduct.likeit" />
     </main>
     <FooterSection />
   </div>
@@ -147,6 +147,19 @@ interface ApiProductData {
     text: string;
     author: string;
     date: string;
+  }[];
+  likeit: {
+    id: number;
+    name: string;
+    title: string;
+    image: string;
+    hoverImage: string;
+    price: number;
+    fullPrice: number;
+    discount: number;
+    badge?: string;
+    badgeType?: "sale" | "new" | "top";
+    endDate?: string;
   }[];
 }
 
@@ -200,6 +213,19 @@ interface ProductData {
     text: string;
     author: string;
     date: string;
+  }[];
+  likeit: {
+    id: number;
+    name: string;
+    title: string;
+    image: string;
+    hoverImage: string;
+    price: number;
+    fullPrice: number;
+    discount: number;
+    badge?: string;
+    badgeType?: "sale" | "new" | "top";
+    endDate?: string;
   }[];
 }
 
@@ -330,6 +356,11 @@ const mappedProduct = computed<ProductData | null>(() => {
     estimatedDelivery,
     slug: productSlug.value,
     comments: data.comments || [],
+    likeit: (data.likeit || []).map((item) => ({
+      ...item,
+      image: `${apiHost}${item.image}`,
+      hoverImage: `${apiHost}${item.hoverImage}`,
+    })),
   };
 });
 

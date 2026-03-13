@@ -1,5 +1,5 @@
 <template>
-  <section class="py-16 bg-white">
+  <section v-if="products && products.length > 0" class="py-16 bg-white">
     <div class="container mx-auto px-4">
       <h2 class="text-3xl font-medium text-center mb-6">
         Вам это может понравиться
@@ -73,14 +73,14 @@
             <!-- Main Image (default state) -->
             <img
               :src="product.image"
-              :alt="product.name"
+              :alt="product.title"
               class="w-full h-full object-cover absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"
             />
 
             <!-- Hover Image -->
             <img
               :src="product.hoverImage || product.image"
-              :alt="product.name"
+              :alt="product.title"
               class="w-full h-full object-cover absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             />
 
@@ -89,14 +89,14 @@
               class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
             >
               <a
-                :href="`/product/${product.id}`"
+                :href="`/product/${product.name}`"
                 class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
                 @click.stop
               >
                 ПРОСМОТР
               </a>
               <a
-                :href="`/cart?add=${product.id}`"
+                :href="`/cart?add=${product.name}`"
                 class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
                 @click.stop
               >
@@ -124,7 +124,10 @@
 
             <!-- Sale Timer (for sale items) -->
             <div
-              v-if="product.endDate"
+              v-if="
+                product.endDate &&
+                formatTimeLeft(product.endDate) !== 'РАСПРОДАЖА ЗАКОНЧЕНА'
+              "
               class="absolute bottom-0 left-0 right-0 bg-black/30 px-3 py-2 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-300"
             >
               <span class="text-xs text-white font-medium">
@@ -136,21 +139,23 @@
           <!-- Product Info -->
           <div class="mt-4">
             <h3 class="text-sm font-medium text-gray-900">
-              {{ product.name }}
+              {{ product.title }}
             </h3>
             <div class="flex items-center gap-2 mt-1">
-              <span class="text-sm font-medium">₽{{ product.price }}</span>
+              <span class="text-sm font-medium"
+                >₽{{ formatPrice(product.price) }}</span
+              >
               <span
-                v-if="product.oldPrice"
+                v-if="product.discount && product.discount > 0"
                 class="text-sm text-gray-400 line-through"
               >
-                ₽{{ product.oldPrice }}
+                ₽{{ formatPrice(product.fullPrice) }}
               </span>
               <span
-                v-if="product.discount"
+                v-if="product.discount && product.discount > 0"
                 class="px-2 py-0.5 text-xs font-medium bg-[#ec018c] text-[#ffffff] rounded-full"
               >
-                {{ product.discount }}
+                -{{ product.discount }}%
               </span>
             </div>
           </div>
@@ -162,6 +167,25 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from "vue";
+
+interface LikeItProduct {
+  id: number;
+  name: string;
+  title: string;
+  image: string;
+  hoverImage: string;
+  price: number;
+  fullPrice: number;
+  discount: number;
+  badge?: string;
+  badgeType?: "sale" | "new" | "top";
+  endDate?: string;
+  colors?: string[];
+}
+
+defineProps<{
+  products: LikeItProduct[];
+}>();
 
 const currentTime = ref(Date.now());
 
@@ -198,55 +222,8 @@ const formatTimeLeft = (endDate: string) => {
   return `${days}Д : ${String(hours).padStart(2, "0")}Ч : ${String(minutes).padStart(2, "0")}M : ${String(seconds).padStart(2, "0")}С`;
 };
 
-const products = [
-  {
-    id: 1,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "ТОП",
-    badgeType: "top" as const,
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 2,
-    name: "Kimono Sleeve Top",
-    price: 24.0,
-    oldPrice: 32.0,
-    discount: "-25%",
-    badge: "РАСПРОДАЖА",
-    badgeType: "sale" as const,
-    endDate: "2026-03-15T23:59:59",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 3,
-    name: "Mesh Shirt",
-    price: 35.0,
-    oldPrice: 45.0,
-    discount: "-22%",
-    badge: "ТОП",
-    badgeType: "top" as const,
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 4,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "НОВИНКА",
-    badgeType: "new" as const,
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-];
+// Форматирование цены с разделителем тысяч
+const formatPrice = (price: number) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
 </script>
