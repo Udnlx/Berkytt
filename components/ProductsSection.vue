@@ -172,8 +172,28 @@
 
           <!-- Products Grid -->
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Loading state -->
             <div
-              v-for="product in products"
+              v-if="loading"
+              class="col-span-full flex justify-center items-center py-20"
+            >
+              <div
+                class="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ec018c]"
+              ></div>
+            </div>
+
+            <!-- Empty state -->
+            <div
+              v-else-if="props.products.length === 0"
+              class="col-span-full text-center py-20"
+            >
+              <p class="text-gray-500 text-lg">Товары не найдены</p>
+            </div>
+
+            <!-- Products -->
+            <div
+              v-else
+              v-for="product in props.products"
               :key="product.id"
               class="group cursor-pointer"
             >
@@ -325,29 +345,17 @@
           <div class="flex justify-center mt-12">
             <div class="flex items-center gap-2">
               <button
-                class="w-10 h-10 bg-gray-900 text-white rounded flex items-center justify-center text-sm font-medium"
+                v-for="pageNum in totalPages"
+                :key="pageNum"
+                @click="changePage(pageNum)"
+                :class="[
+                  'w-10 h-10 rounded flex items-center justify-center text-sm font-medium transition',
+                  currentPage === pageNum
+                    ? 'bg-gray-900 text-white'
+                    : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50',
+                ]"
               >
-                1
-              </button>
-              <button
-                class="w-10 h-10 bg-white border border-gray-200 text-gray-700 rounded flex items-center justify-center text-sm font-medium hover:bg-gray-50 transition"
-              >
-                2
-              </button>
-              <button
-                class="w-10 h-10 bg-white border border-gray-200 text-gray-700 rounded flex items-center justify-center text-sm font-medium hover:bg-gray-50 transition"
-              >
-                3
-              </button>
-              <button
-                class="w-10 h-10 bg-white border border-gray-200 text-gray-700 rounded flex items-center justify-center text-sm font-medium hover:bg-gray-50 transition"
-              >
-                ›
-              </button>
-              <button
-                class="w-10 h-10 bg-white border border-gray-200 text-gray-700 rounded flex items-center justify-center text-sm font-medium hover:bg-gray-50 transition"
-              >
-                ››
+                {{ pageNum }}
               </button>
             </div>
           </div>
@@ -358,7 +366,51 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  oldPrice?: number;
+  discount?: string;
+  badge?: string;
+  badgeType?: "new" | "sale";
+  image: string;
+  hoverImage?: string;
+  colors?: string[];
+  category?: string;
+  endDate?: string;
+}
+
+const props = defineProps<{
+  products: Product[];
+  loading?: boolean;
+  totalItems?: number;
+}>();
+
+const emit = defineEmits<{
+  (e: "update:filters", filters: { section?: string; category?: string }): void;
+}>();
+
+const route = useRoute();
+const router = useRouter();
+
+const currentPage = computed(() => Number(route.query.page) || 1);
+const itemsPerPage = 9;
+
+const totalPages = computed(() => {
+  const total = props.totalItems || props.products.length;
+  return Math.ceil(total / itemsPerPage);
+});
+
+const changePage = (page: number) => {
+  router.push({
+    path: "/catalog",
+    query: { ...route.query, page: String(page) },
+  });
+};
 
 const productTypes = [
   { label: "ПАЛЬТО", count: 12, href: "#" },
@@ -468,127 +520,6 @@ const formatTimeLeft = (endDate: string) => {
 
   return `${days}Д : ${String(hours).padStart(2, "0")}Ч : ${String(minutes).padStart(2, "0")}М : ${String(seconds).padStart(2, "0")}С`;
 };
-
-const products = [
-  {
-    id: 1,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "НОВИНКА",
-    badgeType: "new" as const,
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 2,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "НОВИНКА",
-    badgeType: "new" as const,
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 3,
-    name: "Kimono Sleeve Top",
-    price: 24.0,
-    oldPrice: 32.0,
-    discount: "-25%",
-    badge: "РАСПРОДАЖА",
-    badgeType: "sale" as const,
-    category: "ПАЛЬТО",
-    endDate: "2026-03-15T23:59:59",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 4,
-    name: "Kimono Sleeve Top",
-    price: 24.0,
-    oldPrice: 32.0,
-    discount: "-25%",
-    badge: "РАСПРОДАЖА",
-    badgeType: "sale" as const,
-    category: "ПАЛЬТО",
-    endDate: "2026-03-15T23:59:59",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 5,
-    name: "Kimono Sleeve Top",
-    price: 24.0,
-    oldPrice: 32.0,
-    discount: "-25%",
-    badge: "РАСПРОДАЖА",
-    badgeType: "sale" as const,
-    category: "ПАЛЬТО",
-    endDate: "2026-03-15T23:59:59",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 6,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "НОВИНКА",
-    badgeType: "new" as const,
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 7,
-    name: "Kimono Sleeve Top",
-    price: 24.0,
-    oldPrice: 32.0,
-    discount: "-25%",
-    badge: "РАСПРОДАЖА",
-    badgeType: "sale" as const,
-    category: "ПАЛЬТО",
-    endDate: "2026-03-15T23:59:59",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 8,
-    name: "Kimono Sleeve Top",
-    price: 24.0,
-    oldPrice: 32.0,
-    discount: "-25%",
-    badge: "РАСПРОДАЖА",
-    badgeType: "sale" as const,
-    category: "ПАЛЬТО",
-    endDate: "2026-03-15T23:59:59",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 9,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "НОВИНКА",
-    badgeType: "new" as const,
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-];
 
 onMounted(() => {
   timerInterval = setInterval(() => {
