@@ -382,6 +382,12 @@ interface Category {
   name: string;
   title: string;
   count: number;
+  slug?: string;
+  id?: string | number;
+}
+
+interface CategoriesResponse {
+  categories: Category[];
 }
 
 interface ProductType {
@@ -423,18 +429,18 @@ const fetchCategories = async () => {
   const section = route.query.section || "men";
   categoriesLoading.value = true;
   try {
-    const response = await $fetch(
+    const response = await $fetch<Category[] | CategoriesResponse>(
       `http://berkytt/api/getcategories/${section}/`,
     );
 
     // Пробуем разные варианты структуры ответа
-    const categories = Array.isArray(response)
+    const categories: Category[] = Array.isArray(response)
       ? response
-      : response.categories || [];
+      : (response as CategoriesResponse).categories || [];
 
-    productTypes.value = categories.map((cat: any) => ({
-      label: cat.title || cat.name || "Без названия",
-      category: cat.name || cat.slug || cat.id || "unknown",
+    productTypes.value = categories.map((cat: Category) => ({
+      label: (cat.title || cat.name || "Без названия").toUpperCase(),
+      category: cat.name || cat.slug || String(cat.id) || "unknown",
       count: cat.count || 0,
     }));
   } catch (error) {
@@ -448,8 +454,8 @@ const fetchCategories = async () => {
 // Следим за изменением section и перезагружаем категории
 watch(
   () => route.query.section,
-  () => {
-    fetchCategories();
+  async () => {
+    await fetchCategories();
     // Сбрасываем категорию на первую при смене секции
     if (productTypes.value.length > 0) {
       const currentCategory = route.query.category;
@@ -457,14 +463,17 @@ watch(
         (cat) => cat.category === currentCategory,
       );
       if (!categoryExists) {
-        router.push({
-          path: "/catalog",
-          query: {
-            ...route.query,
-            category: productTypes.value[0].category,
-            page: "1",
-          },
-        });
+        const firstCategory = productTypes.value[0];
+        if (firstCategory) {
+          router.push({
+            path: "/catalog",
+            query: {
+              ...route.query,
+              category: firstCategory.category,
+              page: "1",
+            },
+          });
+        }
       }
     }
   },
@@ -578,12 +587,12 @@ const formatTimeLeft = (endDate: string) => {
   return `${days}Д : ${String(hours).padStart(2, "0")}Ч : ${String(minutes).padStart(2, "0")}М : ${String(seconds).padStart(2, "0")}С`;
 };
 
-onMounted(() => {
+onMounted(async () => {
   timerInterval = setInterval(() => {
     currentTime.value = Date.now();
   }, 1000);
   // Загружаем категории при монтировании
-  fetchCategories();
+  await fetchCategories();
 });
 
 onUnmounted(() => {
