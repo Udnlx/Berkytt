@@ -15,10 +15,10 @@
               >
                 <a
                   href="#"
-                  @click.prevent="activeCategory = item.label"
+                  @click.prevent="selectCategory(item.category)"
                   :class="[
                     'text-sm transition',
-                    activeCategory === item.label
+                    activeCategory === item.category
                       ? 'text-[#ec018c] font-medium'
                       : 'text-gray-600 hover:text-gray-900',
                   ]"
@@ -353,7 +353,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 interface Product {
@@ -397,16 +397,29 @@ const changePage = (page: number) => {
 };
 
 const productTypes = [
-  { label: "ПАЛЬТО", count: 12, href: "#" },
-  { label: "ПОЛУПАЛЬТО", count: 4, href: "#" },
-  { label: "ПЛАЩИ", count: 4, href: "#" },
-  { label: "КУРТКИ", count: 8, href: "#" },
-  { label: "ПИДЖАКИ", count: 5, href: "#" },
-  { label: "БРЮКИ", count: 4, href: "#" },
-  { label: "ЖИЛЕТЫ", count: 4, href: "#" },
-  { label: "ИЗДЕЛИЯ С МЕХОМ", count: 6, href: "#" },
-  { label: "БЕЙСБОЛКИ И КЕПКИ", count: 6, href: "#" },
+  { label: "ПАЛЬТО", category: "coat", count: 12 },
+  { label: "ПОЛУПАЛЬТО", category: "short-coat", count: 4 },
+  { label: "КУРТКИ", category: "kurtki", count: 8 },
+  { label: "ПЛАЩИ", category: "raincoats", count: 4 },
+  { label: "ИЗДЕЛИЯ ИЗ ЛЬНА", category: "summer-collection", count: 5 },
+  { label: "ИЗДЕЛИЯ С МЕХОМ", category: "winter-collection", count: 4 },
+  { label: "КУРТКИ СТЁГАННЫЕ", category: "kurtki-stegannye", count: 4 },
+  { label: "БЕЙСБОЛКИ И КЕПКИ", category: "beisbolki-i-kepi", count: 6 },
+  { label: "РАСПРОДАЖА", category: "stok", count: 6 },
 ];
+
+const activeCategory = computed(() => route.query.category || "coat");
+
+const selectCategory = (category: string) => {
+  router.push({
+    path: "/catalog",
+    query: {
+      ...route.query,
+      category,
+      page: "1",
+    },
+  });
+};
 
 const sizeGrid = [
   {
@@ -479,8 +492,6 @@ const getActiveClass = (size: string, param: string) => {
     ? "active"
     : "";
 };
-
-const activeCategory = ref("ПАЛЬТО");
 
 const currentTime = ref(Date.now());
 

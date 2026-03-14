@@ -15,9 +15,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from "vue";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { useHead } from "#app";
+import { useHead, navigateTo } from "#app";
 
 interface Product {
   id: number;
@@ -87,52 +87,39 @@ const normalizeProduct = (product: any): Product => {
 };
 
 const route = useRoute();
-const products = ref<Product[]>([]);
-const loading = ref(false);
-const totalPages = ref(1);
 
-const fetchProducts = async () => {
-  loading.value = true;
-  try {
+// Создаём реактивный ключ для useFetch — при изменении query запрос обновится автоматически
+const queryKey = computed(() => JSON.stringify(route.query));
+
+const { data, pending } = await useFetch<ProductsResponse>(
+  () => {
     const params = route.query;
     const queryString = new URLSearchParams(
       params as Record<string, string>,
     ).toString();
-    const response = await $fetch<ProductsResponse>(
-      `http://berkytt/api/getproducts/?${queryString}`,
-    );
-    console.log("API Response:", response); // Для отладки
-    // Нормализуем данные продуктов
-    products.value = (response.products || []).map(normalizeProduct);
-    totalPages.value = response.totalPage || 1;
-  } catch (error) {
-    console.error("Ошибка загрузки товаров:", error);
-    products.value = [];
-    totalPages.value = 1;
-  } finally {
-    loading.value = false;
-  }
-};
+    return `http://berkytt/api/getproducts/?${queryString}`;
+  },
+  {
+    key: () => queryKey.value,
+    default: () => ({ products: [], totalPage: 1 }),
+  },
+);
+
+const products = computed<Product[]>(() => {
+  return (data.value?.products || []).map(normalizeProduct);
+});
+
+const loading = computed(() => pending.value);
+
+const totalPages = computed(() => data.value?.totalPage || 1);
 
 const handleFilterUpdate = (filters: {
   section?: string;
   category?: string;
 }) => {
-  const query = { ...route.query, ...filters };
+  const query = { ...route.query, ...filters, page: "1" };
   navigateTo({ path: "/catalog", query });
 };
-
-watch(
-  () => route.query,
-  () => {
-    fetchProducts();
-  },
-  { deep: true },
-);
-
-onMounted(() => {
-  fetchProducts();
-});
 
 // SEO-метатеги для страницы каталога
 const siteUrl = "http://localhost:3000";

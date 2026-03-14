@@ -16,10 +16,10 @@
         <button
           v-for="item in categories"
           :key="item.label"
-          @click="selectCategory(item.label)"
+          @click="selectSection(item.section)"
           class="text-sm font-medium transition uppercase tracking-wide"
           :class="
-            activeCategory === item.label
+            currentSection === item.section
               ? 'text-[#ec018c]'
               : 'text-gray-700 hover:text-gray-900'
           "
@@ -32,20 +32,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-const activeCategory = ref<string | null>("ДЛЯ МУЖЧИН");
+const route = useRoute();
+const router = useRouter();
+
+const currentSection = computed(() => route.query.section || "men");
 
 const categories = [
-  { label: "ДЛЯ МУЖЧИН", href: "" },
-  { label: "ДЛЯ ЖЕНЩИН", href: "" },
+  { label: "ДЛЯ МУЖЧИН", section: "men" },
+  { label: "ДЛЯ ЖЕНЩИН", section: "women" },
 ];
 
-const selectCategory = (label: string) => {
-  if (activeCategory.value === label) {
-    activeCategory.value = null;
-  } else {
-    activeCategory.value = label;
-  }
+const selectSection = (section: string) => {
+  // Сбрасываем страницу на 1 при смене секции
+  router.push({
+    path: "/catalog",
+    query: {
+      ...route.query,
+      section,
+      page: "1",
+    },
+  });
 };
 </script>
