@@ -273,37 +273,19 @@
                   class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
                 >
                   <a
-                    :href="`/product/${product.id}`"
+                    :href="`/product/${product.name}`"
                     class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
                     @click.stop
                   >
                     ПРОСМОТР
                   </a>
                   <a
-                    :href="`/cart?add=${product.id}`"
+                    :href="`/cart?add=${product.name}`"
                     class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
                     @click.stop
                   >
                     В КОРЗИНУ
                   </a>
-                </div>
-
-                <!-- Color Swatches -->
-                <div
-                  class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-16 group-hover:-translate-y-11 transition-all duration-300 delay-75"
-                >
-                  <div
-                    v-for="color in product.colors || [
-                      'bg-gray-200',
-                      'bg-pink-200',
-                      'bg-blue-100',
-                    ]"
-                    :key="color"
-                    :class="[
-                      'w-8 h-8 rounded-full cursor-pointer border-2 border-white shadow-md hover:scale-110 transition',
-                      color,
-                    ]"
-                  ></div>
                 </div>
 
                 <!-- Sale Timer (for sale items) -->
@@ -345,7 +327,7 @@
           <div class="flex justify-center mt-12">
             <div class="flex items-center gap-2">
               <button
-                v-for="pageNum in totalPages"
+                v-for="pageNum in totalPagesComputed"
                 :key="pageNum"
                 @click="changePage(pageNum)"
                 :class="[
@@ -387,7 +369,7 @@ interface Product {
 const props = defineProps<{
   products: Product[];
   loading?: boolean;
-  totalItems?: number;
+  totalPages?: number;
 }>();
 
 const emit = defineEmits<{
@@ -398,12 +380,8 @@ const route = useRoute();
 const router = useRouter();
 
 const currentPage = computed(() => Number(route.query.page) || 1);
-const itemsPerPage = 9;
 
-const totalPages = computed(() => {
-  const total = props.totalItems || props.products.length;
-  return Math.ceil(total / itemsPerPage);
-});
+const totalPagesComputed = computed(() => props.totalPages || 1);
 
 const changePage = (page: number) => {
   router.push({

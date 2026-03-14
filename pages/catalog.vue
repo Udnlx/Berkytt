@@ -6,7 +6,7 @@
       <ProductsSection
         :products="products"
         :loading="loading"
-        :total-items="totalItems"
+        :total-pages="totalPages"
         @update:filters="handleFilterUpdate"
       />
     </main>
@@ -35,13 +35,58 @@ interface Product {
 
 interface ProductsResponse {
   products: Product[];
-  total?: number;
+  totalPage?: number;
 }
+
+// Функция для нормализации данных продукта
+const normalizeProduct = (product: any): Product => {
+  const API_BASE = "http://berkytt";
+
+  // Получаем изображение
+  let image =
+    product.image || product.img || product.imageUrl || product.image_url || "";
+
+  // Если путь относительный (начинается с /), добавляем базовый URL API
+  if (image && image.startsWith("/")) {
+    image = API_BASE + image;
+  } else if (image && !image.startsWith("http")) {
+    image = API_BASE + "/images/" + image;
+  }
+
+  if (!image) {
+    image = "/images/forcards.jpg";
+  }
+
+  // Получаем hover-изображение
+  let hoverImage =
+    product.hoverImage || product.hover_image || product.image2 || "";
+
+  if (hoverImage && hoverImage.startsWith("/")) {
+    hoverImage = API_BASE + hoverImage;
+  } else if (hoverImage && !hoverImage.startsWith("http")) {
+    hoverImage = API_BASE + "/images/" + hoverImage;
+  }
+
+  return {
+    id: product.id,
+    name: product.name || product.title || "",
+    price: product.price || 0,
+    oldPrice: product.oldPrice || product.old_price,
+    discount: product.discount,
+    badge: product.badge,
+    badgeType: product.badgeType || product.badge_type,
+    image: image,
+    hoverImage: hoverImage || undefined,
+    colors: product.colors,
+    category: product.category,
+    endDate: product.endDate || product.end_date,
+  };
+};
 
 const route = useRoute();
 const products = ref<Product[]>([]);
 const loading = ref(false);
-const totalItems = ref(0);
+const totalPages = ref(1);
 
 const fetchProducts = async () => {
   loading.value = true;
@@ -53,12 +98,14 @@ const fetchProducts = async () => {
     const response = await $fetch<ProductsResponse>(
       `http://berkytt/api/getproducts/?${queryString}`,
     );
-    products.value = response.products || [];
-    totalItems.value = response.total || products.value.length;
+    console.log("API Response:", response); // Для отладки
+    // Нормализуем данные продуктов
+    products.value = (response.products || []).map(normalizeProduct);
+    totalPages.value = response.totalPage || 1;
   } catch (error) {
     console.error("Ошибка загрузки товаров:", error);
     products.value = [];
-    totalItems.value = 0;
+    totalPages.value = 1;
   } finally {
     loading.value = false;
   }
