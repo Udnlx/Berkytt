@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const activeCategory = ref<string | null>(null);
+const activeCategory = ref<string | null>("ДЛЯ МУЖЧИН");
 
 const categories = [
   { label: "ДЛЯ МУЖЧИН", href: "" },
