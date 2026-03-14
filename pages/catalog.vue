@@ -21,6 +21,7 @@ import { useRoute } from "vue-router";
 interface Product {
   id: number;
   name: string;
+  title: string;
   price: number;
   oldPrice?: number;
   discount?: string;
@@ -69,17 +70,18 @@ const normalizeProduct = (product: any): Product => {
 
   return {
     id: product.id,
-    name: product.name || product.title || "",
+    name: product.name || "",
+    title: product.title || "",
     price: product.price || 0,
-    oldPrice: product.oldPrice || product.old_price,
+    oldPrice: product.fullPrice,
     discount: product.discount,
     badge: product.badge,
-    badgeType: product.badgeType || product.badge_type,
+    badgeType: product.badgeType,
     image: image,
     hoverImage: hoverImage || undefined,
     colors: product.colors,
     category: product.category,
-    endDate: product.endDate || product.end_date,
+    endDate: product.endDate,
   };
 };
 

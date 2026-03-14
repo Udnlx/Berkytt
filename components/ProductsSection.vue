@@ -302,12 +302,12 @@
               <!-- Product Info -->
               <div class="mt-4">
                 <h3 class="text-sm font-medium text-gray-900">
-                  {{ product.name }}
+                  {{ product.title }}
                 </h3>
                 <div class="flex items-center gap-2 mt-1">
                   <span class="text-sm font-medium">₽{{ product.price }}</span>
                   <span
-                    v-if="product.oldPrice"
+                    v-if="product.discount"
                     class="text-sm text-gray-400 line-through"
                   >
                     ₽{{ product.oldPrice }}
@@ -316,7 +316,7 @@
                     v-if="product.discount"
                     class="px-2 py-0.5 text-xs font-medium bg-[#ec018c] text-[#ffffff] rounded-full"
                   >
-                    {{ product.discount }}
+                    -{{ product.discount }}%
                   </span>
                 </div>
               </div>
@@ -354,6 +354,7 @@ import { useRoute, useRouter } from "vue-router";
 interface Product {
   id: number;
   name: string;
+  title: string;
   price: number;
   oldPrice?: number;
   discount?: string;
