@@ -444,7 +444,7 @@ const getActiveClass = (size: string, param: string) => {
     : "";
 };
 
-const activeCategory = ref("ПАЛЬТО");
+const activeCategory = ref("");
 
 const currentTime = ref(Date.now());
 

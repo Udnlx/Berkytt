@@ -16,11 +16,11 @@
         <button
           v-for="item in categories"
           :key="item.label"
-          @click="activeCategory = item.label"
+          @click="selectCategory(item.label)"
           class="text-sm font-medium transition uppercase tracking-wide"
           :class="
             activeCategory === item.label
-              ? 'text-[#ec018c] border-b-2 border-[#ec018c] pb-0.5'
+              ? 'text-[#ec018c]'
               : 'text-gray-700 hover:text-gray-900'
           "
         >
@@ -34,10 +34,18 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const activeCategory = ref("ДЛЯ МУЖЧИН");
+const activeCategory = ref<string | null>(null);
 
 const categories = [
   { label: "ДЛЯ МУЖЧИН", href: "" },
   { label: "ДЛЯ ЖЕНЩИН", href: "" },
 ];
+
+const selectCategory = (label: string) => {
+  if (activeCategory.value === label) {
+    activeCategory.value = null;
+  } else {
+    activeCategory.value = label;
+  }
+};
 </script>
