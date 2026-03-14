@@ -17,6 +17,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { useHead } from "#app";
 
 interface Product {
   id: number;
@@ -131,5 +132,42 @@ watch(
 
 onMounted(() => {
   fetchProducts();
+});
+
+// SEO-метатеги для страницы каталога
+const siteUrl = "http://localhost:3000";
+
+useHead({
+  title: "Каталог товаров — BERKYTT",
+  meta: [
+    {
+      name: "description",
+      content:
+        "Широкий ассортимент товаров в интернет-магазине BERKYTT. Одежда и аксессуары по доступным ценам.",
+    },
+    {
+      property: "og:type",
+      content: "website",
+    },
+    {
+      property: "og:title",
+      content: "Каталог товаров — BERKYTT",
+    },
+    {
+      property: "og:description",
+      content:
+        "Широкий ассортимент товаров в интернет-магазине BERKYTT. Одежда и аксессуары по доступным ценам.",
+    },
+    {
+      property: "og:image",
+      content: "/images/forcards.jpg",
+    },
+  ],
+  link: [
+    {
+      rel: "canonical",
+      href: `${siteUrl}/catalog`,
+    },
+  ],
 });
 </script>
