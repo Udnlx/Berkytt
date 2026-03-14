@@ -6,11 +6,17 @@
         <aside class="w-full lg:w-64 flex-shrink-0">
           <!-- Products Type -->
           <div class="mb-8">
-            <h3 class="text-sm font-medium text-gray-900 mb-4">Товары</h3>
+            <h3 class="text-sm font-medium text-gray-900 mb-4">Категории</h3>
             <ul class="space-y-2">
+              <!-- Loading state -->
+              <li v-if="categoriesLoading" class="text-sm text-gray-500 py-4">
+                Загрузка категорий...
+              </li>
+              <!-- Categories -->
               <li
+                v-else
                 v-for="item in productTypes"
-                :key="item.label"
+                :key="item.category"
                 class="flex justify-between items-center"
               >
                 <a
@@ -353,7 +359,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, onMounted, onUnmounted } from "vue";
+import { computed, ref, onMounted, onUnmounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 interface Product {
@@ -370,6 +376,18 @@ interface Product {
   colors?: string[];
   category?: string;
   endDate?: string;
+}
+
+interface Category {
+  name: string;
+  title: string;
+  count: number;
+}
+
+interface ProductType {
+  label: string;
+  category: string;
+  count: number;
 }
 
 const props = defineProps<{
@@ -396,17 +414,61 @@ const changePage = (page: number) => {
   });
 };
 
-const productTypes = [
-  { label: "ПАЛЬТО", category: "coat", count: 12 },
-  { label: "ПОЛУПАЛЬТО", category: "short-coat", count: 4 },
-  { label: "КУРТКИ", category: "kurtki", count: 8 },
-  { label: "ПЛАЩИ", category: "raincoats", count: 4 },
-  { label: "ИЗДЕЛИЯ ИЗ ЛЬНА", category: "summer-collection", count: 5 },
-  { label: "ИЗДЕЛИЯ С МЕХОМ", category: "winter-collection", count: 4 },
-  { label: "КУРТКИ СТЁГАННЫЕ", category: "kurtki-stegannye", count: 4 },
-  { label: "БЕЙСБОЛКИ И КЕПКИ", category: "beisbolki-i-kepi", count: 6 },
-  { label: "РАСПРОДАЖА", category: "stok", count: 6 },
-];
+// Динамические категории из API
+const productTypes = ref<ProductType[]>([]);
+const categoriesLoading = ref(false);
+
+// Функция загрузки категорий
+const fetchCategories = async () => {
+  const section = route.query.section || "men";
+  categoriesLoading.value = true;
+  try {
+    const response = await $fetch(
+      `http://berkytt/api/getcategories/${section}/`,
+    );
+
+    // Пробуем разные варианты структуры ответа
+    const categories = Array.isArray(response)
+      ? response
+      : response.categories || [];
+
+    productTypes.value = categories.map((cat: any) => ({
+      label: cat.title || cat.name || "Без названия",
+      category: cat.name || cat.slug || cat.id || "unknown",
+      count: cat.count || 0,
+    }));
+  } catch (error) {
+    console.error("Ошибка загрузки категорий:", error);
+    productTypes.value = [];
+  } finally {
+    categoriesLoading.value = false;
+  }
+};
+
+// Следим за изменением section и перезагружаем категории
+watch(
+  () => route.query.section,
+  () => {
+    fetchCategories();
+    // Сбрасываем категорию на первую при смене секции
+    if (productTypes.value.length > 0) {
+      const currentCategory = route.query.category;
+      const categoryExists = productTypes.value.find(
+        (cat) => cat.category === currentCategory,
+      );
+      if (!categoryExists) {
+        router.push({
+          path: "/catalog",
+          query: {
+            ...route.query,
+            category: productTypes.value[0].category,
+            page: "1",
+          },
+        });
+      }
+    }
+  },
+);
 
 const activeCategory = computed(() => route.query.category || "coat");
 
@@ -520,6 +582,8 @@ onMounted(() => {
   timerInterval = setInterval(() => {
     currentTime.value = Date.now();
   }, 1000);
+  // Загружаем категории при монтировании
+  fetchCategories();
 });
 
 onUnmounted(() => {
