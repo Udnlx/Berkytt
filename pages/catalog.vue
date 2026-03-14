@@ -88,6 +88,19 @@ const normalizeProduct = (product: any): Product => {
 
 const route = useRoute();
 
+// Если нет query-параметров, перенаправляем на default
+if (!route.query.section || !route.query.category) {
+  await navigateTo({
+    path: "/catalog",
+    query: {
+      section: "men",
+      category: "coat",
+      page: "1",
+    },
+    replace: true,
+  });
+}
+
 // Создаём реактивный ключ для useFetch — при изменении query запрос обновится автоматически
 const queryKey = computed(() => JSON.stringify(route.query));
 
