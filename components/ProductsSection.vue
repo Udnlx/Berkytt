@@ -290,7 +290,10 @@
 
                 <!-- Sale Timer (for sale items) -->
                 <div
-                  v-if="product.endDate"
+                  v-if="
+                    product.endDate &&
+                    formatTimeLeft(product.endDate) !== 'РАСПРОДАЖА ЗАКОНЧЕНА'
+                  "
                   class="absolute bottom-0 left-0 right-0 bg-black/30 px-3 py-2 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-300"
                 >
                   <span class="text-xs text-white font-medium">
@@ -305,12 +308,14 @@
                   {{ product.title }}
                 </h3>
                 <div class="flex items-center gap-2 mt-1">
-                  <span class="text-sm font-medium">₽{{ product.price }}</span>
+                  <span class="text-sm font-medium"
+                    >₽{{ formatPrice(product.price) }}</span
+                  >
                   <span
                     v-if="product.discount"
                     class="text-sm text-gray-400 line-through"
                   >
-                    ₽{{ product.oldPrice }}
+                    ₽{{ formatPrice(product.oldPrice) }}
                   </span>
                   <span
                     v-if="product.discount"
@@ -511,6 +516,12 @@ onUnmounted(() => {
     clearInterval(timerInterval);
   }
 });
+
+// Форматирование цены с разделителем тысяч
+const formatPrice = (price: number | undefined | null) => {
+  if (!price) return "0";
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
 </script>
 
 <style scoped>
