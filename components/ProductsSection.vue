@@ -455,12 +455,15 @@ const fetchCategories = async () => {
     );
 
     if (sizesResponse && "sizes" in sizesResponse) {
-      availableSizes.value = sizesResponse.sizes.map((size: Size) => ({
-        value: size.id,
-        label: `${size.russianSize} - ${size.title}`,
-        id: size.id,
-        russianSize: size.russianSize,
-      }));
+      availableSizes.value = [
+        { value: "", label: "Все размеры", id: "", russianSize: "" },
+        ...sizesResponse.sizes.map((size: Size) => ({
+          value: size.id,
+          label: `${size.russianSize} - ${size.title}`,
+          id: size.id,
+          russianSize: size.russianSize,
+        })),
+      ];
     }
   } catch (error) {
     console.error("Ошибка загрузки категорий:", error);
@@ -502,7 +505,7 @@ watch(
 watch(
   () => route.query.size,
   (newSize) => {
-    if (newSize) {
+    if (newSize && !Array.isArray(newSize)) {
       selectedSize.value = newSize;
     } else {
       selectedSize.value = "";
@@ -530,12 +533,12 @@ const onSizeChange = () => {
     (size) => size.value === selectedSize.value,
   );
   if (selectedSizeData) {
-    // Добавляем параметр size в URL
+    // Добавляем параметр size в URL или убираем его если выбрано "Все размеры"
     router.push({
       path: "/catalog",
       query: {
         ...route.query,
-        size: String(selectedSizeData.id),
+        size: selectedSizeData.id ? String(selectedSizeData.id) : undefined,
         page: "1",
       },
     });
