@@ -39,53 +39,38 @@
           <!-- Size Filter -->
           <div class="mb-8">
             <h3 class="text-sm font-medium text-gray-900 mb-4">Размеры</h3>
-            <div class="size-table">
-              <table>
-                <tbody>
-                  <tr v-for="row in sizeGrid" :key="row.size">
-                    <td class="size-label">{{ row.size }}</td>
-                    <td
-                      v-if="row.bust"
-                      @click="
-                        !row.bustUnavailable &&
-                        selectSize(row.size, 'bust', row.bust)
-                      "
-                      :class="[
-                        getActiveClass(row.size, 'bust'),
-                        { unavailable: row.bustUnavailable },
-                      ]"
-                    >
-                      {{ row.bust }}
-                    </td>
-                    <td
-                      v-if="row.waist"
-                      @click="
-                        !row.waistUnavailable &&
-                        selectSize(row.size, 'waist', row.waist)
-                      "
-                      :class="[
-                        getActiveClass(row.size, 'waist'),
-                        { unavailable: row.waistUnavailable },
-                      ]"
-                    >
-                      {{ row.waist }}
-                    </td>
-                    <td
-                      v-if="row.hips"
-                      @click="
-                        !row.hipsUnavailable &&
-                        selectSize(row.size, 'hips', row.hips)
-                      "
-                      :class="[
-                        getActiveClass(row.size, 'hips'),
-                        { unavailable: row.hipsUnavailable },
-                      ]"
-                    >
-                      {{ row.hips }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="relative">
+              <select
+                v-model="selectedSize"
+                class="appearance-none w-full text-sm border-2 border-gray-900 rounded px-4 py-2 pr-8 text-gray-900 font-medium focus:outline-none focus:border-[#ec018c] cursor-pointer bg-white"
+                @change="onSizeChange"
+              >
+                <option value="" disabled>Выберите размер</option>
+                <option
+                  v-for="size in availableSizes"
+                  :key="size.value"
+                  :value="size.value"
+                >
+                  {{ size.label }}
+                </option>
+              </select>
+              <div
+                class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-900"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         </aside>
@@ -492,76 +477,17 @@ const selectCategory = (category: string) => {
   });
 };
 
-const sizeGrid = [
-  {
-    size: "46",
-    bust: "92/176",
-    bustUnavailable: true,
-    waist: "92/182",
-    waistUnavailable: true,
-    hips: "",
-  },
-  {
-    size: "48",
-    bust: "96/176",
-    bustUnavailable: true,
-    waist: "96/182",
-    waistUnavailable: true,
-    hips: "",
-  },
-  {
-    size: "50",
-    bust: "100/176",
-    bustUnavailable: true,
-    waist: "100/182",
-    hips: "100/188",
-    hipsUnavailable: true,
-  },
-  {
-    size: "52",
-    bust: "104/176",
-    bustUnavailable: true,
-    waist: "104/182",
-    waistUnavailable: true,
-    hips: "104/188",
-    hipsUnavailable: true,
-  },
-  {
-    size: "54",
-    bust: "108/176",
-    bustUnavailable: true,
-    waist: "108/182",
-    hips: "108/188",
-    hipsUnavailable: true,
-  },
-  {
-    size: "56",
-    bust: "112/176",
-    waist: "112/182",
-    hips: "112/188",
-  },
-  {
-    size: "58",
-    bust: "116/176",
-    waist: "116/182",
-    hips: "116/188",
-  },
+const availableSizes = [
+  { value: "size1", label: "Размер 1" },
+  { value: "size2", label: "Размер 2" },
+  { value: "size3", label: "Размер 3" },
 ];
 
-const activeSize = ref<string | null>(null);
-const activeSizeParam = ref<string | null>(null);
-const activeValue = ref<string | null>(null);
+const selectedSize = ref<string>("");
 
-const selectSize = (size: string, param: string, value: string) => {
-  activeSize.value = size;
-  activeSizeParam.value = param;
-  activeValue.value = value;
-};
-
-const getActiveClass = (size: string, param: string) => {
-  return activeSize.value === size && activeSizeParam.value === param
-    ? "active"
-    : "";
+const onSizeChange = () => {
+  // Обработка выбора размера
+  console.log("Выбран размер:", selectedSize.value);
 };
 
 const currentTime = ref(Date.now());
@@ -607,66 +533,3 @@ const formatPrice = (price: number | undefined | null) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 </script>
-
-<style scoped>
-.size-table {
-  overflow-x: auto;
-}
-
-.size-table table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-  table-layout: fixed;
-}
-
-.size-table td {
-  padding: 10px 6px;
-  text-align: center;
-  border-bottom: 1px solid #e5e5e5;
-  word-break: break-word;
-}
-
-.size-table td:first-child {
-  width: 50px;
-}
-
-.size-table .size-label {
-  background-color: #f5f5f5;
-  color: #666;
-  font-weight: 500;
-  border-right: 1px solid #d0d0d0;
-}
-
-.size-table td:not(.size-label) {
-  color: #ec018c;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.size-table td:not(.size-label):hover {
-  background-color: #fff0f6;
-}
-
-.size-table td.unavailable {
-  color: #ccc;
-  text-decoration: line-through;
-  cursor: not-allowed;
-  background-color: #fafafa;
-}
-
-.size-table td.unavailable:hover {
-  background-color: #fafafa;
-}
-
-.size-table td.active {
-  background-color: #fce7f3;
-  color: #ec018c;
-  font-weight: 600;
-}
-
-.size-table td:empty {
-  background-color: #fafafa;
-  cursor: default;
-}
-</style>
