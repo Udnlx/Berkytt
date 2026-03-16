@@ -382,6 +382,7 @@ interface ProductType {
 }
 
 interface Size {
+  id: number | string;
   russianSize: string;
   title: string;
 }
@@ -419,7 +420,9 @@ const productTypes = ref<ProductType[]>([]);
 const categoriesLoading = ref(false);
 
 // Динамические размеры из API
-const availableSizes = ref<{ value: string; label: string }[]>([]);
+const availableSizes = ref<
+  { value: string; label: string; id: number | string }[]
+>([]);
 
 // Функция загрузки категорий
 const fetchCategories = async () => {
@@ -450,6 +453,7 @@ const fetchCategories = async () => {
       availableSizes.value = sizesResponse.sizes.map((size: Size) => ({
         value: size.russianSize,
         label: `${size.russianSize} - ${size.title}`,
+        id: size.id,
       }));
     }
   } catch (error) {
@@ -506,7 +510,16 @@ const selectedSize = ref<string>("");
 
 const onSizeChange = () => {
   // Обработка выбора размера
-  console.log("Выбран размер:", selectedSize.value);
+  const selectedSizeData = availableSizes.value.find(
+    (size) => size.value === selectedSize.value,
+  );
+  if (selectedSizeData) {
+    console.log("Выбран размер:", {
+      id: selectedSizeData.id,
+      russianSize: selectedSizeData.value,
+      label: selectedSizeData.label,
+    });
+  }
 };
 
 const currentTime = ref(Date.now());
