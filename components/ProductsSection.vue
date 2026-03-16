@@ -471,11 +471,15 @@ const fetchCategories = async () => {
   }
 };
 
+const selectedSize = ref<number | string>("");
+
 // Следим за изменением section и перезагружаем категории
 watch(
   () => route.query.section,
   async () => {
     await fetchCategories();
+    // Сбрасываем размер при смене секции
+    selectedSize.value = "";
     // Сбрасываем категорию на первую при смене секции
     if (productTypes.value.length > 0) {
       const currentCategory = route.query.category;
@@ -499,6 +503,19 @@ watch(
   },
 );
 
+// Следим за изменением size в URL и устанавливаем выбранный размер
+watch(
+  () => route.query.size,
+  (newSize) => {
+    if (newSize) {
+      selectedSize.value = newSize;
+    } else {
+      selectedSize.value = "";
+    }
+  },
+  { immediate: true },
+);
+
 const activeCategory = computed(() => route.query.category || "coat");
 
 const selectCategory = (category: string) => {
@@ -512,18 +529,20 @@ const selectCategory = (category: string) => {
   });
 };
 
-const selectedSize = ref<number | string>("");
-
 const onSizeChange = () => {
   // Обработка выбора размера
   const selectedSizeData = availableSizes.value.find(
     (size) => size.value === selectedSize.value,
   );
   if (selectedSizeData) {
-    console.log("Выбран размер:", {
-      id: selectedSizeData.id,
-      russianSize: selectedSizeData.russianSize,
-      label: selectedSizeData.label,
+    // Добавляем параметр size в URL
+    router.push({
+      path: "/catalog",
+      query: {
+        ...route.query,
+        size: String(selectedSizeData.id),
+        page: "1",
+      },
     });
   }
 };
