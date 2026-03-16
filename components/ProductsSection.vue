@@ -421,7 +421,12 @@ const categoriesLoading = ref(false);
 
 // Динамические размеры из API
 const availableSizes = ref<
-  { value: string; label: string; id: number | string }[]
+  {
+    value: number | string;
+    label: string;
+    id: number | string;
+    russianSize: string;
+  }[]
 >([]);
 
 // Функция загрузки категорий
@@ -451,9 +456,10 @@ const fetchCategories = async () => {
 
     if (sizesResponse && "sizes" in sizesResponse) {
       availableSizes.value = sizesResponse.sizes.map((size: Size) => ({
-        value: size.russianSize,
+        value: size.id,
         label: `${size.russianSize} - ${size.title}`,
         id: size.id,
+        russianSize: size.russianSize,
       }));
     }
   } catch (error) {
@@ -506,7 +512,7 @@ const selectCategory = (category: string) => {
   });
 };
 
-const selectedSize = ref<string>("");
+const selectedSize = ref<number | string>("");
 
 const onSizeChange = () => {
   // Обработка выбора размера
@@ -516,7 +522,7 @@ const onSizeChange = () => {
   if (selectedSizeData) {
     console.log("Выбран размер:", {
       id: selectedSizeData.id,
-      russianSize: selectedSizeData.value,
+      russianSize: selectedSizeData.russianSize,
       label: selectedSizeData.label,
     });
   }
