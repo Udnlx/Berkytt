@@ -482,22 +482,17 @@ watch(
     selectedSize.value = "";
     // Сбрасываем категорию на первую при смене секции
     if (productTypes.value.length > 0) {
-      const currentCategory = route.query.category;
-      const categoryExists = productTypes.value.find(
-        (cat) => cat.category === currentCategory,
-      );
-      if (!categoryExists) {
-        const firstCategory = productTypes.value[0];
-        if (firstCategory) {
-          router.push({
-            path: "/catalog",
-            query: {
-              ...route.query,
-              category: firstCategory.category,
-              page: "1",
-            },
-          });
-        }
+      const firstCategory = productTypes.value[0];
+      if (firstCategory) {
+        router.push({
+          path: "/catalog",
+          query: {
+            ...route.query,
+            category: firstCategory.category,
+            page: "1",
+            size: undefined, // Удаляем параметр size из URL
+          },
+        });
       }
     }
   },
