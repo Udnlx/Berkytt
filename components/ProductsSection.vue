@@ -381,6 +381,15 @@ interface ProductType {
   count: number;
 }
 
+interface Size {
+  russianSize: string;
+  title: string;
+}
+
+interface SizesResponse {
+  sizes: Size[];
+}
+
 const props = defineProps<{
   products: Product[];
   loading?: boolean;
@@ -409,6 +418,9 @@ const changePage = (page: number) => {
 const productTypes = ref<ProductType[]>([]);
 const categoriesLoading = ref(false);
 
+// Динамические размеры из API
+const availableSizes = ref<{ value: string; label: string }[]>([]);
+
 // Функция загрузки категорий
 const fetchCategories = async () => {
   const section = route.query.section || "men";
@@ -428,9 +440,22 @@ const fetchCategories = async () => {
       category: cat.name || cat.slug || String(cat.id) || "unknown",
       count: cat.count || 0,
     }));
+
+    // Загружаем размеры для текущей секции
+    const sizesResponse = await $fetch<SizesResponse>(
+      `http://berkytt/api/getcategories/${section}/`,
+    );
+
+    if (sizesResponse && "sizes" in sizesResponse) {
+      availableSizes.value = sizesResponse.sizes.map((size: Size) => ({
+        value: size.russianSize,
+        label: `${size.russianSize} - ${size.title}`,
+      }));
+    }
   } catch (error) {
     console.error("Ошибка загрузки категорий:", error);
     productTypes.value = [];
+    availableSizes.value = [];
   } finally {
     categoriesLoading.value = false;
   }
@@ -476,12 +501,6 @@ const selectCategory = (category: string) => {
     },
   });
 };
-
-const availableSizes = [
-  { value: "size1", label: "Размер 1" },
-  { value: "size2", label: "Размер 2" },
-  { value: "size3", label: "Размер 3" },
-];
 
 const selectedSize = ref<string>("");
 
