@@ -139,6 +139,7 @@ interface ApiProductData {
   category: string;
   tag: string;
   about: string;
+  aboutProduct: string;
   specifications: { name: string; value: string | number }[];
   totalComments: number;
   comments: {
@@ -170,6 +171,7 @@ interface ProductData {
   category: string;
   productSection: string;
   description: string;
+  aboutProduct: string;
   price: number;
   oldPrice: number;
   discount: number;
@@ -332,6 +334,7 @@ const mappedProduct = computed<ProductData | null>(() => {
     category: data.productCategory,
     productSection: data.productSection,
     description: data.description,
+    aboutProduct: data.aboutProduct || "",
     price: data.price,
     oldPrice: data.fullPrice,
     discount: data.discount,

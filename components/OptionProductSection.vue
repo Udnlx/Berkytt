@@ -48,15 +48,9 @@
         <!-- Specifications List -->
         <div>
           <h4 class="text-lg font-semibold text-black mb-4">О продукте</h4>
-          <ul class="space-y-1.5">
-            <li
-              v-for="(feature, index) in product?.features || defaultFeatures"
-              :key="index"
-              class="text-sm text-gray-600 leading-relaxed before:content-['·'] before:absolute before:left-0 pl-4 relative"
-            >
-              {{ feature.description }}
-            </li>
-          </ul>
+          <p class="text-sm text-gray-600 leading-relaxed">
+            {{ product?.aboutProduct || "О продукте" }}
+          </p>
         </div>
       </div>
 
@@ -209,6 +203,7 @@ interface ProductData {
   title: string;
   category: string;
   description: string;
+  aboutProduct: string;
   price: number;
   oldPrice: number;
   discount: number;
@@ -230,11 +225,6 @@ interface ProductData {
     price: string;
   }[];
   specifications: { name: string; value: string }[];
-  features: {
-    icon: string;
-    title: string;
-    description: string;
-  }[];
   deliveryInfo: {
     freeShipping: boolean;
     freeShippingThreshold: number;
@@ -256,37 +246,6 @@ const activeTab = ref<"description" | "specifications">("description");
 const defaultSpecifications = [
   { name: "Внешняя оболочка", value: "100% полиэстер" },
   { name: "Подкладка", value: "100% полиуретан" },
-];
-
-const defaultFeatures = [
-  {
-    icon: "",
-    title: "Универсальность",
-    description:
-      "Универсальное женское пальто на каждый день и для более формальных образов",
-  },
-  {
-    icon: "",
-    title: "Лаконичный крой",
-    description:
-      "Лаконичный крой: аккуратно подчёркивает силуэт, не сковывает движения",
-  },
-  {
-    icon: "",
-    title: "Качественный материал",
-    description:
-      "Материал хорошо держит форму и выглядит опрятно в течение дня",
-  },
-  {
-    icon: "",
-    title: "Комфортная посадка",
-    description: "Комфортная посадка по плечам и в зоне талии",
-  },
-  {
-    icon: "",
-    title: "Практичность",
-    description: "Практичные боковые карманы для мелочей и тепла рук",
-  },
 ];
 </script>
 
