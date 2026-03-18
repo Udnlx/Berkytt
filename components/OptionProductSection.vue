@@ -36,9 +36,14 @@
 
     <!-- Description Tab -->
     <div v-if="activeTab === 'description'" class="tab-content animate-fadeIn">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div
+        :class="[
+          'grid gap-10',
+          hasAboutProduct ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1',
+        ]"
+      >
         <!-- Description Main -->
-        <div>
+        <div :class="hasAboutProduct ? '' : 'lg:col-span-1'">
           <h3 class="text-lg font-semibold text-black mb-4">Описание</h3>
           <p class="text-sm text-gray-600 leading-relaxed">
             {{ product?.description || "Описание продукта" }}
@@ -46,11 +51,12 @@
         </div>
 
         <!-- Specifications List -->
-        <div>
+        <div v-if="hasAboutProduct">
           <h4 class="text-lg font-semibold text-black mb-4">О продукте</h4>
-          <p class="text-sm text-gray-600 leading-relaxed">
-            {{ product?.aboutProduct || "О продукте" }}
-          </p>
+          <div
+            class="text-sm text-gray-600 leading-relaxed"
+            v-html="product?.aboutProduct"
+          ></div>
         </div>
       </div>
 
@@ -196,7 +202,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 interface ProductData {
   name: string;
@@ -237,11 +243,18 @@ interface ProductData {
   };
 }
 
-defineProps<{
+const props = defineProps<{
   product?: ProductData | null;
 }>();
 
 const activeTab = ref<"description" | "specifications">("description");
+
+const hasAboutProduct = computed(() => {
+  const html = props.product?.aboutProduct || "";
+  // Проверяем, есть ли контент внутри HTML-тегов
+  const textContent = html.replace(/<[^>]*>/g, "").trim();
+  return textContent !== "";
+});
 
 const defaultSpecifications = [
   { name: "Внешняя оболочка", value: "100% полиэстер" },
