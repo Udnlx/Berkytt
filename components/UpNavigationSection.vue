@@ -48,7 +48,7 @@ const categories = [
 const selectSection = (section: string) => {
   // Сбрасываем страницу на 1 при смене секции
   router.push({
-    path: `/catalog/${section}/coat//1`,
+    path: `/catalog/${section}/coat/all/1`,
   });
 };
 </script>

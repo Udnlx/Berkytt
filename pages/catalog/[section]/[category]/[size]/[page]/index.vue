@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRoute, navigateTo } from "#app";
 import { useHead, useRuntimeConfig } from "#app";
 
@@ -45,6 +45,9 @@ const apiBase = config.public.apiBase || "http://berkytt/api";
 // Базовый хост для изображений (без /api)
 const apiHost = apiBase.replace("/api", "");
 
+// Для запросов используем относительный путь, чтобы работал прокси через Nuxt
+const fetchApiBase = "/api";
+
 // Функция для нормализации данных продукта
 const normalizeProduct = (product: any): Product => {
   let image =
@@ -65,7 +68,7 @@ const normalizeProduct = (product: any): Product => {
 
   if (hoverImage && hoverImage.startsWith("/")) {
     hoverImage = apiHost + hoverImage;
-  } else if (hoverImage && !hoverImage.startsWith("http")) {
+  } else if (hoverImage && !image.startsWith("http")) {
     hoverImage = apiHost + "/images/" + hoverImage;
   }
 
@@ -88,50 +91,58 @@ const normalizeProduct = (product: any): Product => {
 
 const route = useRoute();
 
+// Реактивные данные
+const products = ref<Product[]>([]);
+const loading = ref(false);
+const totalPages = ref(1);
+
 // Получаем параметры из route.params
 const section = computed(() => String(route.params.section || "men"));
 const category = computed(() => String(route.params.category || "coat"));
-const size = computed(() => String(route.params.size || ""));
+const size = computed(() => String(route.params.size || "all"));
 const page = computed(() => String(route.params.page || "1"));
 
 // Если параметры не заданы, перенаправляем на значения по умолчанию
 if (!section.value || !category.value) {
   await navigateTo({
-    path: "/catalog/men/coat//1",
+    path: "/catalog/men/coat/all/1",
     replace: true,
   });
 }
 
-// Создаём реактивный ключ для useFetch
-const queryKey = computed(() =>
-  JSON.stringify({
-    section: section.value,
-    category: category.value,
-    size: size.value,
-    page: page.value,
-  }),
-);
-
-// Формируем URL в новом формате: /getproducts/{section}/{category}/{size}/{page}
-const { data, pending } = await useFetch<ProductsResponse>(
-  () => {
-    const sizeParam = size.value ? size.value : "";
+// Функция загрузки товаров
+const fetchProducts = async () => {
+  loading.value = true;
+  try {
+    const sizeParam = size.value || "all";
     const pageParam = page.value || "1";
-    return `${apiBase}/getproducts/${section.value}/${category.value}/${sizeParam}/${pageParam}`;
+    const url = `${fetchApiBase}/getproducts/${section.value}/${category.value}/${sizeParam}/${pageParam}`;
+
+    console.log("Загрузка товаров:", url);
+
+    const response = await $fetch<ProductsResponse>(url);
+    console.log("Ответ API:", response);
+
+    products.value = (response.products || []).map(normalizeProduct);
+    totalPages.value = response.totalPage || 1;
+    console.log("Товары загружены:", products.value.length);
+  } catch (error) {
+    console.error("Ошибка загрузки товаров:", error);
+    products.value = [];
+    totalPages.value = 1;
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Загружаем товары при изменении параметров маршрута
+watch(
+  () => route.fullPath,
+  () => {
+    fetchProducts();
   },
-  {
-    key: () => queryKey.value,
-    default: () => ({ products: [], totalPage: 1 }),
-  },
+  { immediate: true },
 );
-
-const products = computed<Product[]>(() => {
-  return (data.value?.products || []).map(normalizeProduct);
-});
-
-const loading = computed(() => pending.value);
-
-const totalPages = computed(() => data.value?.totalPage || 1);
 
 const handleFilterUpdate = (filters: {
   section?: string;
@@ -140,7 +151,7 @@ const handleFilterUpdate = (filters: {
   const newSection = filters.section || section.value;
   const newCategory = filters.category || category.value;
   navigateTo({
-    path: `/catalog/${newSection}/${newCategory}//1`,
+    path: `/catalog/${newSection}/${newCategory}/all/1`,
   });
 };
 

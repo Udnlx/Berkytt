@@ -414,7 +414,7 @@ const totalPagesComputed = computed(() => props.totalPages || 1);
 const changePage = (page: number) => {
   const section = route.params.section || "men";
   const category = route.params.category || "coat";
-  const size = route.params.size || "0";
+  const size = route.params.size || "all";
   router.push({
     path: `/catalog/${section}/${category}/${size}/${page}`,
   });
@@ -461,7 +461,7 @@ const fetchCategories = async () => {
 
     if (sizesResponse && "sizes" in sizesResponse) {
       availableSizes.value = [
-        { value: "", label: "Все размеры", id: "", russianSize: "" },
+        { value: "all", label: "Все размеры", id: "all", russianSize: "" },
         ...sizesResponse.sizes.map((size: Size) => ({
           value: size.id,
           label: `${size.russianSize} - ${size.title}`,
@@ -479,7 +479,7 @@ const fetchCategories = async () => {
   }
 };
 
-const selectedSize = ref<number | string>("");
+const selectedSize = ref<number | string>("all");
 
 // Следим за изменением section и перезагружаем категории
 watch(
@@ -493,7 +493,7 @@ watch(
       const firstCategory = productTypes.value[0];
       if (firstCategory) {
         router.push({
-          path: `/catalog/${route.params.section}/${firstCategory.category}/0/1`,
+          path: `/catalog/${route.params.section}/${firstCategory.category}/all/1`,
         });
       }
     }
@@ -507,7 +507,7 @@ watch(
     if (newSize && !Array.isArray(newSize)) {
       selectedSize.value = newSize;
     } else {
-      selectedSize.value = "0";
+      selectedSize.value = "all";
     }
   },
   { immediate: true },
@@ -517,7 +517,7 @@ const activeCategory = computed(() => route.params.category || "coat");
 
 const selectCategory = (category: string) => {
   const section = route.params.section || "men";
-  const size = route.params.size || "";
+  const size = route.params.size || "all";
   router.push({
     path: `/catalog/${section}/${category}/${size}/1`,
   });
@@ -532,7 +532,7 @@ const onSizeChange = () => {
     // Добавляем параметр size в URL или убираем его если выбрано "Все размеры"
     const section = route.params.section || "men";
     const category = route.params.category || "coat";
-    const newSize = selectedSizeData.id ? String(selectedSizeData.id) : "";
+    const newSize = selectedSizeData.id ? String(selectedSizeData.id) : "all";
     router.push({
       path: `/catalog/${section}/${category}/${newSize}/1`,
     });

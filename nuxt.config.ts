@@ -18,6 +18,12 @@ export default defineNuxtConfig({
         },
       },
     },
+    devProxy: {
+      "/api": {
+        target: "http://berkytt/api",
+        changeOrigin: true,
+      },
+    },
   },
   runtimeConfig: {
     public: {
