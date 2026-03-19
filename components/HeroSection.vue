@@ -29,12 +29,13 @@
                 >
                   {{ slide.title }}
                 </h1>
-                <button
-                  class="text-white px-4 py-1.5 sm:px-5 sm:py-2 md:px-6 md:py-2.5 lg:px-8 lg:py-3 rounded-md font-medium transition transform hover:scale-105 hover:shadow-lg text-xs sm:text-sm md:text-base"
+                <NuxtLink
+                  :to="slide.buttonLink"
+                  class="text-white px-4 py-1.5 sm:px-5 sm:py-2 md:px-6 md:py-2.5 lg:px-8 lg:py-3 rounded-md font-medium transition transform hover:scale-105 hover:shadow-lg text-xs sm:text-sm md:text-base inline-block"
                   style="background-color: #ec018c"
                 >
                   {{ slide.buttonText }}
-                </button>
+                </NuxtLink>
               </div>
 
               <!-- Изображение справа -->
@@ -125,18 +126,21 @@ const slides = [
     subtitle: "СКИДКИ ДО 50%!",
     title: "Стильная верхняя одежда для вас",
     buttonText: "В КАТАЛОГ",
+    buttonLink: "/catalog/men/coat/all/1",
     image: "/images/slide_men.png",
   },
   {
     subtitle: "НОВАЯ КОЛЛЕКЦИЯ 2026",
     title: "Откройте свой идеальный образ",
     buttonText: "СМОТРЕТЬ",
+    buttonLink: "/catalog/women/raincoats/all/1",
     image: "/images/slide_woman.png",
   },
   {
     subtitle: "ОГРАНИЧЕННАЯ СЕРИЯ",
     title: "Эксклюзивные модели курток",
     buttonText: "ПОДРОБНЕЕ",
+    buttonLink: "/catalog/men/kurtki/all/1",
     image: "/images/slide_men2.png",
   },
 ];
