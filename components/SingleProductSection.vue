@@ -11,7 +11,10 @@
             <video
               v-if="currentMediaType === 'video' && product?.video"
               :src="product.video"
-              controls
+              autoplay
+              loop
+              muted
+              playsinline
               class="w-full h-auto object-contain"
             ></video>
             <img
