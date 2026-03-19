@@ -57,33 +57,33 @@
             v-for="collection in props.collections"
             :key="collection.id"
             class="group cursor-pointer relative overflow-hidden rounded-xl flex-shrink-0 w-[320px]"
-            @click="onCollectionClick(collection)"
           >
             <!-- Image -->
-            <div class="aspect-[3/4] overflow-hidden bg-gray-100">
-              <img
-                :src="collection.image"
-                :alt="collection.title"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-            </div>
+            <a :href="`/${collection.link}`" class="block">
+              <div class="aspect-[3/4] overflow-hidden bg-gray-100">
+                <img
+                  :src="collection.image"
+                  :alt="collection.title"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
 
-            <!-- Label & Button -->
-            <div
-              class="absolute bottom-4 left-0 right-0 flex flex-col items-center gap-2"
-            >
-              <span
-                class="px-6 py-2 bg-white text-gray-900 text-sm font-medium rounded-lg shadow-sm"
+              <!-- Label & Button -->
+              <div
+                class="absolute bottom-4 left-0 right-0 flex flex-col items-center gap-2"
               >
-                {{ collection.title }}
-              </span>
-              <button
-                class="px-6 py-2 bg-[#ec018c] text-white text-sm font-medium rounded-lg shadow-sm hover:bg-[#ff43b2] transition"
-                @click.stop="onCollectionClick(collection)"
-              >
-                Купить
-              </button>
-            </div>
+                <span
+                  class="px-6 py-2 bg-white text-gray-900 text-sm font-medium rounded-lg shadow-sm"
+                >
+                  {{ collection.title }}
+                </span>
+                <span
+                  class="px-6 py-2 bg-[#ec018c] text-white text-sm font-medium rounded-lg shadow-sm hover:bg-[#ff43b2] transition"
+                >
+                  Купить
+                </span>
+              </div>
+            </a>
           </div>
         </div>
       </div>
@@ -118,10 +118,6 @@ const scrollRight = () => {
   if (carouselRef.value) {
     carouselRef.value.scrollBy({ left: 300, behavior: "smooth" });
   }
-};
-
-const onCollectionClick = (collection: Collection) => {
-  navigateTo(`/${collection.link}`);
 };
 </script>
 
