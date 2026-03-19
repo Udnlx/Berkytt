@@ -1,5 +1,8 @@
 <template>
-  <section class="py-16 bg-white">
+  <section
+    v-if="props.collections && props.collections.length > 0"
+    class="py-16 bg-white"
+  >
     <div class="container mx-auto px-4">
       <h2 class="text-3xl font-medium text-center mb-10">Наши коллекции</h2>
 
@@ -51,7 +54,7 @@
           style="scrollbar-width: none; -ms-overflow-style: none"
         >
           <div
-            v-for="collection in collections"
+            v-for="collection in props.collections"
             :key="collection.id"
             class="group cursor-pointer relative overflow-hidden rounded-xl flex-shrink-0 w-[320px]"
             @click="onCollectionClick(collection)"
@@ -60,7 +63,7 @@
             <div class="aspect-[3/4] overflow-hidden bg-gray-100">
               <img
                 :src="collection.image"
-                :alt="collection.name"
+                :alt="collection.title"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
             </div>
@@ -72,7 +75,7 @@
               <span
                 class="px-6 py-2 bg-white text-gray-900 text-sm font-medium rounded-lg shadow-sm"
               >
-                {{ collection.name }}
+                {{ collection.title }}
               </span>
               <button
                 class="px-6 py-2 bg-[#ec018c] text-white text-sm font-medium rounded-lg shadow-sm hover:bg-[#ff43b2] transition"
@@ -91,46 +94,19 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const carouselRef = ref<HTMLElement | null>(null);
+interface Collection {
+  id: number;
+  name: string;
+  title: string;
+  image: string;
+  link: string;
+}
 
-const collections = [
-  {
-    id: 1,
-    name: "ПАЛЬТО",
-    label: "coat",
-    image: "/images/forcards.jpg",
-  },
-  {
-    id: 2,
-    name: "ПОЛУПАЛЬТО",
-    label: "halfcoat",
-    image: "/images/forcards.jpg",
-  },
-  {
-    id: 3,
-    name: "ПЛАЩИ",
-    label: "raincoats",
-    image: "/images/forcards.jpg",
-  },
-  {
-    id: 4,
-    name: "КУРТКИ",
-    label: "jackets",
-    image: "/images/forcards.jpg",
-  },
-  {
-    id: 5,
-    name: "ПИДЖАКИ",
-    label: "manjackets",
-    image: "/images/forcards.jpg",
-  },
-  {
-    id: 6,
-    name: "БРЮКИ",
-    label: "trousers",
-    image: "/images/forcards.jpg",
-  },
-];
+const props = defineProps<{
+  collections: Collection[];
+}>();
+
+const carouselRef = ref<HTMLElement | null>(null);
 
 const scrollLeft = () => {
   if (carouselRef.value) {
@@ -144,8 +120,8 @@ const scrollRight = () => {
   }
 };
 
-const onCollectionClick = (collection: (typeof collections)[number]) => {
-  navigateTo(`/collections/${collection.label.toLowerCase()}`);
+const onCollectionClick = (collection: Collection) => {
+  navigateTo(`/${collection.link}`);
 };
 </script>
 

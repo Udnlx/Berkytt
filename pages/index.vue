@@ -4,7 +4,7 @@
     <main>
       <HeroSection />
       <WhatsNewSection :filters="btnFiltersForNew" :products="productsForNew" />
-      <ExploreCollectionsSection />
+      <ExploreCollectionsSection :collections="ourCollections" />
       <BestSellersSection />
       <ShopNowSection />
       <AboutUsSection />
@@ -34,10 +34,18 @@ interface MainPageData {
     badgeType?: string;
     endDate?: string;
   }>;
+  ourCollections: Array<{
+    id: number;
+    name: string;
+    title: string;
+    image: string;
+    link: string;
+  }>;
 }
 
 const btnFiltersForNew = ref<string[]>([]);
 const productsForNew = ref<MainPageData["productsForNew"]>([]);
+const ourCollections = ref<MainPageData["ourCollections"]>([]);
 
 onMounted(async () => {
   try {
@@ -57,8 +65,23 @@ onMounted(async () => {
           ? `${API_BASE}${product.hoverImage}`
           : undefined,
     }));
+    // Добавляем базовый URL к изображениям коллекций
+    // API возвращает путь к папке, нужно найти первое изображение
+    ourCollections.value = (data.ourCollections || []).map((collection) => {
+      // Если image заканчивается на '/', ищем первое изображение в папке
+      const imagePath = collection.image.endsWith("/")
+        ? `${collection.image}1.jpg`
+        : collection.image;
+      return {
+        ...collection,
+        image: imagePath.startsWith("http")
+          ? imagePath
+          : `${API_BASE}${imagePath}`,
+      };
+    });
     console.log("btnFiltersForNew:", btnFiltersForNew.value);
     console.log("productsForNew:", productsForNew.value);
+    console.log("ourCollections:", ourCollections.value);
   } catch (error) {
     console.error("Failed to fetch mainpage data:", error);
   }
