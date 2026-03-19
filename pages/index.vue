@@ -17,6 +17,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 
+const API_BASE = "http://berkytt";
+
 interface MainPageData {
   btnFiltersForNew: string[];
   productsForNew: Array<{
@@ -31,7 +33,6 @@ interface MainPageData {
     badge?: string;
     badgeType?: string;
     endDate?: string;
-    colors?: string[];
   }>;
 }
 
@@ -44,7 +45,18 @@ onMounted(async () => {
     const data: MainPageData = await response.json();
     console.log("API Response:", data);
     btnFiltersForNew.value = data.btnFiltersForNew || [];
-    productsForNew.value = data.productsForNew || [];
+    // Добавляем базовый URL к путям изображений
+    productsForNew.value = (data.productsForNew || []).map((product) => ({
+      ...product,
+      image: product.image?.startsWith("http")
+        ? product.image
+        : `${API_BASE}${product.image}`,
+      hoverImage: product.hoverImage?.startsWith("http")
+        ? product.hoverImage
+        : product.hoverImage
+          ? `${API_BASE}${product.hoverImage}`
+          : undefined,
+    }));
     console.log("btnFiltersForNew:", btnFiltersForNew.value);
     console.log("productsForNew:", productsForNew.value);
   } catch (error) {

@@ -405,7 +405,7 @@ const emit = defineEmits<{
 const route = useRoute();
 const router = useRouter();
 const config = useRuntimeConfig();
-const apiBase = config.public.apiBase || "http://berkytt/api";
+const apiBase = config.public.apiBase;
 
 const currentPage = computed(() => Number(route.params.page) || 1);
 

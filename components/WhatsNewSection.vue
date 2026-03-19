@@ -17,7 +17,7 @@
             :key="filter"
             @click="activeFilter = filter"
             :class="[
-              'px-4 py-2 text-sm rounded-full transition-all',
+              'px-4 py-2 text-sm rounded-full transition-all uppercase',
               activeFilter === filter
                 ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-500 hover:text-gray-700',
@@ -175,24 +175,6 @@
                 </a>
               </div>
 
-              <!-- Color Swatches -->
-              <div
-                class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-16 group-hover:-translate-y-11 transition-all duration-300 delay-75"
-              >
-                <div
-                  v-for="color in product.colors || [
-                    'bg-gray-200',
-                    'bg-pink-200',
-                    'bg-blue-100',
-                  ]"
-                  :key="color"
-                  :class="[
-                    'w-8 h-8 rounded-full cursor-pointer border-2 border-white shadow-md hover:scale-110 transition',
-                    color,
-                  ]"
-                ></div>
-              </div>
-
               <!-- Sale Timer (for sale items) -->
               <div
                 v-if="product.endDate"
@@ -249,7 +231,6 @@ interface NewProduct {
   badge?: string;
   badgeType?: string;
   endDate?: string;
-  colors?: string[];
   category?: string;
 }
 
@@ -269,9 +250,9 @@ watch(activeFilter, () => {
 
 watch(
   () => props.filters,
-  (newFilters) => {
+  (newFilters: readonly string[]) => {
     if (newFilters && newFilters.length > 0 && !activeFilter.value) {
-      activeFilter.value = newFilters[0];
+      activeFilter.value = newFilters[0] as string;
     }
   },
   { immediate: true },
@@ -286,7 +267,7 @@ onMounted(() => {
   }, 1000);
 
   if (props.filters && props.filters.length > 0) {
-    activeFilter.value = props.filters[0];
+    activeFilter.value = props.filters[0] as string;
   }
 });
 

@@ -41,7 +41,7 @@ interface ProductsResponse {
 }
 
 const config = useRuntimeConfig();
-const apiBase = config.public.apiBase || "http://berkytt/api";
+const apiBase = config.public.apiBase;
 // Базовый хост для изображений (без /api)
 const apiHost = apiBase.replace("/api", "");
 
