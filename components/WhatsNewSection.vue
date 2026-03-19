@@ -1,13 +1,19 @@
 <template>
-  <section class="py-16 bg-white">
+  <section
+    v-if="props.products && props.products.length > 0"
+    class="py-16 bg-white"
+  >
     <div class="container mx-auto px-4">
       <h2 class="text-3xl font-medium text-center mb-6">Наши новинки</h2>
 
       <!-- Filters -->
-      <div class="flex justify-center mb-10">
+      <div
+        v-if="props.filters && props.filters.length > 0"
+        class="flex justify-center mb-10"
+      >
         <div class="inline-flex bg-gray-100 rounded-full px-2 py-1">
           <button
-            v-for="filter in filters"
+            v-for="filter in props.filters"
             :key="filter"
             @click="activeFilter = filter"
             :class="[
@@ -138,14 +144,14 @@
               <!-- Main Image (default state) -->
               <img
                 :src="product.image"
-                :alt="product.name"
+                :alt="product.title"
                 class="w-full h-full object-cover absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"
               />
 
               <!-- Hover Image -->
               <img
                 :src="product.hoverImage || product.image"
-                :alt="product.name"
+                :alt="product.title"
                 class="w-full h-full object-cover absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               />
 
@@ -154,14 +160,14 @@
                 class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
               >
                 <a
-                  :href="`/product/${product.id}`"
+                  :href="`/product/${product.name}`"
                   class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
                   @click.stop
                 >
                   ПРОСМОТР
                 </a>
                 <a
-                  :href="`/cart?add=${product.id}`"
+                  :href="`/cart?add=${product.name}`"
                   class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
                   @click.stop
                 >
@@ -201,21 +207,23 @@
             <!-- Product Info -->
             <div class="mt-4">
               <h3 class="text-sm font-medium text-gray-900">
-                {{ product.name }}
+                {{ product.title }}
               </h3>
               <div class="flex items-center gap-2 mt-1">
-                <span class="text-sm font-medium">₽{{ product.price }}</span>
+                <span class="text-sm font-medium"
+                  >₽{{ formatPrice(product.price) }}</span
+                >
                 <span
-                  v-if="product.oldPrice"
+                  v-if="product.fullPrice && product.discount"
                   class="text-sm text-gray-400 line-through"
                 >
-                  ₽{{ product.oldPrice }}
+                  ₽{{ formatPrice(product.fullPrice) }}
                 </span>
                 <span
                   v-if="product.discount"
                   class="px-2 py-0.5 text-xs font-medium bg-[#ec018c] text-[#ffffff] rounded-full"
                 >
-                  {{ product.discount }}
+                  -{{ product.discount }}%
                 </span>
               </div>
             </div>
@@ -229,8 +237,28 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
 
-const filters = ["ТОП", "ПАЛЬТО", "КУРТКИ"];
-const activeFilter = ref("ПАЛЬТО");
+interface NewProduct {
+  id: number;
+  name: string;
+  title: string;
+  image: string;
+  hoverImage?: string;
+  price: number;
+  fullPrice: number;
+  discount: number;
+  badge?: string;
+  badgeType?: string;
+  endDate?: string;
+  colors?: string[];
+  category?: string;
+}
+
+const props = defineProps<{
+  filters: string[];
+  products: NewProduct[];
+}>();
+
+const activeFilter = ref("");
 const currentTime = ref(Date.now());
 
 watch(activeFilter, () => {
@@ -239,6 +267,16 @@ watch(activeFilter, () => {
   });
 });
 
+watch(
+  () => props.filters,
+  (newFilters) => {
+    if (newFilters && newFilters.length > 0 && !activeFilter.value) {
+      activeFilter.value = newFilters[0];
+    }
+  },
+  { immediate: true },
+);
+
 // Update timer every second
 let timerInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -246,6 +284,10 @@ onMounted(() => {
   timerInterval = setInterval(() => {
     currentTime.value = Date.now();
   }, 1000);
+
+  if (props.filters && props.filters.length > 0) {
+    activeFilter.value = props.filters[0];
+  }
 });
 
 onUnmounted(() => {
@@ -272,80 +314,17 @@ const formatTimeLeft = (endDate: string) => {
   return `${days}Д : ${String(hours).padStart(2, "0")}Ч : ${String(minutes).padStart(2, "0")}M : ${String(seconds).padStart(2, "0")}С`;
 };
 
-const products = [
-  {
-    id: 1,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "НОВИНКА",
-    badgeType: "new" as const,
-    category: "ПАЛЬТО",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 2,
-    name: "Kimono Sleeve Top",
-    price: 24.0,
-    oldPrice: 32.0,
-    discount: "-25%",
-    badge: "РАСПРОДАЖА",
-    badgeType: "sale" as const,
-    category: "ПАЛЬТО",
-    endDate: "2026-03-15T23:59:59",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 3,
-    name: "Mesh Shirt",
-    price: 35.0,
-    oldPrice: 45.0,
-    discount: "-22%",
-    badge: "НОВИНКА",
-    badgeType: "new" as const,
-    category: "КУРТКИ",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 4,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "НОВИНКА",
-    badgeType: "new" as const,
-    category: "ПАЛЬТО",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 5,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "НОВИНКА",
-    badgeType: "new" as const,
-    category: "ПАЛЬТО",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-];
-
 const filteredProducts = computed(() => {
-  if (activeFilter.value === "ТОП") {
-    return products;
+  if (!props.products || props.products.length === 0) {
+    return [];
   }
-  return products.filter((p) => p.category === activeFilter.value);
+  if (!activeFilter.value || activeFilter.value === "Все новинки") {
+    return props.products;
+  }
+  // Если у товара нет category или она совпадает с фильтром — показываем
+  return props.products.filter(
+    (p) => !p.category || p.category === activeFilter.value,
+  );
 });
 
 const carouselRef = ref<HTMLElement | null>(null);
@@ -386,6 +365,11 @@ const scrollRight = () => {
   if (carouselRef.value) {
     carouselRef.value.scrollBy({ left: 300, behavior: "smooth" });
   }
+};
+
+// Форматирование цены с разделителем тысяч
+const formatPrice = (price: number) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 </script>
 
