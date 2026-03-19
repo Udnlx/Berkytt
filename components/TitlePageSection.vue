@@ -7,13 +7,19 @@
           {{ product?.name || "Название страницы" }}
         </h1>
         <nav class="text-sm text-gray-500">
-          <a href="/" class="hover:text-gray-900 transition"> Домой </a>
+          <a href="/" class="hover:text-gray-900 transition">Домой</a>
           <span class="mx-2">›</span>
-          <a href="/category" class="hover:text-gray-900 transition">
+          <a
+            :href="`/catalog/${product?.productSectionName || 'section'}/${product?.productCategoryName || 'category'}/all/1`"
+            class="hover:text-gray-900 transition"
+          >
             {{ product?.productSection || "Раздел" }}
           </a>
           <span class="mx-2">›</span>
-          <a href="/category" class="hover:text-gray-900 transition">
+          <a
+            :href="`/catalog/${product?.productSectionName || 'section'}/${product?.productCategoryName || 'category'}/all/1`"
+            class="hover:text-gray-900 transition"
+          >
             {{ product?.category || "Категория" }}
           </a>
           <span class="mx-2">›</span>
@@ -32,6 +38,8 @@ interface ProductData {
   title: string;
   category: string;
   productSection: string;
+  productSectionName: string;
+  productCategoryName: string;
   description: string;
   price: number;
   oldPrice: number;
