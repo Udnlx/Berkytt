@@ -8,7 +8,7 @@
         Более 1000 новых товаров уже ждут вас в каталоге
       </p>
       <a
-        :href="`/catalog`"
+        :href="`/catalog/men/coat//1`"
         class="bg-white text-purple-600 px-10 py-4 rounded-full font-semibold hover:bg-purple-50 transition transform hover:scale-105"
         @click.stop
       >

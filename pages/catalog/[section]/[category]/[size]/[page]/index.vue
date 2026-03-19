@@ -16,8 +16,8 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { useRoute } from "vue-router";
-import { useHead, navigateTo, useRuntimeConfig } from "#app";
+import { useRoute, navigateTo } from "#app";
+import { useHead, useRuntimeConfig } from "#app";
 
 interface Product {
   id: number;
@@ -47,11 +47,9 @@ const apiHost = apiBase.replace("/api", "");
 
 // Функция для нормализации данных продукта
 const normalizeProduct = (product: any): Product => {
-  // Получаем изображение
   let image =
     product.image || product.img || product.imageUrl || product.image_url || "";
 
-  // Если путь относительный (начинается с /), добавляем базовый URL API
   if (image && image.startsWith("/")) {
     image = apiHost + image;
   } else if (image && !image.startsWith("http")) {
@@ -62,7 +60,6 @@ const normalizeProduct = (product: any): Product => {
     image = "/images/forcards.jpg";
   }
 
-  // Получаем hover-изображение
   let hoverImage =
     product.hoverImage || product.hover_image || product.image2 || "";
 
@@ -91,29 +88,36 @@ const normalizeProduct = (product: any): Product => {
 
 const route = useRoute();
 
-// Если нет query-параметров, перенаправляем на default
-if (!route.query.section || !route.query.category) {
+// Получаем параметры из route.params
+const section = computed(() => String(route.params.section || "men"));
+const category = computed(() => String(route.params.category || "coat"));
+const size = computed(() => String(route.params.size || ""));
+const page = computed(() => String(route.params.page || "1"));
+
+// Если параметры не заданы, перенаправляем на значения по умолчанию
+if (!section.value || !category.value) {
   await navigateTo({
-    path: "/catalog",
-    query: {
-      section: "men",
-      category: "coat",
-      page: "1",
-    },
+    path: "/catalog/men/coat//1",
     replace: true,
   });
 }
 
-// Создаём реактивный ключ для useFetch — при изменении query запрос обновится автоматически
-const queryKey = computed(() => JSON.stringify(route.query));
+// Создаём реактивный ключ для useFetch
+const queryKey = computed(() =>
+  JSON.stringify({
+    section: section.value,
+    category: category.value,
+    size: size.value,
+    page: page.value,
+  }),
+);
 
+// Формируем URL в новом формате: /getproducts/{section}/{category}/{size}/{page}
 const { data, pending } = await useFetch<ProductsResponse>(
   () => {
-    const params = route.query;
-    const queryString = new URLSearchParams(
-      params as Record<string, string>,
-    ).toString();
-    return `${apiBase}/getproducts/?${queryString}`;
+    const sizeParam = size.value ? size.value : "";
+    const pageParam = page.value || "1";
+    return `${apiBase}/getproducts/${section.value}/${category.value}/${sizeParam}/${pageParam}`;
   },
   {
     key: () => queryKey.value,
@@ -133,8 +137,11 @@ const handleFilterUpdate = (filters: {
   section?: string;
   category?: string;
 }) => {
-  const query = { ...route.query, ...filters, page: "1" };
-  navigateTo({ path: "/catalog", query });
+  const newSection = filters.section || section.value;
+  const newCategory = filters.category || category.value;
+  navigateTo({
+    path: `/catalog/${newSection}/${newCategory}//1`,
+  });
 };
 
 // SEO-метатеги для страницы каталога
@@ -169,7 +176,7 @@ useHead({
   link: [
     {
       rel: "canonical",
-      href: `${siteUrl}/catalog`,
+      href: `${siteUrl}/catalog/${section.value}/${category.value}`,
     },
   ],
 });

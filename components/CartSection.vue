@@ -235,7 +235,7 @@
           <!-- Back to Catalog Button -->
           <div class="mt-8">
             <a
-              href="/catalog"
+              href="/catalog/men/coat//1"
               class="inline-flex items-center gap-2 px-6 py-3 border border-gray-200 text-gray-700 text-sm font-medium hover:border-[#ec018c] hover:text-[#ec018c] transition-colors"
             >
               <svg

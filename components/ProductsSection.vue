@@ -407,14 +407,16 @@ const router = useRouter();
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase || "http://berkytt/api";
 
-const currentPage = computed(() => Number(route.query.page) || 1);
+const currentPage = computed(() => Number(route.params.page) || 1);
 
 const totalPagesComputed = computed(() => props.totalPages || 1);
 
 const changePage = (page: number) => {
+  const section = route.params.section || "men";
+  const category = route.params.category || "coat";
+  const size = route.params.size || "0";
   router.push({
-    path: "/catalog",
-    query: { ...route.query, page: String(page) },
+    path: `/catalog/${section}/${category}/${size}/${page}`,
   });
 };
 
@@ -434,7 +436,7 @@ const availableSizes = ref<
 
 // Функция загрузки категорий
 const fetchCategories = async () => {
-  const section = route.query.section || "men";
+  const section = route.params.section || "men";
   categoriesLoading.value = true;
   try {
     const response = await $fetch<Category[] | CategoriesResponse>(
@@ -481,7 +483,7 @@ const selectedSize = ref<number | string>("");
 
 // Следим за изменением section и перезагружаем категории
 watch(
-  () => route.query.section,
+  () => route.params.section,
   async () => {
     await fetchCategories();
     // Сбрасываем размер при смене секции
@@ -491,13 +493,7 @@ watch(
       const firstCategory = productTypes.value[0];
       if (firstCategory) {
         router.push({
-          path: "/catalog",
-          query: {
-            ...route.query,
-            category: firstCategory.category,
-            page: "1",
-            size: undefined, // Удаляем параметр size из URL
-          },
+          path: `/catalog/${route.params.section}/${firstCategory.category}/0/1`,
         });
       }
     }
@@ -506,27 +502,24 @@ watch(
 
 // Следим за изменением size в URL и устанавливаем выбранный размер
 watch(
-  () => route.query.size,
+  () => route.params.size,
   (newSize) => {
     if (newSize && !Array.isArray(newSize)) {
       selectedSize.value = newSize;
     } else {
-      selectedSize.value = "";
+      selectedSize.value = "0";
     }
   },
   { immediate: true },
 );
 
-const activeCategory = computed(() => route.query.category || "coat");
+const activeCategory = computed(() => route.params.category || "coat");
 
 const selectCategory = (category: string) => {
+  const section = route.params.section || "men";
+  const size = route.params.size || "";
   router.push({
-    path: "/catalog",
-    query: {
-      ...route.query,
-      category,
-      page: "1",
-    },
+    path: `/catalog/${section}/${category}/${size}/1`,
   });
 };
 
@@ -537,13 +530,11 @@ const onSizeChange = () => {
   );
   if (selectedSizeData) {
     // Добавляем параметр size в URL или убираем его если выбрано "Все размеры"
+    const section = route.params.section || "men";
+    const category = route.params.category || "coat";
+    const newSize = selectedSizeData.id ? String(selectedSizeData.id) : "";
     router.push({
-      path: "/catalog",
-      query: {
-        ...route.query,
-        size: selectedSizeData.id ? String(selectedSizeData.id) : undefined,
-        page: "1",
-      },
+      path: `/catalog/${section}/${category}/${newSize}/1`,
     });
   }
 };

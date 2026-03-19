@@ -11,6 +11,12 @@ export default defineNuxtConfig({
           "Access-Control-Allow-Origin": "*",
         },
       },
+      "/catalog/**": {
+        cors: true,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      },
     },
   },
   runtimeConfig: {

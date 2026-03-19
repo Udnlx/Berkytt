@@ -38,7 +38,7 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-const currentSection = computed(() => route.query.section || "men");
+const currentSection = computed(() => route.params.section || "men");
 
 const categories = [
   { label: "ДЛЯ МУЖЧИН", section: "men" },
@@ -48,12 +48,7 @@ const categories = [
 const selectSection = (section: string) => {
   // Сбрасываем страницу на 1 при смене секции
   router.push({
-    path: "/catalog",
-    query: {
-      ...route.query,
-      section,
-      page: "1",
-    },
+    path: `/catalog/${section}/coat//1`,
   });
 };
 </script>
