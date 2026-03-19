@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { useHead, navigateTo } from "#app";
+import { useHead, navigateTo, useRuntimeConfig } from "#app";
 
 interface Product {
   id: number;
@@ -40,19 +40,22 @@ interface ProductsResponse {
   totalPage?: number;
 }
 
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase || "http://berkytt/api";
+// Базовый хост для изображений (без /api)
+const apiHost = apiBase.replace("/api", "");
+
 // Функция для нормализации данных продукта
 const normalizeProduct = (product: any): Product => {
-  const API_BASE = "http://berkytt";
-
   // Получаем изображение
   let image =
     product.image || product.img || product.imageUrl || product.image_url || "";
 
   // Если путь относительный (начинается с /), добавляем базовый URL API
   if (image && image.startsWith("/")) {
-    image = API_BASE + image;
+    image = apiHost + image;
   } else if (image && !image.startsWith("http")) {
-    image = API_BASE + "/images/" + image;
+    image = apiHost + "/images/" + image;
   }
 
   if (!image) {
@@ -64,9 +67,9 @@ const normalizeProduct = (product: any): Product => {
     product.hoverImage || product.hover_image || product.image2 || "";
 
   if (hoverImage && hoverImage.startsWith("/")) {
-    hoverImage = API_BASE + hoverImage;
+    hoverImage = apiHost + hoverImage;
   } else if (hoverImage && !hoverImage.startsWith("http")) {
-    hoverImage = API_BASE + "/images/" + hoverImage;
+    hoverImage = apiHost + "/images/" + hoverImage;
   }
 
   return {
@@ -110,7 +113,7 @@ const { data, pending } = await useFetch<ProductsResponse>(
     const queryString = new URLSearchParams(
       params as Record<string, string>,
     ).toString();
-    return `http://berkytt/api/getproducts/?${queryString}`;
+    return `${apiBase}/getproducts/?${queryString}`;
   },
   {
     key: () => queryKey.value,

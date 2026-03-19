@@ -346,6 +346,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useRuntimeConfig } from "#app";
 
 interface Product {
   id: number;
@@ -403,6 +404,8 @@ const emit = defineEmits<{
 
 const route = useRoute();
 const router = useRouter();
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase || "http://berkytt/api";
 
 const currentPage = computed(() => Number(route.query.page) || 1);
 
@@ -435,7 +438,7 @@ const fetchCategories = async () => {
   categoriesLoading.value = true;
   try {
     const response = await $fetch<Category[] | CategoriesResponse>(
-      `http://berkytt/api/getcategories/${section}/`,
+      `${apiBase}/getcategories/${section}/`,
     );
 
     // Пробуем разные варианты структуры ответа
@@ -451,7 +454,7 @@ const fetchCategories = async () => {
 
     // Загружаем размеры для текущей секции
     const sizesResponse = await $fetch<SizesResponse>(
-      `http://berkytt/api/getcategories/${section}/`,
+      `${apiBase}/getcategories/${section}/`,
     );
 
     if (sizesResponse && "sizes" in sizesResponse) {
