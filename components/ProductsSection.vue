@@ -197,7 +197,7 @@
                   v-if="product.badge"
                   :class="[
                     'absolute top-3 left-3 px-2 py-1 text-xs font-medium rounded-md z-10',
-                    product.badgeType === 'new'
+                    product.badgeType === 'top' || product.badgeType === 'new'
                       ? 'bg-[#ec018c] text-[#ffffff]'
                       : 'bg-[#303030] text-[#ffffff]',
                   ]"
@@ -356,7 +356,7 @@ interface Product {
   oldPrice?: number;
   discount?: string;
   badge?: string;
-  badgeType?: "new" | "sale";
+  badgeType?: string;
   image: string;
   hoverImage?: string;
   colors?: string[];

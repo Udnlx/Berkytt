@@ -27,7 +27,7 @@ interface Product {
   oldPrice?: number;
   discount?: string;
   badge?: string;
-  badgeType?: "new" | "sale";
+  badgeType?: string;
   image: string;
   hoverImage?: string;
   colors?: string[];
