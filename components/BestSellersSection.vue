@@ -249,7 +249,7 @@ watch(activeFilter, () => {
 watch(
   () => props.filters,
   (newFilters: readonly string[]) => {
-    if (newFilters && newFilters.length > 0 && !activeFilter.value) {
+    if (newFilters && newFilters.length > 0) {
       activeFilter.value = newFilters[0] as string;
     }
   },
@@ -264,9 +264,9 @@ onMounted(() => {
     currentTime.value = Date.now();
   }, 1000);
 
-  if (props.filters && props.filters.length > 0) {
-    activeFilter.value = props.filters[0] as string;
-  }
+  console.log("BestSellers: props.filters =", props.filters);
+  console.log("BestSellers: props.products =", props.products);
+  console.log("BestSellers: activeFilter =", activeFilter.value);
 });
 
 onUnmounted(() => {
@@ -297,11 +297,13 @@ const filteredProducts = computed(() => {
   if (!props.products || props.products.length === 0) {
     return [];
   }
-  if (!activeFilter.value || activeFilter.value === "Топ") {
+  if (!activeFilter.value) {
     return props.products;
   }
+  // Фильтруем по полю badge (сравнение без учета регистра)
   return props.products.filter(
-    (p) => !p.category || p.category === activeFilter.value,
+    (p) =>
+      p.badge && p.badge.toUpperCase() === activeFilter.value.toUpperCase(),
   );
 });
 
