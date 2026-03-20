@@ -56,7 +56,7 @@
 
     <!-- Навигация (точки) -->
     <div
-      class="absolute bottom-3 sm:bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-2.5 md:space-x-3 z-50"
+      class="absolute bottom-3 sm:bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-2.5 md:space-x-3 z-20"
     >
       <button
         v-for="(slide, index) in slides"
@@ -75,7 +75,7 @@
     <!-- Кнопки навигации -->
     <button
       @click="prevSlide"
-      class="absolute left-1 sm:left-2 md:left-4 top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-50"
+      class="absolute left-1 sm:left-2 md:left-4 top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-20"
       aria-label="Предыдущий слайд"
     >
       <svg
@@ -95,7 +95,7 @@
 
     <button
       @click="nextSlide"
-      class="absolute right-1 sm:right-2 md:right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-50"
+      class="absolute right-1 sm:right-2 md:right-4 top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-20"
       aria-label="Следующий слайд"
     >
       <svg

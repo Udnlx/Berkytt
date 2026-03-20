@@ -147,13 +147,13 @@
                     </svg>
                   </button>
                   <div
-                    class="absolute left-0 mt-2 w-48 bg-white border border-gray-100 shadow-lg rounded-md py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+                    class="absolute left-0 mt-2 w-56 bg-white border border-gray-100 shadow-lg rounded-md py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
                   >
                     <a
                       v-for="(subItem, subIndex) in item.items"
                       :key="subIndex"
                       :href="subItem.href"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition"
+                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition whitespace-normal break-words"
                     >
                       {{ subItem.label }}
                     </a>
@@ -339,7 +339,7 @@ const toggleDropdown = (menuIndex: number) => {
 
 // Единый массив пунктов меню
 const menuItems = [
-  { label: "О БРЕНДЕ", href: "#" },
+  { label: "О БРЕНДЕ", href: "/o-brende" },
   {
     label: "ДЛЯ МУЖЧИН",
     type: "dropdown",
@@ -368,12 +368,23 @@ const menuItems = [
     type: "dropdown",
     items: [
       { label: "ГДЕ КУПИТЬ", href: "#" },
-      { label: "УХОД-ХРАНЕНИЕ", href: "#" },
-      { label: "ДОКУМЕНТЫ", href: "#" },
-      { label: "ДОСТАВКА", href: "#" },
+      { label: "УХОД-ХРАНЕНИЕ", href: "/ukhod-khranenie" },
+      { label: "ДОСТАВКА", href: "/delivery" },
       { label: "ВОЗВРАТ", href: "#" },
+      {
+        label: "ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ",
+        href: "/politika-konfidentcial-nosti",
+      },
+      {
+        label: "ПОЛЬЗОВАТЕЛСКОЕ СОГЛАШЕНИЕ",
+        href: "/pol-zovatel-skoe-soglashenie",
+      },
+      {
+        label: "СОГЛАШЕНИЕ НА ИСПОЛЬЗОВАНИЕ КУКИ",
+        href: "/soglashenie-na-ispol-zovanie-kuki",
+      },
     ],
   },
-  { label: "КОНТАКТЫ", href: "#" },
+  { label: "КОНТАКТЫ", href: "/contact" },
 ];
 </script>

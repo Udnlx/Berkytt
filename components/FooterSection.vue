@@ -58,7 +58,7 @@
             </li>
             <li>
               <a
-                href="#"
+                href="/ukhod-khranenie"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
                 УХОД-ХРАНЕНИЕ
@@ -66,15 +66,7 @@
             </li>
             <li>
               <a
-                href="#"
-                class="text-sm text-gray-600 hover:text-gray-900 transition"
-              >
-                ДОКУМЕНТЫ
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
+                href="/delivery"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
                 ДОСТАВКА
@@ -88,6 +80,14 @@
                 ВОЗВРАТ
               </a>
             </li>
+            <li>
+              <a
+                href="/contact"
+                class="text-sm text-gray-600 hover:text-gray-900 transition"
+              >
+                КОНТАКТЫ
+              </a>
+            </li>
           </ul>
         </div>
 
@@ -99,7 +99,7 @@
           <ul class="space-y-3">
             <li>
               <a
-                href="#"
+                href="/catalog/men/coat/all/1"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
                 ДЛЯ МУЖЧИН
@@ -107,34 +107,10 @@
             </li>
             <li>
               <a
-                href="#"
+                href="/catalog/women/raincoats/all/1"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
                 ДЛЯ ЖЕНЩИН
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="text-sm text-gray-600 hover:text-gray-900 transition"
-              >
-                ПАЛЬТО
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="text-sm text-gray-600 hover:text-gray-900 transition"
-              >
-                КУРТКИ
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="text-sm text-gray-600 hover:text-gray-900 transition"
-              >
-                БЕЙСБОЛКИ И КЕПКИ
               </a>
             </li>
           </ul>
@@ -146,7 +122,7 @@
           <ul class="space-y-3">
             <li>
               <a
-                href="#"
+                href="/o-brende"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
                 О БРЕНДЕ
@@ -154,15 +130,7 @@
             </li>
             <li>
               <a
-                href="#"
-                class="text-sm text-gray-600 hover:text-gray-900 transition"
-              >
-                ВОПРОСЫ
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
+                href="/politika-konfidentcial-nosti"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
                 ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ
@@ -170,18 +138,18 @@
             </li>
             <li>
               <a
-                href="#"
+                href="/pol-zovatel-skoe-soglashenie"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
-                ВОЗВРАТ
+                ПОЛЬЗОВАТЕЛСКОЕ СОГЛАШЕНИЕ
               </a>
             </li>
             <li>
               <a
-                href="#"
+                href="/soglashenie-na-ispol-zovanie-kuki"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
-                КОНТАКТЫ
+                СОГЛАШЕНИЕ НА ИСПОЛЬЗОВАНИЕ КУКИ
               </a>
             </li>
           </ul>
