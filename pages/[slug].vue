@@ -13,6 +13,7 @@
 interface PageData {
   title: string;
   body: string;
+  name: string;
 }
 
 const route = useRoute();
@@ -23,10 +24,7 @@ const { data: pageData, error } = await useFetch<PageData>(
   `${config.public.apiBase}/getpage/${slug}`,
 );
 
-if (error.value) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: "Страница не найдена",
-  });
+if (error.value || !pageData.value?.name) {
+  await navigateTo("/404");
 }
 </script>
