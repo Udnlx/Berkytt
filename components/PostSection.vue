@@ -71,4 +71,42 @@ a {
 a:hover {
   color: #9d174d;
 }
+
+/* Стили для таблиц */
+:deep(table) {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 24px 0;
+  font-size: 14px;
+}
+
+:deep(th),
+:deep(td) {
+  padding: 12px 16px;
+  border: 1px solid #e5e5e5;
+  text-align: center;
+}
+
+:deep(th) {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+:deep(tr:nth-child(even)) {
+  background-color: #fafafa;
+}
+
+:deep(tr:hover) {
+  background-color: #fff0f6;
+}
+
+/* Первый столбец - заголовки строк */
+:deep(td:first-child),
+:deep(th:first-child) {
+  background-color: #f3f4f6;
+  font-weight: 500;
+  color: #4b5563;
+  min-width: 120px;
+}
 </style>
