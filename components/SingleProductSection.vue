@@ -174,7 +174,9 @@
           <div v-if="product?.sizes && product.sizes.length > 0">
             <div class="flex justify-between items-center mb-3">
               <p class="text-sm font-medium">Размер:</p>
-              <a href="#" class="text-sm text-black underline">О размерах</a>
+              <a :href="sizeGuideLink" class="text-sm text-black underline"
+                >О размерах</a
+              >
             </div>
             <div class="size-table">
               <table>
@@ -493,6 +495,18 @@ const selectColor = (color: string, slug?: string) => {
 // Массив размеров с сервера
 const sizesData = computed(() => {
   return props.product?.sizes || [];
+});
+
+// Ссылка на таблицу размеров в зависимости от категории
+const sizeGuideLink = computed(() => {
+  const categories = props.product?.categories?.join(", ") || "";
+  if (categories.toLowerCase().includes("для женщин")) {
+    return "/sizes-female";
+  }
+  if (categories.toLowerCase().includes("для мужчин")) {
+    return "/sizes";
+  }
+  return "#";
 });
 
 // Размерная сетка - группируем по russianSize и сортируем
