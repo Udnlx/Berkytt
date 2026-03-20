@@ -83,9 +83,23 @@
             </h3>
 
             <!-- Text -->
-            <p class="text-sm text-gray-600 leading-relaxed mb-6">
-              {{ review.text }}
-            </p>
+            <div class="mb-6 flex-grow">
+              <p
+                class="text-sm text-gray-600 leading-relaxed"
+                :class="[!expandedReviews.has(review.id) ? 'line-clamp-4' : '']"
+              >
+                {{ review.text }}
+              </p>
+              <button
+                v-if="review.text.length > 150"
+                @click="toggleExpand(review.id)"
+                class="mt-2 text-xs font-medium text-[#ec018c] hover:text-[#ec018c]/80 transition"
+              >
+                {{
+                  expandedReviews.has(review.id) ? "Свернуть" : "Читать далее"
+                }}
+              </button>
+            </div>
 
             <!-- Author -->
             <div class="flex items-center gap-3 mt-auto">
@@ -127,6 +141,17 @@ const props = defineProps<{
 
 const carouselRef = ref<HTMLElement | null>(null);
 const showArrows = ref(false);
+const expandedReviews = ref<Set<number>>(new Set());
+
+const toggleExpand = (id: number) => {
+  const newSet = new Set(expandedReviews.value);
+  if (newSet.has(id)) {
+    newSet.delete(id);
+  } else {
+    newSet.add(id);
+  }
+  expandedReviews.value = newSet;
+};
 
 const checkArrows = () => {
   if (carouselRef.value) {
