@@ -16,11 +16,4 @@
   </section>
 </template>
 
-<script setup lang="ts">
-const categories = [
-  { label: "ПАЛЬТО", href: "#" },
-  { label: "ПОЛУПАЛЬТО", href: "#" },
-  { label: "ПЛАЩИ", href: "#" },
-  { label: "КУРТКИ", href: "#" },
-];
-</script>
+<script setup lang="ts"></script>
