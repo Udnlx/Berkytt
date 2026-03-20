@@ -71,24 +71,17 @@
             </p>
             <div class="flex flex-wrap justify-center gap-3">
               <a
-                href="/category/for-men"
+                href="/catalog/men/coat/all/1"
                 class="text-sm text-[#ec018c] hover:underline"
               >
                 Для мужчин
               </a>
               <span class="text-gray-300">•</span>
               <a
-                href="/category/for-women"
+                href="/catalog/women/raincoats/all/1"
                 class="text-sm text-[#ec018c] hover:underline"
               >
                 Для женщин
-              </a>
-              <span class="text-gray-300">•</span>
-              <a
-                href="/category/new"
-                class="text-sm text-[#ec018c] hover:underline"
-              >
-                Новинки
               </a>
             </div>
           </div>
