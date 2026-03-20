@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 defineProps<{
-  body: string;
+  body?: string;
 }>();
 </script>
 
@@ -18,6 +18,7 @@ section {
   font-family:
     -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
     Cantarell, sans-serif;
+  text-align: justify;
 }
 
 h1 {
