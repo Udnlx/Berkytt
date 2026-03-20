@@ -111,7 +111,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, watch, nextTick } from "vue";
 
 interface Comment {
   id: number;
@@ -136,8 +136,17 @@ const checkArrows = () => {
   }
 };
 
+watch(
+  () => props.comments,
+  () => {
+    nextTick(() => {
+      checkArrows();
+    });
+  },
+  { immediate: true },
+);
+
 onMounted(() => {
-  checkArrows();
   window.addEventListener("resize", checkArrows);
 });
 
