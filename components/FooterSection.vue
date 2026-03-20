@@ -13,19 +13,33 @@
           <div class="space-y-3">
             <div class="flex">
               <span class="text-sm font-medium text-gray-900 w-20">Почта:</span>
-              <span class="text-sm text-gray-600">berkytt@gmail.com</span>
+              <span class="text-sm text-gray-600">
+                <a
+                  :href="mainInfo.email ? 'mailto:' + mainInfo.email : '#'"
+                  class="transition opacity-100 hover:opacity-70"
+                >
+                  {{ mainInfo.email || "berkytt@yandex.ru" }}
+                </a>
+              </span>
             </div>
             <div class="flex">
               <span class="text-sm font-medium text-gray-900 w-20"
                 >Телефон:</span
               >
-              <span class="text-sm text-gray-600">1-333-345-6868</span>
+              <span class="text-sm text-gray-600">
+                <a
+                  :href="mainInfo.phone ? 'tel:' + mainInfo.phone : '#'"
+                  class="transition opacity-100 hover:opacity-70"
+                >
+                  {{ mainInfo.phone || "+7 (495) 788-88-67" }}
+                </a>
+              </span>
             </div>
             <div class="flex">
               <span class="text-sm font-medium text-gray-900 w-20">Адрес:</span>
-              <span class="text-sm text-gray-600"
-                >г. Москва, Сормовский проезд, д.11с1</span
-              >
+              <span class="text-sm text-gray-600">{{
+                mainInfo.address || "г. Москва, Сормовский проезд, д.11с1"
+              }}</span>
             </div>
           </div>
         </div>
@@ -259,6 +273,48 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
+
+interface MainInfo {
+  address: string;
+  phone: string;
+  mobilePhone: string;
+  whatsapp: string;
+  email: string;
+}
+
+const mainInfo = ref<MainInfo>({
+  address: "",
+  phone: "",
+  mobilePhone: "",
+  whatsapp: "",
+  email: "",
+});
+
+onMounted(async () => {
+  try {
+    const response = await fetch("/api/maininfo");
+    const data = await response.json();
+    console.log("API Response:", data);
+
+    // API возвращает { info: [...] }
+    const infoData = data.info && data.info[0] ? data.info[0] : null;
+
+    if (infoData) {
+      mainInfo.value = {
+        address: infoData.address?.replace(/<[^>]*>/g, "") || "", // Удаляем HTML теги
+        phone: infoData.main_phone || "",
+        mobilePhone: infoData.mobile_phone || "",
+        whatsapp: infoData.whatsapp || "",
+        email: infoData.email || "",
+      };
+    }
+    console.log("Header mainInfo:", mainInfo.value);
+  } catch (error) {
+    console.error("Failed to fetch maininfo data:", error);
+  }
+});
+
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 };

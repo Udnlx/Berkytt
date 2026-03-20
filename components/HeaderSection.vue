@@ -13,11 +13,11 @@
           <div class="flex items-center space-x-4">
             <!-- Адрес -->
             <span class="text-sm hidden lg:inline">
-              г. Москва, Сормовский проезд, д.11с1
+              {{ mainInfo.address || "г. Москва, Сормовский проезд, д.11с1" }}
             </span>
             <!-- Конверт (Email) -->
             <a
-              href="mailto:info@berkytt.com"
+              :href="mainInfo.email ? 'mailto:' + mainInfo.email : '#'"
               class="transition opacity-100 hover:opacity-70"
             >
               <img
@@ -29,7 +29,7 @@
             </a>
             <!-- Телефонная трубка -->
             <a
-              href="tel:+1234567890"
+              :href="mainInfo.phone ? 'tel:' + mainInfo.phone : '#'"
               class="transition opacity-100 hover:opacity-70"
             >
               <img
@@ -41,7 +41,7 @@
             </a>
             <!-- Мобильный телефон -->
             <a
-              href="tel:+1234567890"
+              :href="mainInfo.mobilePhone ? 'tel:' + mainInfo.mobilePhone : '#'"
               class="transition opacity-100 hover:opacity-70"
             >
               <img
@@ -53,7 +53,11 @@
             </a>
             <!-- WhatsApp -->
             <a
-              href="https://wa.me/1234567890"
+              :href="
+                mainInfo.whatsapp
+                  ? 'https://wa.me/' + mainInfo.whatsapp.replace(/[^\d]/g, '')
+                  : '#'
+              "
               target="_blank"
               class="transition opacity-100 hover:opacity-70"
             >
@@ -280,10 +284,50 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 const isMobileMenuOpen = ref(false);
 const openDropdown = ref<number | null>(null);
+
+interface MainInfo {
+  address: string;
+  phone: string;
+  mobilePhone: string;
+  whatsapp: string;
+  email: string;
+}
+
+const mainInfo = ref<MainInfo>({
+  address: "",
+  phone: "",
+  mobilePhone: "",
+  whatsapp: "",
+  email: "",
+});
+
+onMounted(async () => {
+  try {
+    const response = await fetch("/api/maininfo");
+    const data = await response.json();
+    console.log("API Response:", data);
+
+    // API возвращает { info: [...] }
+    const infoData = data.info && data.info[0] ? data.info[0] : null;
+
+    if (infoData) {
+      mainInfo.value = {
+        address: infoData.address?.replace(/<[^>]*>/g, "") || "", // Удаляем HTML теги
+        phone: infoData.main_phone || "",
+        mobilePhone: infoData.mobile_phone || "",
+        whatsapp: infoData.whatsapp || "",
+        email: infoData.email || "",
+      };
+    }
+    console.log("Header mainInfo:", mainInfo.value);
+  } catch (error) {
+    console.error("Failed to fetch maininfo data:", error);
+  }
+});
 
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
