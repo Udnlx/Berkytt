@@ -11,7 +11,7 @@
       />
       <ShopNowSection />
       <AboutUsSection />
-      <CommentsSection />
+      <CommentsSection :comments="commentsForMain" />
     </main>
     <FooterSection />
   </div>
@@ -51,6 +51,13 @@ interface MainPageData {
     badgeType?: string;
     endDate?: string;
   }>;
+  commentsForMain: Array<{
+    id: number;
+    title: string;
+    text: string;
+    author: string;
+    date: string;
+  }>;
   ourCollections: Array<{
     id: number;
     name: string;
@@ -64,6 +71,7 @@ const btnFiltersForNew = ref<string[]>([]);
 const productsForNew = ref<MainPageData["productsForNew"]>([]);
 const btnFiltersForBest = ref<string[]>([]);
 const productsForBest = ref<MainPageData["productsForBest"]>([]);
+const commentsForMain = ref<MainPageData["commentsForMain"]>([]);
 const ourCollections = ref<MainPageData["ourCollections"]>([]);
 
 onMounted(async () => {
@@ -97,6 +105,8 @@ onMounted(async () => {
           ? `${API_BASE}${product.hoverImage}`
           : undefined,
     }));
+    // Загружаем комментарии
+    commentsForMain.value = data.commentsForMain || [];
     // Добавляем базовый URL к изображениям коллекций
     // API возвращает путь к папке, нужно найти первое изображение
     ourCollections.value = (data.ourCollections || []).map((collection) => {
@@ -115,6 +125,7 @@ onMounted(async () => {
     console.log("productsForNew:", productsForNew.value);
     console.log("btnFiltersForBest:", btnFiltersForBest.value);
     console.log("productsForBest:", productsForBest.value);
+    console.log("commentsForMain:", commentsForMain.value);
     console.log("ourCollections:", ourCollections.value);
   } catch (error) {
     console.error("Failed to fetch mainpage data:", error);
