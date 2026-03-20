@@ -1,15 +1,21 @@
 <template>
-  <section class="py-16 bg-white">
+  <section
+    v-if="props.products && props.products.length > 0"
+    class="py-16 bg-white"
+  >
     <div class="container mx-auto px-4">
       <!-- Filters -->
-      <div class="flex justify-center mb-10">
+      <div
+        v-if="props.filters && props.filters.length > 0"
+        class="flex justify-center mb-10"
+      >
         <div class="inline-flex bg-gray-100 rounded-full px-2 py-1">
           <button
-            v-for="filter in filters"
+            v-for="filter in props.filters"
             :key="filter"
             @click="activeFilter = filter"
             :class="[
-              'px-4 py-2 text-sm rounded-full transition-all',
+              'px-4 py-2 text-sm rounded-full transition-all uppercase',
               activeFilter === filter
                 ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-500 hover:text-gray-700',
@@ -152,37 +158,19 @@
                 class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
               >
                 <a
-                  :href="`/product/${product.id}`"
+                  :href="`/product/${product.name}`"
                   class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
                   @click.stop
                 >
                   ПРОСМОТР
                 </a>
                 <a
-                  :href="`/cart?add=${product.id}`"
+                  :href="`/cart?add=${product.name}`"
                   class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
                   @click.stop
                 >
                   В КОРЗИНУ
                 </a>
-              </div>
-
-              <!-- Color Swatches -->
-              <div
-                class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-16 group-hover:-translate-y-11 transition-all duration-300 delay-75"
-              >
-                <div
-                  v-for="color in product.colors || [
-                    'bg-gray-200',
-                    'bg-pink-200',
-                    'bg-blue-100',
-                  ]"
-                  :key="color"
-                  :class="[
-                    'w-8 h-8 rounded-full cursor-pointer border-2 border-white shadow-md hover:scale-110 transition',
-                    color,
-                  ]"
-                ></div>
               </div>
 
               <!-- Sale Timer (for sale items) -->
@@ -199,21 +187,23 @@
             <!-- Product Info -->
             <div class="mt-4">
               <h3 class="text-sm font-medium text-gray-900">
-                {{ product.name }}
+                {{ product.title }}
               </h3>
               <div class="flex items-center gap-2 mt-1">
-                <span class="text-sm font-medium">₽{{ product.price }}</span>
+                <span class="text-sm font-medium"
+                  >₽{{ formatPrice(product.price) }}</span
+                >
                 <span
-                  v-if="product.oldPrice"
+                  v-if="product.fullPrice && product.discount"
                   class="text-sm text-gray-400 line-through"
                 >
-                  ₽{{ product.oldPrice }}
+                  ₽{{ formatPrice(product.fullPrice) }}
                 </span>
                 <span
                   v-if="product.discount"
                   class="px-2 py-0.5 text-xs font-medium bg-[#ec018c] text-[#ffffff] rounded-full"
                 >
-                  {{ product.discount }}
+                  -{{ product.discount }}%
                 </span>
               </div>
             </div>
@@ -227,8 +217,27 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
 
-const filters = ["ТОП", "РАСПРОДАЖИ", "НОВИНКИ"];
-const activeFilter = ref("ТОП");
+interface BestProduct {
+  id: number;
+  name: string;
+  title: string;
+  image: string;
+  hoverImage?: string;
+  price: number;
+  fullPrice: number;
+  discount: number;
+  badge?: string;
+  badgeType?: string;
+  endDate?: string;
+  category?: string;
+}
+
+const props = defineProps<{
+  filters: string[];
+  products: BestProduct[];
+}>();
+
+const activeFilter = ref("");
 const currentTime = ref(Date.now());
 
 watch(activeFilter, () => {
@@ -237,6 +246,16 @@ watch(activeFilter, () => {
   });
 });
 
+watch(
+  () => props.filters,
+  (newFilters: readonly string[]) => {
+    if (newFilters && newFilters.length > 0 && !activeFilter.value) {
+      activeFilter.value = newFilters[0] as string;
+    }
+  },
+  { immediate: true },
+);
+
 // Update timer every second
 let timerInterval: ReturnType<typeof setInterval> | null = null;
 
@@ -244,6 +263,10 @@ onMounted(() => {
   timerInterval = setInterval(() => {
     currentTime.value = Date.now();
   }, 1000);
+
+  if (props.filters && props.filters.length > 0) {
+    activeFilter.value = props.filters[0] as string;
+  }
 });
 
 onUnmounted(() => {
@@ -270,120 +293,16 @@ const formatTimeLeft = (endDate: string) => {
   return `${days}Д : ${String(hours).padStart(2, "0")}Ч : ${String(minutes).padStart(2, "0")}M : ${String(seconds).padStart(2, "0")}С`;
 };
 
-const products = [
-  {
-    id: 1,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "ТОП",
-    badgeType: "top" as const,
-    category: "ТОП",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 2,
-    name: "Kimono Sleeve Top",
-    price: 24.0,
-    oldPrice: 32.0,
-    discount: "-25%",
-    badge: "РАСПРОДАЖА",
-    badgeType: "sale" as const,
-    category: "РАСПРОДАЖИ",
-    endDate: "2026-03-15T23:59:59",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 3,
-    name: "Mesh Shirt",
-    price: 35.0,
-    oldPrice: 45.0,
-    discount: "-22%",
-    badge: "ТОП",
-    badgeType: "top" as const,
-    category: "ТОП",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 4,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "РАСПРОДАЖА",
-    badgeType: "sale" as const,
-    category: "РАСПРОДАЖИ",
-    endDate: "2026-03-15T23:59:59",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 5,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "НОВИНКА",
-    badgeType: "new" as const,
-    category: "НОВИНКИ",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 6,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "ТОП",
-    badgeType: "top" as const,
-    category: "ТОП",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 7,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "ТОП",
-    badgeType: "top" as const,
-    category: "ТОП",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-  {
-    id: 8,
-    name: "Raglan Sleeve T-Shirt",
-    price: 28.0,
-    oldPrice: 36.0,
-    discount: "-22%",
-    badge: "ТОП",
-    badgeType: "top" as const,
-    category: "ТОП",
-    image: "/images/forcards.jpg",
-    hoverImage: "/images/forcardshover.jpg",
-    colors: ["bg-gray-200", "bg-pink-200", "bg-blue-100"],
-  },
-];
-
 const filteredProducts = computed(() => {
-  if (activeFilter.value === "ALL") {
-    return products;
+  if (!props.products || props.products.length === 0) {
+    return [];
   }
-  return products.filter((p) => p.category === activeFilter.value);
+  if (!activeFilter.value || activeFilter.value === "Топ") {
+    return props.products;
+  }
+  return props.products.filter(
+    (p) => !p.category || p.category === activeFilter.value,
+  );
 });
 
 const carouselRef = ref<HTMLElement | null>(null);
@@ -424,6 +343,11 @@ const scrollRight = () => {
   if (carouselRef.value) {
     carouselRef.value.scrollBy({ left: 300, behavior: "smooth" });
   }
+};
+
+// Форматирование цены с разделителем тысяч
+const formatPrice = (price: number) => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 </script>
 

@@ -5,7 +5,10 @@
       <HeroSection />
       <WhatsNewSection :filters="btnFiltersForNew" :products="productsForNew" />
       <ExploreCollectionsSection :collections="ourCollections" />
-      <BestSellersSection />
+      <BestSellersSection
+        :filters="btnFiltersForBest"
+        :products="productsForBest"
+      />
       <ShopNowSection />
       <AboutUsSection />
       <CommentsSection />
@@ -34,6 +37,20 @@ interface MainPageData {
     badgeType?: string;
     endDate?: string;
   }>;
+  btnFiltersForBest: string[];
+  productsForBest: Array<{
+    id: number;
+    name: string;
+    title: string;
+    image: string;
+    hoverImage?: string;
+    price: number;
+    fullPrice: number;
+    discount: number;
+    badge?: string;
+    badgeType?: string;
+    endDate?: string;
+  }>;
   ourCollections: Array<{
     id: number;
     name: string;
@@ -45,6 +62,8 @@ interface MainPageData {
 
 const btnFiltersForNew = ref<string[]>([]);
 const productsForNew = ref<MainPageData["productsForNew"]>([]);
+const btnFiltersForBest = ref<string[]>([]);
+const productsForBest = ref<MainPageData["productsForBest"]>([]);
 const ourCollections = ref<MainPageData["ourCollections"]>([]);
 
 onMounted(async () => {
@@ -55,6 +74,19 @@ onMounted(async () => {
     btnFiltersForNew.value = data.btnFiltersForNew || [];
     // Добавляем базовый URL к путям изображений
     productsForNew.value = (data.productsForNew || []).map((product) => ({
+      ...product,
+      image: product.image?.startsWith("http")
+        ? product.image
+        : `${API_BASE}${product.image}`,
+      hoverImage: product.hoverImage?.startsWith("http")
+        ? product.hoverImage
+        : product.hoverImage
+          ? `${API_BASE}${product.hoverImage}`
+          : undefined,
+    }));
+    // Добавляем базовый URL к изображениям для BestSellers
+    btnFiltersForBest.value = data.btnFiltersForBest || [];
+    productsForBest.value = (data.productsForBest || []).map((product) => ({
       ...product,
       image: product.image?.startsWith("http")
         ? product.image
@@ -81,6 +113,8 @@ onMounted(async () => {
     });
     console.log("btnFiltersForNew:", btnFiltersForNew.value);
     console.log("productsForNew:", productsForNew.value);
+    console.log("btnFiltersForBest:", btnFiltersForBest.value);
+    console.log("productsForBest:", productsForBest.value);
     console.log("ourCollections:", ourCollections.value);
   } catch (error) {
     console.error("Failed to fetch mainpage data:", error);
