@@ -103,8 +103,7 @@
 <script setup lang="ts">
 // @ts-nocheck
 import { computed } from "vue";
-import { useRoute } from "vue-router";
-import { useRuntimeConfig, useHead } from "#app";
+import { useRoute, useHead, useRuntimeConfig } from "#app";
 
 // Интерфейс ответа от API
 interface ApiProductData {

@@ -10,15 +10,17 @@
 </template>
 
 <script setup lang="ts">
+import { useRoute, useRuntimeConfig, navigateTo } from "#app";
+
+const route = useRoute();
+const slug = route.params.slug as string;
+const config = useRuntimeConfig();
+
 interface PageData {
   title: string;
   body: string;
   name: string;
 }
-
-const route = useRoute();
-const slug = route.params.slug as string;
-const config = useRuntimeConfig();
 
 const { data: pageData, error } = await useFetch<PageData>(
   `${config.public.apiBase}/getpage/${slug}`,

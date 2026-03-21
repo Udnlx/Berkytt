@@ -16,8 +16,7 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { useRoute, navigateTo } from "#app";
-import { useHead, useRuntimeConfig } from "#app";
+import { useRoute, navigateTo, useHead, useRuntimeConfig } from "#app";
 
 interface Product {
   id: number;
