@@ -20,7 +20,10 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 
-const API_BASE = "http://berkytt";
+const config = useRuntimeConfig();
+const API_BASE = config.public.apiBase as string;
+// Базовый хост для изображений (без /api в конце)
+const IMAGE_BASE = API_BASE.replace("/api", "");
 
 interface MainPageData {
   btnFiltersForNew: string[];
@@ -85,11 +88,11 @@ onMounted(async () => {
       ...product,
       image: product.image?.startsWith("http")
         ? product.image
-        : `${API_BASE}${product.image}`,
+        : `${IMAGE_BASE}${product.image}`,
       hoverImage: product.hoverImage?.startsWith("http")
         ? product.hoverImage
         : product.hoverImage
-          ? `${API_BASE}${product.hoverImage}`
+          ? `${IMAGE_BASE}${product.hoverImage}`
           : undefined,
     }));
     // Добавляем базовый URL к изображениям для BestSellers
@@ -98,11 +101,11 @@ onMounted(async () => {
       ...product,
       image: product.image?.startsWith("http")
         ? product.image
-        : `${API_BASE}${product.image}`,
+        : `${IMAGE_BASE}${product.image}`,
       hoverImage: product.hoverImage?.startsWith("http")
         ? product.hoverImage
         : product.hoverImage
-          ? `${API_BASE}${product.hoverImage}`
+          ? `${IMAGE_BASE}${product.hoverImage}`
           : undefined,
     }));
     // Загружаем комментарии
@@ -118,7 +121,7 @@ onMounted(async () => {
         ...collection,
         image: imagePath.startsWith("http")
           ? imagePath
-          : `${API_BASE}${imagePath}`,
+          : `${IMAGE_BASE}${imagePath}`,
       };
     });
     console.log("btnFiltersForNew:", btnFiltersForNew.value);
