@@ -70,9 +70,9 @@ interface MainPageData {
   }>;
 }
 
-const btnFiltersForNew = ref<string[]>([]);
+const btnFiltersForNew = ref<MainPageData["btnFiltersForNew"]>([]);
 const productsForNew = ref<MainPageData["productsForNew"]>([]);
-const btnFiltersForBest = ref<string[]>([]);
+const btnFiltersForBest = ref<MainPageData["btnFiltersForBest"]>([]);
 const productsForBest = ref<MainPageData["productsForBest"]>([]);
 const commentsForMain = ref<MainPageData["commentsForMain"]>([]);
 const ourCollections = ref<MainPageData["ourCollections"]>([]);
@@ -82,8 +82,9 @@ onMounted(async () => {
     const response = await fetch("/api/mainpage");
     const data: MainPageData = await response.json();
     console.log("API Response:", data);
+
     btnFiltersForNew.value = data.btnFiltersForNew || [];
-    // Добавляем базовый URL к путям изображений
+    // Добавляем базовый URL к изображениям для NewProducts
     productsForNew.value = (data.productsForNew || []).map((product) => ({
       ...product,
       image: product.image?.startsWith("http")
@@ -95,6 +96,20 @@ onMounted(async () => {
           ? `${IMAGE_BASE}${product.hoverImage}`
           : undefined,
     }));
+
+    // Добавляем базовый URL к изображениям для OurCollections
+    ourCollections.value = (data.ourCollections || []).map((collection) => {
+      const imagePath = collection.image.endsWith("/")
+        ? `${collection.image}1.jpg`
+        : collection.image;
+      return {
+        ...collection,
+        image: imagePath.startsWith("http")
+          ? imagePath
+          : `${IMAGE_BASE}${imagePath}`,
+      };
+    });
+
     // Добавляем базовый URL к изображениям для BestSellers
     btnFiltersForBest.value = data.btnFiltersForBest || [];
     productsForBest.value = (data.productsForBest || []).map((product) => ({
@@ -108,22 +123,10 @@ onMounted(async () => {
           ? `${IMAGE_BASE}${product.hoverImage}`
           : undefined,
     }));
+
     // Загружаем комментарии
     commentsForMain.value = data.commentsForMain || [];
-    // Добавляем базовый URL к изображениям коллекций
-    // API возвращает путь к папке, нужно найти первое изображение
-    ourCollections.value = (data.ourCollections || []).map((collection) => {
-      // Если image заканчивается на '/', ищем первое изображение в папке
-      const imagePath = collection.image.endsWith("/")
-        ? `${collection.image}1.jpg`
-        : collection.image;
-      return {
-        ...collection,
-        image: imagePath.startsWith("http")
-          ? imagePath
-          : `${IMAGE_BASE}${imagePath}`,
-      };
-    });
+
     console.log("btnFiltersForNew:", btnFiltersForNew.value);
     console.log("productsForNew:", productsForNew.value);
     console.log("btnFiltersForBest:", btnFiltersForBest.value);
