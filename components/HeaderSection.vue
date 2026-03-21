@@ -150,12 +150,12 @@
                     class="absolute left-0 mt-2 w-56 bg-white border border-gray-100 shadow-lg rounded-md py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
                   >
                     <a
-                      v-for="(subItem, subIndex) in item.items"
+                      v-for="(subItem, subIndex) in item.items || []"
                       :key="subIndex"
-                      :href="subItem.href"
+                      :href="subItem?.href || '#'"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition whitespace-normal break-words"
                     >
-                      {{ subItem.label }}
+                      {{ subItem?.label || "" }}
                     </a>
                   </div>
                 </div>
@@ -266,12 +266,12 @@
                   class="pl-4 mt-2 space-y-2"
                 >
                   <a
-                    v-for="(subItem, subIndex) in item.items"
+                    v-for="(subItem, subIndex) in item.items || []"
                     :key="subIndex"
-                    :href="subItem.href"
+                    :href="subItem?.href || '#'"
                     class="block text-sm text-gray-500 hover:text-gray-900 transition py-1"
                   >
-                    {{ subItem.label }}
+                    {{ subItem?.label || "" }}
                   </a>
                 </div>
               </div>
@@ -284,7 +284,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const isMobileMenuOpen = ref(false);
 const openDropdown = ref<number | null>(null);
@@ -297,6 +297,18 @@ interface MainInfo {
   email: string;
 }
 
+interface MenuItem {
+  id: number;
+  section: string;
+  title: string;
+  name: string;
+}
+
+interface MenuData {
+  menuMan: MenuItem[];
+  menuWoman: MenuItem[];
+}
+
 const mainInfo = ref<MainInfo>({
   address: "",
   phone: "",
@@ -305,25 +317,44 @@ const mainInfo = ref<MainInfo>({
   email: "",
 });
 
+const menuData = ref<MenuData>({
+  menuMan: [],
+  menuWoman: [],
+});
+
 onMounted(async () => {
   try {
     const response = await fetch("/api/maininfo");
     const data = await response.json();
     console.log("API Response:", data);
 
-    // API возвращает { info: [...] }
+    // info - отдельно, menuMan/menuWoman - в корне
     const infoData = data.info && data.info[0] ? data.info[0] : null;
 
     if (infoData) {
       mainInfo.value = {
-        address: infoData.address?.replace(/<[^>]*>/g, "") || "", // Удаляем HTML теги
+        address: infoData.address?.replace(/<[^>]*>/g, "") || "",
         phone: infoData.main_phone || "",
         mobilePhone: infoData.mobile_phone || "",
         whatsapp: infoData.whatsapp || "",
         email: infoData.email || "",
       };
     }
+
+    // Получаем меню для мужчин (приходит в корне data)
+    if (data.menuMan && Array.isArray(data.menuMan)) {
+      menuData.value.menuMan = data.menuMan;
+      console.log("Set menuMan:", menuData.value.menuMan);
+    }
+
+    // Получаем меню для женщин (приходит в корне data)
+    if (data.menuWoman && Array.isArray(data.menuWoman)) {
+      menuData.value.menuWoman = data.menuWoman;
+      console.log("Set menuWoman:", menuData.value.menuWoman);
+    }
+
     console.log("Header mainInfo:", mainInfo.value);
+    console.log("Menu data:", menuData.value);
   } catch (error) {
     console.error("Failed to fetch maininfo data:", error);
   }
@@ -337,31 +368,38 @@ const toggleDropdown = (menuIndex: number) => {
   openDropdown.value = openDropdown.value === menuIndex ? null : menuIndex;
 };
 
-// Единый массив пунктов меню
-const menuItems = [
+// Формируем URL вида /catalog/{section}/{name}/all/1
+const buildMenuUrl = (section: string, name: string) => {
+  return `/catalog/${section}/${name}/all/1`;
+};
+
+// Вычисляемые свойства для меню
+const manMenuItems = computed(() => {
+  return (menuData.value.menuMan || []).map((item) => ({
+    label: item.title.toUpperCase(),
+    href: buildMenuUrl(item.section, item.name),
+  }));
+});
+
+const womanMenuItems = computed(() => {
+  return (menuData.value.menuWoman || []).map((item) => ({
+    label: item.title.toUpperCase(),
+    href: buildMenuUrl(item.section, item.name),
+  }));
+});
+
+// Единый массив пунктов меню (вычисляемое свойство)
+const menuItems = computed(() => [
   { label: "О БРЕНДЕ", href: "/o-brende" },
   {
     label: "ДЛЯ МУЖЧИН",
     type: "dropdown",
-    items: [
-      { label: "ПАЛЬТО", href: "#" },
-      { label: "ПОЛУПАЛЬТО", href: "#" },
-      { label: "ПЛАЩИ", href: "#" },
-      { label: "КУРТКИ", href: "#" },
-      { label: "ПИДЖАКИ", href: "#" },
-      { label: "БРЮКИ", href: "#" },
-      { label: "ЖИЛЕТЫ", href: "#" },
-      { label: "ИЗДЕЛИЯ С МЕХОМ", href: "#" },
-      { label: "БЕЙСБОЛКИ И КЕПКИ", href: "#" },
-    ],
+    items: manMenuItems.value,
   },
   {
     label: "ДЛЯ ЖЕНЩИН",
     type: "dropdown",
-    items: [
-      { label: "ПАЛЬТО", href: "#" },
-      { label: "ПЛАЩИ", href: "#" },
-    ],
+    items: womanMenuItems.value,
   },
   {
     label: "ИНФОРМАЦИЯ",
@@ -386,5 +424,5 @@ const menuItems = [
     ],
   },
   { label: "КОНТАКТЫ", href: "/contact" },
-];
+]);
 </script>
