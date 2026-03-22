@@ -2,6 +2,7 @@ import { ref, computed } from "vue";
 
 interface CartProduct {
   id: number; // ID товара
+  idSize: number; // ID размера
   product: string; // nameProduct
   size: string; // nameSize
   qnt: number; // Количество
@@ -35,13 +36,18 @@ const totalQuantity = computed(() => {
 // Добавление товара в корзину
 const addToCart = (
   id: number,
+  idSize: number,
   product: string,
   size: string,
   qnt: number,
   price: number,
 ) => {
   const existingIndex = cartProducts.value.findIndex(
-    (item) => item.id === id && item.product === product && item.size === size,
+    (item) =>
+      item.id === id &&
+      item.idSize === idSize &&
+      item.product === product &&
+      item.size === size,
   );
 
   if (existingIndex !== -1) {
@@ -49,7 +55,7 @@ const addToCart = (
     cartProducts.value[existingIndex].qnt += qnt;
   } else {
     // Добавляем новый товар
-    cartProducts.value.push({ id, product, size, qnt, price });
+    cartProducts.value.push({ id, idSize, product, size, qnt, price });
   }
 
   saveToStorage();
@@ -57,10 +63,20 @@ const addToCart = (
 };
 
 // Удаление товара из корзины
-const removeFromCart = (id: number, product: string, size: string) => {
+const removeFromCart = (
+  id: number,
+  idSize: number,
+  product: string,
+  size: string,
+) => {
   cartProducts.value = cartProducts.value.filter(
     (item) =>
-      !(item.id === id && item.product === product && item.size === size),
+      !(
+        item.id === id &&
+        item.idSize === idSize &&
+        item.product === product &&
+        item.size === size
+      ),
   );
   saveToStorage();
   console.log("Товар удалён из корзины:", cartProducts.value);
@@ -76,12 +92,17 @@ const clearCart = () => {
 // Обновление количества товара
 const updateQuantity = (
   id: number,
+  idSize: number,
   product: string,
   size: string,
   qnt: number,
 ) => {
   const item = cartProducts.value.find(
-    (item) => item.id === id && item.product === product && item.size === size,
+    (item) =>
+      item.id === id &&
+      item.idSize === idSize &&
+      item.product === product &&
+      item.size === size,
   );
   if (item) {
     item.qnt = qnt;

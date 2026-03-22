@@ -21,7 +21,9 @@
           <!-- Cart Item -->
           <div
             v-for="item in cartProducts"
-            :key="item.id + '-' + item.product + '-' + item.size"
+            :key="
+              item.id + '-' + item.idSize + '-' + item.product + '-' + item.size
+            "
             class="py-6 border-b border-gray-200"
           >
             <!-- Mobile Layout -->
@@ -37,7 +39,9 @@
                   <h3 class="text-sm font-medium text-[#ec018c] mb-1">
                     {{ item.product }}
                   </h3>
-                  <p class="text-xs text-gray-400">РАЗМЕР: {{ item.size }}</p>
+                  <p class="text-xs text-gray-400">
+                    РАЗМЕР: {{ item.size }} (ID: {{ item.idSize }})
+                  </p>
                 </div>
               </div>
 
@@ -57,6 +61,7 @@
                     @click="
                       decreaseQuantity(
                         item.id,
+                        item.idSize,
                         item.product,
                         item.size,
                         item.qnt,
@@ -88,6 +93,7 @@
                     @click="
                       increaseQuantity(
                         item.id,
+                        item.idSize,
                         item.product,
                         item.size,
                         item.qnt,
@@ -122,7 +128,9 @@
                     </span>
                   </div>
                   <button
-                    @click="removeItem(item.id, item.product, item.size)"
+                    @click="
+                      removeItem(item.id, item.idSize, item.product, item.size)
+                    "
                     class="text-gray-400 hover:text-[#ec018c] transition-colors"
                   >
                     <svg
@@ -158,7 +166,9 @@
                   <h3 class="text-sm font-medium text-[#ec018c] mb-1">
                     {{ item.product }}
                   </h3>
-                  <p class="text-xs text-gray-400">РАЗМЕР: {{ item.size }}</p>
+                  <p class="text-xs text-gray-400">
+                    РАЗМЕР: {{ item.size }} (ID: {{ item.idSize }})
+                  </p>
                 </div>
               </div>
 
@@ -176,6 +186,7 @@
                     @click="
                       decreaseQuantity(
                         item.id,
+                        item.idSize,
                         item.product,
                         item.size,
                         item.qnt,
@@ -207,6 +218,7 @@
                     @click="
                       increaseQuantity(
                         item.id,
+                        item.idSize,
                         item.product,
                         item.size,
                         item.qnt,
@@ -237,7 +249,9 @@
                   {{ formatPrice(item.price * item.qnt) }} ₽
                 </span>
                 <button
-                  @click="removeItem(item.id, item.product, item.size)"
+                  @click="
+                    removeItem(item.id, item.idSize, item.product, item.size)
+                  "
                   class="text-gray-400 hover:text-[#ec018c] transition-colors"
                 >
                   <svg
@@ -382,26 +396,33 @@ const formatPrice = (price: number): string => {
 
 const increaseQuantity = (
   id: number,
+  idSize: number,
   product: string,
   size: string,
   currentQnt: number,
 ) => {
-  updateQuantity(id, product, size, currentQnt + 1);
+  updateQuantity(id, idSize, product, size, currentQnt + 1);
 };
 
 const decreaseQuantity = (
   id: number,
+  idSize: number,
   product: string,
   size: string,
   currentQnt: number,
 ) => {
   if (currentQnt > 1) {
-    updateQuantity(id, product, size, currentQnt - 1);
+    updateQuantity(id, idSize, product, size, currentQnt - 1);
   }
 };
 
-const removeItem = (id: number, product: string, size: string) => {
-  removeFromCart(id, product, size);
+const removeItem = (
+  id: number,
+  idSize: number,
+  product: string,
+  size: string,
+) => {
+  removeFromCart(id, idSize, product, size);
 };
 
 const checkout = () => {

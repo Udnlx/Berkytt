@@ -185,10 +185,10 @@
                     <td class="size-label">{{ row.russianSize }}</td>
                     <td
                       v-for="(cell, index) in row.cells"
-                      :key="index"
+                      :key="cell.idSize"
                       @click="
                         !cell.unavailable &&
-                        selectSize(row.russianSize, cell.size)
+                        selectSize(row.russianSize, cell.size, cell.idSize)
                       "
                       :class="[
                         getActiveClass(row.russianSize, cell.size),
@@ -198,7 +198,10 @@
                         cell.unavailable ? '' : `Количество: ${cell.quantity}`
                       "
                     >
-                      {{ cell.size }}
+                      <div>{{ cell.size }}</div>
+                      <div class="text-xs text-gray-400 mt-1">
+                        ID: {{ cell.idSize }}
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -421,6 +424,7 @@ interface ProductData {
   video?: string;
   colors: { name: string; code: string; slug?: string }[];
   sizes: {
+    idSize: number;
     scancode: string;
     storage: boolean;
     russianSize: string;
@@ -527,6 +531,7 @@ const sizeGrid = computed(() => {
         acc[item.russianSize] = [];
       }
       acc[item.russianSize]!.push({
+        idSize: item.idSize,
         size: item.size,
         quantity: item.quantity,
         unavailable: item.quantity === "" || item.quantity === 0,
@@ -535,7 +540,12 @@ const sizeGrid = computed(() => {
     },
     {} as Record<
       string,
-      { size: string; quantity: number | string; unavailable: boolean }[]
+      {
+        idSize: number;
+        size: string;
+        quantity: number | string;
+        unavailable: boolean;
+      }[]
     >,
   );
 
@@ -560,11 +570,13 @@ const sizeGrid = computed(() => {
 // Выбранный размер
 const selectedSize = ref<string | null>(null);
 const selectedSizeValue = ref<string | null>(null);
+const selectedSizeId = ref<number | null>(null);
 
 // Выбор размера
-const selectSize = (russianSize: string, size: string) => {
+const selectSize = (russianSize: string, size: string, idSize: number) => {
   selectedSize.value = russianSize;
   selectedSizeValue.value = size;
+  selectedSizeId.value = idSize;
 };
 
 // Получить класс для активной ячейки
@@ -637,11 +649,12 @@ const addToCartHandler = () => {
   errorMessage.value = null;
 
   const productId = props.product.id || 0;
+  const productSizeId = selectedSizeId.value || 0;
   const productName = props.product.name || props.product.title;
   const size = selectedSizeValue.value || selectedSize.value || "Нет размера";
   const price = props.product.price || 0;
 
-  addToCart(productId, productName, size, quantity.value, price);
+  addToCart(productId, productSizeId, productName, size, quantity.value, price);
 };
 </script>
 

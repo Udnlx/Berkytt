@@ -122,6 +122,7 @@ interface ApiProductData {
   description: string;
   sameModels: { title: string; name: string; color: string }[];
   sizes: {
+    idSize: number;
     scancode: string;
     storage: boolean;
     russianSize: string;
@@ -183,6 +184,7 @@ interface ProductData {
   video?: string;
   colors: { name: string; code: string; slug?: string }[];
   sizes: {
+    idSize: number;
     scancode: string;
     storage: boolean;
     russianSize: string;
