@@ -20,24 +20,22 @@
 
           <!-- Cart Item -->
           <div
-            v-for="item in cartItems"
-            :key="item.id"
+            v-for="item in cartProducts"
+            :key="item.product + '-' + item.size"
             class="py-6 border-b border-gray-200"
           >
             <!-- Mobile Layout -->
             <div class="md:hidden">
               <!-- Product Row -->
               <div class="flex gap-4 mb-4">
-                <div class="w-20 h-28 flex-shrink-0">
-                  <img
-                    :src="item.image"
-                    :alt="item.name"
-                    class="w-full h-full object-cover"
-                  />
+                <div
+                  class="w-20 h-28 flex-shrink-0 bg-gray-100 flex items-center justify-center"
+                >
+                  <span class="text-xs text-gray-400">Нет фото</span>
                 </div>
                 <div class="flex flex-col justify-center flex-1">
                   <h3 class="text-sm font-medium text-[#ec018c] mb-1">
-                    {{ item.name }}
+                    {{ item.product }}
                   </h3>
                   <p class="text-xs text-gray-400">РАЗМЕР: {{ item.size }}</p>
                 </div>
@@ -56,9 +54,9 @@
                 <!-- Quantity Controls -->
                 <div class="inline-flex items-center border border-gray-300">
                   <button
-                    @click="decreaseQuantity(item.id)"
+                    @click="decreaseQuantity(item.product, item.size, item.qnt)"
                     class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    :disabled="item.quantity <= 1"
+                    :disabled="item.qnt <= 1"
                   >
                     <svg
                       class="w-3 h-3"
@@ -77,10 +75,10 @@
                   <span
                     class="w-10 h-8 flex items-center justify-center text-sm text-gray-800 border-x border-gray-300"
                   >
-                    {{ item.quantity }}
+                    {{ item.qnt }}
                   </span>
                   <button
-                    @click="increaseQuantity(item.id)"
+                    @click="increaseQuantity(item.product, item.size, item.qnt)"
                     class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors"
                   >
                     <svg
@@ -106,11 +104,11 @@
                     <span
                       class="text-sm font-medium text-gray-800 whitespace-nowrap"
                     >
-                      {{ formatPrice(item.price * item.quantity) }} ₽
+                      {{ formatPrice(item.price * item.qnt) }} ₽
                     </span>
                   </div>
                   <button
-                    @click="removeItem(item.id)"
+                    @click="removeItem(item.product, item.size)"
                     class="text-gray-400 hover:text-[#ec018c] transition-colors"
                   >
                     <svg
@@ -135,16 +133,16 @@
             <div class="hidden md:grid grid-cols-12 gap-4 items-center">
               <!-- Product Info -->
               <div class="col-span-5 flex gap-4">
-                <div class="w-20 h-28 flex-shrink-0">
-                  <img
-                    :src="item.image"
-                    :alt="item.name"
-                    class="w-full h-full object-cover"
-                  />
+                <!--
+                <div
+                  class="w-20 h-28 flex-shrink-0 bg-gray-100 flex items-center justify-center"
+                >
+                  <span class="text-xs text-gray-400">Нет фото</span>
                 </div>
+                -->
                 <div class="flex flex-col justify-center">
                   <h3 class="text-sm font-medium text-[#ec018c] mb-1">
-                    {{ item.name }}
+                    {{ item.product }}
                   </h3>
                   <p class="text-xs text-gray-400">РАЗМЕР: {{ item.size }}</p>
                 </div>
@@ -161,9 +159,9 @@
               <div class="col-span-3 flex justify-center">
                 <div class="inline-flex items-center border border-gray-300">
                   <button
-                    @click="decreaseQuantity(item.id)"
+                    @click="decreaseQuantity(item.product, item.size, item.qnt)"
                     class="w-10 h-9 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    :disabled="item.quantity <= 1"
+                    :disabled="item.qnt <= 1"
                   >
                     <svg
                       class="w-4 h-4"
@@ -182,10 +180,10 @@
                   <span
                     class="w-12 h-9 flex items-center justify-center text-sm text-gray-800 border-x border-gray-300"
                   >
-                    {{ item.quantity }}
+                    {{ item.qnt }}
                   </span>
                   <button
-                    @click="increaseQuantity(item.id)"
+                    @click="increaseQuantity(item.product, item.size, item.qnt)"
                     class="w-10 h-9 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors"
                   >
                     <svg
@@ -208,10 +206,10 @@
               <!-- Total & Remove -->
               <div class="col-span-2 flex items-center justify-center gap-3">
                 <span class="text-sm font-medium text-gray-800">
-                  {{ formatPrice(item.price * item.quantity) }} ₽
+                  {{ formatPrice(item.price * item.qnt) }} ₽
                 </span>
                 <button
-                  @click="removeItem(item.id)"
+                  @click="removeItem(item.product, item.size)"
                   class="text-gray-400 hover:text-[#ec018c] transition-colors"
                 >
                   <svg
@@ -230,6 +228,11 @@
                 </button>
               </div>
             </div>
+          </div>
+
+          <!-- Empty Cart Message -->
+          <div v-if="cartProducts.length === 0" class="py-12 text-center">
+            <p class="text-gray-500 text-lg">Корзина пуста</p>
           </div>
 
           <!-- Back to Catalog Button -->
@@ -321,43 +324,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { computed } from "vue";
+import { useCart } from "~/composables/useCart";
 
-interface CartItem {
-  id: number;
-  name: string;
-  size: string;
-  price: number;
-  quantity: number;
-  image: string;
-}
+const {
+  cartProducts,
+  totalQuantity,
+  removeFromCart,
+  updateQuantity,
+  clearCart,
+} = useCart();
 
-const cartItems = ref<CartItem[]>([
-  {
-    id: 1,
-    name: "ПАЛЬТО 102/1 Т1673.2",
-    size: "92/176",
-    price: 13934,
-    quantity: 1,
-    image: "/images/forcards.jpg",
-  },
-  {
-    id: 2,
-    name: "ПАЛЬТО 202/1 Т1673.2",
-    size: "92/176",
-    price: 10000,
-    quantity: 1,
-    image: "/images/forcards.jpg",
-  },
-]);
-
-const totalItems = computed(() => {
-  return cartItems.value.reduce((sum, item) => sum + item.quantity, 0);
-});
+const totalItems = computed(() => totalQuantity.value);
 
 const subtotal = computed(() => {
-  return cartItems.value.reduce(
-    (sum, item) => sum + item.price * item.quantity,
+  return cartProducts.value.reduce(
+    (sum, item) => sum + item.price * item.qnt,
     0,
   );
 });
@@ -370,26 +352,30 @@ const formatPrice = (price: number): string => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 
-const increaseQuantity = (id: number) => {
-  const item = cartItems.value.find((i) => i.id === id);
-  if (item) {
-    item.quantity++;
+const increaseQuantity = (
+  product: string,
+  size: string,
+  currentQnt: number,
+) => {
+  updateQuantity(product, size, currentQnt + 1);
+};
+
+const decreaseQuantity = (
+  product: string,
+  size: string,
+  currentQnt: number,
+) => {
+  if (currentQnt > 1) {
+    updateQuantity(product, size, currentQnt - 1);
   }
 };
 
-const decreaseQuantity = (id: number) => {
-  const item = cartItems.value.find((i) => i.id === id);
-  if (item && item.quantity > 1) {
-    item.quantity--;
-  }
-};
-
-const removeItem = (id: number) => {
-  cartItems.value = cartItems.value.filter((i) => i.id !== id);
+const removeItem = (product: string, size: string) => {
+  removeFromCart(product, size);
 };
 
 const checkout = () => {
-  console.log("Checkout:", cartItems.value);
+  console.log("Checkout:", cartProducts.value);
   // Здесь будет логика оформления заказа
 };
 </script>
