@@ -14,10 +14,13 @@
               Товары в заказе:
             </h3>
 
-            <div class="space-y-3">
+            <!-- Товары -->
+            <div v-if="cartProducts.length > 0" class="space-y-3">
               <div
                 v-for="item in cartProducts"
-                :key="item.id + '-' + item.idSize"
+                :key="
+                  'item-' + item.id + '-' + item.idSize + '-' + item.product
+                "
                 class="flex justify-between items-center py-3 border-b border-gray-100"
               >
                 <div>
@@ -31,10 +34,11 @@
                   </p>
                 </div>
               </div>
+            </div>
 
-              <div v-if="cartProducts.length === 0" class="text-center py-6">
-                <p class="text-gray-500">Корзина пуста</p>
-              </div>
+            <!-- Пустая корзина -->
+            <div v-else class="text-center py-6">
+              <p class="text-gray-500">Корзина пуста</p>
             </div>
           </div>
 
