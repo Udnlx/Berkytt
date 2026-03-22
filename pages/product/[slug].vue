@@ -161,6 +161,7 @@ interface ApiProductData {
 
 // Интерфейс для компонентов
 interface ProductData {
+  id: number;
   name: string;
   title: string;
   category: string;
@@ -326,6 +327,7 @@ const mappedProduct = computed<ProductData | null>(() => {
   ];
 
   return {
+    id: data.id,
     name: data.title,
     title: data.title,
     category: data.productCategory,

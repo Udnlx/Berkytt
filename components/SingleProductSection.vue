@@ -85,6 +85,7 @@
               <h1 class="text-2xl font-semibold mt-1">
                 {{ product?.name || "Название продукта" }}
               </h1>
+              <p id="product-id">{{ product?.id || "ID продукта" }}</p>
             </div>
             <button
               class="p-2 border border-gray-200 rounded hover:border-gray-400 transition"
@@ -396,6 +397,7 @@ import { useRouter } from "vue-router";
 import { useCart } from "~/composables/useCart";
 
 interface ProductData {
+  id: number;
   name: string;
   title: string;
   category: string;
