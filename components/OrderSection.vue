@@ -93,6 +93,7 @@
                 </span>
                 <input
                   v-model="form.email"
+                  @input="onEmailInput"
                   type="email"
                   placeholder="Электронная почта"
                   class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ec018c] focus:border-transparent"
@@ -120,6 +121,7 @@
                 </span>
                 <input
                   v-model="form.phone"
+                  @input="onPhoneInput"
                   type="tel"
                   placeholder="Телефон"
                   class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ec018c] focus:border-transparent"
@@ -296,7 +298,10 @@
                   />
                   <span class="text-xs text-gray-500 leading-relaxed">
                     Нажимая кнопку "Заказать", Вы принимаете
-                    <a href="#" class="text-[#ec018c] hover:underline">
+                    <a
+                      href="/pol-zovatel-skoe-soglashenie"
+                      class="text-[#ec018c] hover:underline"
+                    >
                       Пользовательское соглашение
                     </a>
                     и даете согласие на обработку персональных данных
@@ -368,6 +373,19 @@ const formatPrice = (price: number): string => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
 
+// Обработка ввода телефона - только цифры
+const onPhoneInput = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  const digits = input.value.replace(/[^\d]/g, "");
+  form.phone = digits;
+};
+
+// Обработка ввода email - убираем пробелы
+const onEmailInput = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  form.email = input.value.replace(/\s/g, "");
+};
+
 const submitOrder = () => {
   errorMessage.value = null;
 
@@ -388,8 +406,23 @@ const submitOrder = () => {
     return;
   }
 
+  // Проверка формата email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(form.email)) {
+    errorMessage.value =
+      "Пожалуйста, введите корректный адрес электронной почты";
+    return;
+  }
+
   if (!form.phone.trim()) {
     errorMessage.value = "Пожалуйста, введите телефон";
+    return;
+  }
+
+  // Проверка: телефон должен содержать только цифры
+  const phoneDigits = form.phone.replace(/[\s\-\(\)\+]/g, "");
+  if (!/^\d+$/.test(phoneDigits)) {
+    errorMessage.value = "Телефон должен содержать только цифры";
     return;
   }
 
