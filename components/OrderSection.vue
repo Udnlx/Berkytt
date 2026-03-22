@@ -302,6 +302,14 @@
                     и даете согласие на обработку персональных данных
                   </span>
                 </label>
+
+                <!-- Error Message -->
+                <p
+                  v-if="errorMessage"
+                  class="mt-3 text-sm text-red-500 bg-red-50 py-2 px-4 rounded"
+                >
+                  {{ errorMessage }}
+                </p>
               </div>
 
               <!-- Submit Button -->
@@ -323,10 +331,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed } from "vue";
+import { reactive, computed, ref } from "vue";
 import { useCart } from "~/composables/useCart";
 
 const { cartProducts, totalQuantity, clearCart } = useCart();
+
+const errorMessage = ref<string | null>(null);
 
 const form = reactive({
   name: "",
@@ -359,13 +369,33 @@ const formatPrice = (price: number): string => {
 };
 
 const submitOrder = () => {
-  if (!form.agreeTerms) {
-    console.log("Необходимо принять условия соглашения");
+  errorMessage.value = null;
+
+  // Проверка на пустую корзину
+  if (cartProducts.value.length === 0) {
+    errorMessage.value = "Ваша корзина пуста";
     return;
   }
 
-  if (cartProducts.value.length === 0) {
-    console.log("Корзина пуста");
+  // Проверка заполнения полей
+  if (!form.name.trim()) {
+    errorMessage.value = "Пожалуйста, введите ваше имя";
+    return;
+  }
+
+  if (!form.email.trim()) {
+    errorMessage.value = "Пожалуйста, введите электронную почту";
+    return;
+  }
+
+  if (!form.phone.trim()) {
+    errorMessage.value = "Пожалуйста, введите телефон";
+    return;
+  }
+
+  // Проверка принятия соглашения
+  if (!form.agreeTerms) {
+    errorMessage.value = "Необходимо принять условия соглашения";
     return;
   }
 

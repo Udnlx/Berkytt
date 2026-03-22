@@ -355,11 +355,19 @@
               <!-- Checkout Button -->
               <div class="mt-8">
                 <a
+                  v-if="cartProducts.length > 0"
                   href="/order"
                   class="w-full py-4 bg-[#0a0a0a] text-white text-sm font-medium hover:bg-[#ec018c] transition-colors duration-300 text-center block"
                 >
                   ОФОРМИТЬ ЗАКАЗ
                 </a>
+                <button
+                  v-else
+                  disabled
+                  class="w-full py-4 bg-gray-300 text-gray-500 text-sm font-medium cursor-not-allowed"
+                >
+                  ОФОРМИТЬ ЗАКАЗ
+                </button>
               </div>
             </div>
           </div>
