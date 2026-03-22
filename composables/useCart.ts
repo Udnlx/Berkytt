@@ -52,7 +52,10 @@ const addToCart = (
 
   if (existingIndex !== -1) {
     // Товар уже есть - увеличиваем количество
-    cartProducts.value[existingIndex].qnt += qnt;
+    const existingItem = cartProducts.value[existingIndex];
+    if (existingItem) {
+      existingItem.qnt += qnt;
+    }
   } else {
     // Добавляем новый товар
     cartProducts.value.push({ id, idSize, product, size, qnt, price });
