@@ -239,6 +239,13 @@
                 ДОБАВИТЬ В КОРЗИНУ
               </button>
             </div>
+            <!-- Сообщение об ошибке -->
+            <p
+              v-if="errorMessage"
+              class="text-red-500 text-sm text-center bg-red-50 py-2 px-4 rounded"
+            >
+              {{ errorMessage }}
+            </p>
             <button
               class="w-full py-3 bg-black text-white text-sm font-medium rounded hover:bg-[#ec018c] hover:text-white transition"
             >
@@ -612,8 +619,23 @@ const getReviewDeclension = (count: number): string => {
 // Добавление в корзину
 const { addToCart } = useCart();
 
+// Сообщение об ошибке
+const errorMessage = ref<string | null>(null);
+
 const addToCartHandler = () => {
   if (!props.product) return;
+
+  // Проверка: выбран ли размер
+  if (!selectedSizeValue.value && !selectedSize.value) {
+    errorMessage.value =
+      "Пожалуйста, выберите размер перед добавлением в корзину";
+    setTimeout(() => {
+      errorMessage.value = null;
+    }, 3000);
+    return;
+  }
+
+  errorMessage.value = null;
 
   const productName = props.product.name || props.product.title;
   const size = selectedSizeValue.value || selectedSize.value || "Нет размера";

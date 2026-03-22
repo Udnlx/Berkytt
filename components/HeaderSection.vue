@@ -200,7 +200,8 @@
               </svg>
             </button>
 
-            <button
+            <a
+              href="/cart"
               class="text-gray-700 hover:text-gray-900 transition relative"
             >
               <svg
@@ -222,7 +223,7 @@
               >
                 {{ totalQuantity }}
               </span>
-            </button>
+            </a>
           </div>
         </div>
 

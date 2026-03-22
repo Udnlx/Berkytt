@@ -2,7 +2,7 @@
   <div>
     <HeaderSection />
     <main class="pt-[80px] min-h-screen">
-      <UpSimpleSection />
+      <UpSimpleSection title="Корзина" />
       <CartSection />
     </main>
     <FooterSection />
