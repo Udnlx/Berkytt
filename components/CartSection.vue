@@ -354,12 +354,12 @@
 
               <!-- Checkout Button -->
               <div class="mt-8">
-                <button
-                  @click="checkout"
-                  class="w-full py-4 bg-[#0a0a0a] text-white text-sm font-medium hover:bg-[#ec018c] transition-colors duration-300"
+                <a
+                  href="/order"
+                  class="w-full py-4 bg-[#0a0a0a] text-white text-sm font-medium hover:bg-[#ec018c] transition-colors duration-300 text-center block"
                 >
                   ОФОРМИТЬ ЗАКАЗ
-                </button>
+                </a>
               </div>
             </div>
           </div>

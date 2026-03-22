@@ -8,6 +8,36 @@
             ОФОРМЛЕНИЕ ЗАКАЗА
           </h2>
 
+          <!-- Cart Items Summary -->
+          <div class="mb-8">
+            <h3 class="text-sm font-medium text-gray-400 mb-4 uppercase">
+              Товары в заказе:
+            </h3>
+
+            <div class="space-y-3">
+              <div
+                v-for="item in cartProducts"
+                :key="item.id + '-' + item.idSize"
+                class="flex justify-between items-center py-3 border-b border-gray-100"
+              >
+                <div>
+                  <p class="text-sm text-gray-800">{{ item.product }}</p>
+                  <p class="text-xs text-gray-400">Размер: {{ item.size }}</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm text-gray-800">{{ item.qnt }} шт.</p>
+                  <p class="text-xs text-gray-400">
+                    {{ formatPrice(item.price * item.qnt) }} ₽
+                  </p>
+                </div>
+              </div>
+
+              <div v-if="cartProducts.length === 0" class="text-center py-6">
+                <p class="text-gray-500">Корзина пуста</p>
+              </div>
+            </div>
+          </div>
+
           <!-- Buyer Information -->
           <div class="mb-8">
             <h3 class="text-sm font-medium text-gray-400 mb-4 uppercase">
@@ -294,6 +324,9 @@
 
 <script setup lang="ts">
 import { reactive, computed } from "vue";
+import { useCart } from "~/composables/useCart";
+
+const { cartProducts, totalQuantity, clearCart } = useCart();
 
 const form = reactive({
   name: "",
@@ -304,14 +337,21 @@ const form = reactive({
   agreeTerms: false,
 });
 
-const totalItems = 1;
-const subtotal = 13934;
+const totalItems = computed(() => totalQuantity.value);
+
+const subtotal = computed(() => {
+  return cartProducts.value.reduce(
+    (sum, item) => sum + item.price * item.qnt,
+    0,
+  );
+});
+
 const deliveryCost = computed(() => {
   return form.deliveryMethod === "pickup" ? 0 : 500;
 });
 
 const total = computed(() => {
-  return subtotal + deliveryCost.value;
+  return subtotal.value + deliveryCost.value;
 });
 
 const formatPrice = (price: number): string => {
@@ -319,18 +359,30 @@ const formatPrice = (price: number): string => {
 };
 
 const submitOrder = () => {
-  if (!form.agreeTerms) return;
+  if (!form.agreeTerms) {
+    console.log("Необходимо принять условия соглашения");
+    return;
+  }
 
-  console.log("Order submitted:", {
-    buyer: {
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-    },
-    payment: form.paymentMethod,
-    delivery: form.deliveryMethod,
-    total: total.value,
+  if (cartProducts.value.length === 0) {
+    console.log("Корзина пуста");
+    return;
+  }
+
+  console.log("=== ОФОРМЛЕНИЕ ЗАКАЗА ===");
+  console.log("Корзина:", cartProducts.value);
+  console.log("Данные покупателя:", {
+    name: form.name,
+    email: form.email,
+    phone: form.phone,
   });
-  // Здесь будет логика оформления заказа
+  console.log("Способ оплаты:", form.paymentMethod);
+  console.log("Способ доставки:", form.deliveryMethod);
+  console.log("Итого:", total.value);
+
+  // Очистка корзины после заказа
+  clearCart();
+
+  // Здесь будет логика отправки заказа на сервер
 };
 </script>
