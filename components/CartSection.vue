@@ -21,7 +21,7 @@
           <!-- Cart Item -->
           <div
             v-for="item in cartProducts"
-            :key="item.product + '-' + item.size"
+            :key="item.id + '-' + item.product + '-' + item.size"
             class="py-6 border-b border-gray-200"
           >
             <!-- Mobile Layout -->
@@ -54,7 +54,14 @@
                 <!-- Quantity Controls -->
                 <div class="inline-flex items-center border border-gray-300">
                   <button
-                    @click="decreaseQuantity(item.product, item.size, item.qnt)"
+                    @click="
+                      decreaseQuantity(
+                        item.id,
+                        item.product,
+                        item.size,
+                        item.qnt,
+                      )
+                    "
                     class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     :disabled="item.qnt <= 1"
                   >
@@ -78,7 +85,14 @@
                     {{ item.qnt }}
                   </span>
                   <button
-                    @click="increaseQuantity(item.product, item.size, item.qnt)"
+                    @click="
+                      increaseQuantity(
+                        item.id,
+                        item.product,
+                        item.size,
+                        item.qnt,
+                      )
+                    "
                     class="w-8 h-8 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors"
                   >
                     <svg
@@ -108,7 +122,7 @@
                     </span>
                   </div>
                   <button
-                    @click="removeItem(item.product, item.size)"
+                    @click="removeItem(item.id, item.product, item.size)"
                     class="text-gray-400 hover:text-[#ec018c] transition-colors"
                   >
                     <svg
@@ -159,7 +173,14 @@
               <div class="col-span-3 flex justify-center">
                 <div class="inline-flex items-center border border-gray-300">
                   <button
-                    @click="decreaseQuantity(item.product, item.size, item.qnt)"
+                    @click="
+                      decreaseQuantity(
+                        item.id,
+                        item.product,
+                        item.size,
+                        item.qnt,
+                      )
+                    "
                     class="w-10 h-9 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     :disabled="item.qnt <= 1"
                   >
@@ -183,7 +204,14 @@
                     {{ item.qnt }}
                   </span>
                   <button
-                    @click="increaseQuantity(item.product, item.size, item.qnt)"
+                    @click="
+                      increaseQuantity(
+                        item.id,
+                        item.product,
+                        item.size,
+                        item.qnt,
+                      )
+                    "
                     class="w-10 h-9 flex items-center justify-center text-gray-600 hover:text-[#ec018c] transition-colors"
                   >
                     <svg
@@ -209,7 +237,7 @@
                   {{ formatPrice(item.price * item.qnt) }} ₽
                 </span>
                 <button
-                  @click="removeItem(item.product, item.size)"
+                  @click="removeItem(item.id, item.product, item.size)"
                   class="text-gray-400 hover:text-[#ec018c] transition-colors"
                 >
                   <svg
@@ -353,25 +381,27 @@ const formatPrice = (price: number): string => {
 };
 
 const increaseQuantity = (
+  id: number,
   product: string,
   size: string,
   currentQnt: number,
 ) => {
-  updateQuantity(product, size, currentQnt + 1);
+  updateQuantity(id, product, size, currentQnt + 1);
 };
 
 const decreaseQuantity = (
+  id: number,
   product: string,
   size: string,
   currentQnt: number,
 ) => {
   if (currentQnt > 1) {
-    updateQuantity(product, size, currentQnt - 1);
+    updateQuantity(id, product, size, currentQnt - 1);
   }
 };
 
-const removeItem = (product: string, size: string) => {
-  removeFromCart(product, size);
+const removeItem = (id: number, product: string, size: string) => {
+  removeFromCart(id, product, size);
 };
 
 const checkout = () => {

@@ -85,7 +85,6 @@
               <h1 class="text-2xl font-semibold mt-1">
                 {{ product?.name || "Название продукта" }}
               </h1>
-              <p id="product-id">{{ product?.id || "ID продукта" }}</p>
             </div>
             <button
               class="p-2 border border-gray-200 rounded hover:border-gray-400 transition"
@@ -637,11 +636,12 @@ const addToCartHandler = () => {
 
   errorMessage.value = null;
 
+  const productId = props.product.id || 0;
   const productName = props.product.name || props.product.title;
   const size = selectedSizeValue.value || selectedSize.value || "Нет размера";
   const price = props.product.price || 0;
 
-  addToCart(productName, size, quantity.value, price);
+  addToCart(productId, productName, size, quantity.value, price);
 };
 </script>
 

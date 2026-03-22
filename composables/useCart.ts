@@ -1,6 +1,7 @@
 import { ref, computed } from "vue";
 
 interface CartProduct {
+  id: number; // ID товара
   product: string; // nameProduct
   size: string; // nameSize
   qnt: number; // Количество
@@ -33,13 +34,14 @@ const totalQuantity = computed(() => {
 
 // Добавление товара в корзину
 const addToCart = (
+  id: number,
   product: string,
   size: string,
   qnt: number,
   price: number,
 ) => {
   const existingIndex = cartProducts.value.findIndex(
-    (item) => item.product === product && item.size === size,
+    (item) => item.id === id && item.product === product && item.size === size,
   );
 
   if (existingIndex !== -1) {
@@ -47,7 +49,7 @@ const addToCart = (
     cartProducts.value[existingIndex].qnt += qnt;
   } else {
     // Добавляем новый товар
-    cartProducts.value.push({ product, size, qnt, price });
+    cartProducts.value.push({ id, product, size, qnt, price });
   }
 
   saveToStorage();
@@ -55,9 +57,10 @@ const addToCart = (
 };
 
 // Удаление товара из корзины
-const removeFromCart = (product: string, size: string) => {
+const removeFromCart = (id: number, product: string, size: string) => {
   cartProducts.value = cartProducts.value.filter(
-    (item) => !(item.product === product && item.size === size),
+    (item) =>
+      !(item.id === id && item.product === product && item.size === size),
   );
   saveToStorage();
   console.log("Товар удалён из корзины:", cartProducts.value);
@@ -71,9 +74,14 @@ const clearCart = () => {
 };
 
 // Обновление количества товара
-const updateQuantity = (product: string, size: string, qnt: number) => {
+const updateQuantity = (
+  id: number,
+  product: string,
+  size: string,
+  qnt: number,
+) => {
   const item = cartProducts.value.find(
-    (item) => item.product === product && item.size === size,
+    (item) => item.id === id && item.product === product && item.size === size,
   );
   if (item) {
     item.qnt = qnt;
