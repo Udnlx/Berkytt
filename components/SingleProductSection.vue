@@ -232,6 +232,7 @@
                 </button>
               </div>
               <button
+                @click="addToCartHandler"
                 class="flex-1 py-3 border border-black rounded text-sm font-medium hover:bg-[#ec018c] hover:text-white transition"
               >
                 ДОБАВИТЬ В КОРЗИНУ
@@ -392,6 +393,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useCart } from "~/composables/useCart";
 
 interface ProductData {
   name: string;
@@ -603,6 +605,19 @@ const getReviewDeclension = (count: number): string => {
   }
 
   return "отзывов";
+};
+
+// Добавление в корзину
+const { addToCart } = useCart();
+
+const addToCartHandler = () => {
+  if (!props.product) return;
+
+  const productName = props.product.name || props.product.title;
+  const size = selectedSizeValue.value || selectedSize.value || "Нет размера";
+  const price = props.product.price || 0;
+
+  addToCart(productName, size, quantity.value, price);
 };
 </script>
 

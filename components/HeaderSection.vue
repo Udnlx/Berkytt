@@ -217,9 +217,11 @@
                 />
               </svg>
               <span
+                v-if="totalQuantity > 0"
                 class="absolute -top-1 -right-1 bg-gray-900 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center"
-                >0</span
               >
+                {{ totalQuantity }}
+              </span>
             </button>
           </div>
         </div>
@@ -285,9 +287,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import { useCart } from "~/composables/useCart";
 
 const isMobileMenuOpen = ref(false);
 const openDropdown = ref<number | null>(null);
+
+// Используем composable корзины
+const { totalQuantity } = useCart();
 
 interface MainInfo {
   address: string;
