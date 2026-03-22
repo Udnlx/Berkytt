@@ -30,17 +30,20 @@
             <div class="md:hidden">
               <!-- Product Row -->
               <div class="flex gap-4 mb-4">
+                <!--
                 <div
                   class="w-20 h-28 flex-shrink-0 bg-gray-100 flex items-center justify-center"
                 >
                   <span class="text-xs text-gray-400">Нет фото</span>
                 </div>
+                -->
                 <div class="flex flex-col justify-center flex-1">
                   <h3 class="text-sm font-medium text-[#ec018c] mb-1">
                     {{ item.product }}
                   </h3>
                   <p class="text-xs text-gray-400">
-                    РАЗМЕР: {{ item.size }} (ID: {{ item.idSize }})
+                    РАЗМЕР: {{ item.size }}
+                    <!--(ID: {{ item.idSize }})-->
                   </p>
                 </div>
               </div>
@@ -167,7 +170,8 @@
                     {{ item.product }}
                   </h3>
                   <p class="text-xs text-gray-400">
-                    РАЗМЕР: {{ item.size }} (ID: {{ item.idSize }})
+                    РАЗМЕР: {{ item.size }}
+                    <!--(ID: {{ item.idSize }})-->
                   </p>
                 </div>
               </div>

@@ -199,9 +199,11 @@
                       "
                     >
                       <div>{{ cell.size }}</div>
+                      <!--
                       <div class="text-xs text-gray-400 mt-1">
                         ID: {{ cell.idSize }}
                       </div>
+                      -->
                     </td>
                   </tr>
                 </tbody>
