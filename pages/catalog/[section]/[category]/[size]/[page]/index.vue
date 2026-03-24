@@ -42,7 +42,7 @@ interface ProductsResponse {
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
 // Базовый хост для изображений (без /api)
-const apiHost = apiBase.replace("/api", "");
+const apiHost = config.public.domain;
 
 // Для запросов используем относительный путь, чтобы работал прокси через Nuxt
 const fetchApiBase = "/api";

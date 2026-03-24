@@ -20,14 +20,15 @@ export default defineNuxtConfig({
     },
     devProxy: {
       "/api": {
-        target: "http://berkytt/api",
+        target: "https://berkytt.ru/apiv2",
         changeOrigin: true,
       },
     },
   },
   runtimeConfig: {
     public: {
-      apiBase: "http://berkytt/api",
+      apiBase: "https://berkytt.ru/apiv2",
+      domain: "https://berkytt.ru"
     },
   },
 });

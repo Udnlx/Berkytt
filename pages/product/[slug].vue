@@ -236,7 +236,7 @@ const config = useRuntimeConfig();
 const productSlug = computed(() => route.params.slug as string);
 
 const apiBase = config.public.apiBase;
-const apiHost = apiBase.replace("/api", ""); // Базовый хост для изображений и видео
+const apiHost = config.public.domain; // Базовый хост для изображений и видео
 const siteUrl = "http://localhost:3000"; // URL сайта для canonical
 
 const apiUrl = computed(

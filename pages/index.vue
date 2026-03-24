@@ -23,7 +23,7 @@ import { ref, onMounted } from "vue";
 const config = useRuntimeConfig();
 const API_BASE = config.public.apiBase as string;
 // Базовый хост для изображений (без /api в конце)
-const IMAGE_BASE = API_BASE.replace("/api", "");
+const IMAGE_BASE = config.public.domain as string;
 
 interface MainPageData {
   btnFiltersForNew: string[];
