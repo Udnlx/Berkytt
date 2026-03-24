@@ -342,7 +342,9 @@
 <script setup lang="ts">
 import { reactive, computed, ref } from "vue";
 import { useCart } from "~/composables/useCart";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const { cartProducts, totalQuantity, clearCart } = useCart();
 
 const errorMessage = ref<string | null>(null);
@@ -436,20 +438,31 @@ const submitOrder = () => {
     return;
   }
 
-  console.log("=== ОФОРМЛЕНИЕ ЗАКАЗА ===");
-  console.log("Корзина:", cartProducts.value);
-  console.log("Данные покупателя:", {
-    name: form.name,
-    email: form.email,
-    phone: form.phone,
-  });
-  console.log("Способ оплаты:", form.paymentMethod);
-  console.log("Способ доставки:", form.deliveryMethod);
-  console.log("Итого:", total.value);
+  // Формируем объект заказа
+  const orderData = {
+    products: cartProducts.value,
+    buyer: {
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+    },
+    paymentMethod: form.paymentMethod,
+    deliveryMethod: form.deliveryMethod,
+    totalItems: totalItems.value,
+    subtotal: subtotal.value,
+    deliveryCost: deliveryCost.value,
+    total: total.value,
+    orderDate: new Date().toISOString(),
+    orderNumber: "ORD-" + Date.now(),
+  };
 
-  // Очистка корзины после заказа
+  // Сохраняем данные заказа в localStorage
+  localStorage.setItem("currentOrder", JSON.stringify(orderData));
+
+  // Очищаем корзину
   clearCart();
 
-  // Здесь будет логика отправки заказа на сервер
+  // Перенаправляем на страницу подтверждения
+  router.push("/confirmorder");
 };
 </script>
