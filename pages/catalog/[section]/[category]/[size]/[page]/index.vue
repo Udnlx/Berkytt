@@ -115,7 +115,7 @@ const fetchProducts = async () => {
   try {
     const sizeParam = size.value || "all";
     const pageParam = page.value || "1";
-    const url = `${fetchApiBase}/getproducts/${section.value}/${category.value}/${sizeParam}/${pageParam}`;
+    const url = `${apiBase}/getproducts/${section.value}/${category.value}/${sizeParam}/${pageParam}`;
 
     console.log("Загрузка товаров:", url);
 
