@@ -289,6 +289,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useCart } from "~/composables/useCart";
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase;
 
 const isMobileMenuOpen = ref(false);
 const openDropdown = ref<number | null>(null);
@@ -331,7 +333,7 @@ const menuData = ref<MenuData>({
 
 onMounted(async () => {
   try {
-    const response = await fetch("/api/maininfo");
+    const response = await fetch(`${apiBase}/maininfo`);
     const data = await response.json();
     console.log("API Response:", data);
 

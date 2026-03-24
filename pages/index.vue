@@ -79,7 +79,9 @@ const ourCollections = ref<MainPageData["ourCollections"]>([]);
 
 onMounted(async () => {
   try {
-    const response = await fetch("/api/mainpage");
+    const config = useRuntimeConfig();
+    const apiBase = config.public.apiBase;
+    const response = await fetch(`${apiBase}/mainpage`);
     const data: MainPageData = await response.json();
     console.log("API Response:", data);
 
