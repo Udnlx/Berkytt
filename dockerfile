@@ -9,6 +9,6 @@ RUN npm run build
 FROM node:22-alpine
 WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/.output /usr/src/app/.output
-ENV PORT 3000
-EXPOSE 3000
+ENV PORT 3030
+EXPOSE 3030
 CMD [ "node", ".output/server/index.mjs" ]
