@@ -232,6 +232,16 @@
                   ПРОДОЛЖИТЬ ПОКУПКИ
                 </NuxtLink>
               </div>
+
+              <!-- JSON Output (для отладки) -->
+              <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                <h4 class="text-xs font-medium text-gray-500 mb-2 uppercase">
+                  Данные заказа (JSON):
+                </h4>
+                <pre class="text-xs text-gray-700 overflow-auto max-h-96">{{
+                  jsonData
+                }}</pre>
+              </div>
             </div>
           </div>
         </div>
@@ -317,4 +327,9 @@ const deliveryText = computed(() => {
 const formatPrice = (price: number): string => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 };
+
+const jsonData = computed(() => {
+  if (!order.value) return "{}";
+  return JSON.stringify(order.value, null, 2);
+});
 </script>
