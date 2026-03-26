@@ -331,7 +331,9 @@ onMounted(async () => {
   const storedOrder = localStorage.getItem("currentOrder");
   if (storedOrder) {
     order.value = JSON.parse(storedOrder);
-    await sendOrderToApi(order.value);
+    if (order.value) {
+      await sendOrderToApi(order.value);
+    }
   }
 });
 
