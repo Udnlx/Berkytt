@@ -32,6 +32,19 @@
               Номер заказа: <span class="font-bold">{{ orderNumber }}</span>
             </p>
             <p class="text-xs text-green-500 mt-1">Дата: {{ formattedDate }}</p>
+
+            <!-- Статус отправки на сервер -->
+            <div class="mt-4 pt-4 border-t border-green-200">
+              <p v-if="isLoading" class="text-sm text-green-600">
+                Отправка данных на сервер...
+              </p>
+              <p v-else-if="error" class="text-sm text-red-600">
+                {{ error }}
+              </p>
+              <p v-else-if="isSent" class="text-sm text-green-700 font-medium">
+                ✓ Данные заказа успешно отправлены на сервер
+              </p>
+            </div>
           </div>
 
           <!-- Products in Order -->
@@ -234,6 +247,7 @@
               </div>
 
               <!-- JSON Output (для отладки) -->
+              <!--
               <div class="mt-8 p-4 bg-gray-100 rounded-lg">
                 <h4 class="text-xs font-medium text-gray-500 mb-2 uppercase">
                   Данные заказа (JSON):
@@ -242,6 +256,7 @@
                   jsonData
                 }}</pre>
               </div>
+              -->
             </div>
           </div>
         </div>
@@ -282,11 +297,41 @@ interface OrderData {
 }
 
 const order = ref<OrderData | null>(null);
+const isLoading = ref(false);
+const error = ref<string | null>(null);
+const isSent = ref(false);
 
-onMounted(() => {
+const sendOrderToApi = async (orderData: OrderData) => {
+  isLoading.value = true;
+  error.value = null;
+
+  try {
+    const response = await fetch("http://berkytt/api/confirmorder/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    });
+
+    if (response.ok) {
+      isSent.value = true;
+      localStorage.removeItem("currentOrder");
+    } else {
+      error.value = "Ошибка при отправке заказа";
+    }
+  } catch (e) {
+    error.value = "Не удалось отправить заказ";
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+onMounted(async () => {
   const storedOrder = localStorage.getItem("currentOrder");
   if (storedOrder) {
     order.value = JSON.parse(storedOrder);
+    await sendOrderToApi(order.value);
   }
 });
 
