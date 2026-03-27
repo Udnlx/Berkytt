@@ -158,6 +158,21 @@ interface ApiProductData {
     badgeType?: "sale" | "new" | "top";
     endDate?: string;
   }[];
+  metaData: {
+    title: string;
+    description: string;
+    keywords: string;
+    canonicalUrl: string;
+  };
+  ogData: {
+    title: string;
+    description: string;
+    image: string;
+    imageAlt: string;
+    type: string;
+    locale: string;
+    siteName: string;
+  };
 }
 
 // Интерфейс для компонентов
@@ -370,46 +385,70 @@ const mappedProduct = computed<ProductData | null>(() => {
   };
 });
 
-// Динамические SEO теги
-useHead(() => ({
-  title: mappedProduct.value?.title
-    ? `${mappedProduct.value.title} — BERKYTT`
-    : "Товар не найден — BERKYTT",
-  meta: [
-    {
-      name: "description",
-      content: mappedProduct.value?.description || "",
-    },
-    {
-      property: "og:type",
-      content: "product",
-    },
-    {
-      property: "og:title",
-      content: mappedProduct.value?.title || "",
-    },
-    {
-      property: "og:description",
-      content: mappedProduct.value?.description || "",
-    },
-    {
-      property: "og:image",
-      content: mappedProduct.value?.images?.[0] || "",
-    },
-    {
-      property: "product:price:amount",
-      content: mappedProduct.value?.price?.toString() || "",
-    },
-    {
-      property: "product:price:currency",
-      content: "RUB",
-    },
-  ],
-  link: [
-    {
-      rel: "canonical",
-      href: `${siteUrl}/product/${productSlug.value}`,
-    },
-  ],
-}));
+// Динамические SEO теги на основе metaData и ogData из API
+useHead(() => {
+  const metaData = apiProductData.value?.metaData;
+  const ogData = apiProductData.value?.ogData;
+  const imageData = apiProductData.value?.images?.[0];
+
+  return {
+    title: metaData?.title
+      ? `${metaData.title} — BERKYTT`
+      : mappedProduct.value?.title
+        ? `${mappedProduct.value.title} — BERKYTT`
+        : "Товар не найден — BERKYTT",
+    meta: [
+      {
+        name: "description",
+        content: metaData?.description || "",
+      },
+      {
+        name: "keywords",
+        content: metaData?.keywords || "",
+      },
+      {
+        property: "og:type",
+        content: ogData?.type || "product",
+      },
+      {
+        property: "og:title",
+        content: ogData?.title || metaData?.title || "",
+      },
+      {
+        property: "og:description",
+        content: ogData?.description || metaData?.description || "",
+      },
+      {
+        property: "og:image",
+        content: ogData?.image || (imageData ? `${apiHost}${imageData}` : ""),
+      },
+      {
+        property: "og:image:alt",
+        content: ogData?.imageAlt || "",
+      },
+      {
+        property: "og:locale",
+        content: ogData?.locale || "ru_RU",
+      },
+      {
+        property: "og:site_name",
+        content: ogData?.siteName || "BERKYTT",
+      },
+      {
+        property: "product:price:amount",
+        content: mappedProduct.value?.price?.toString() || "",
+      },
+      {
+        property: "product:price:currency",
+        content: "RUB",
+      },
+    ],
+    link: [
+      {
+        rel: "canonical",
+        href: `${siteUrl}/product/${productSlug.value}`,
+      },
+    ],
+  };
+});
 </script>
