@@ -250,11 +250,13 @@
             >
               {{ errorMessage }}
             </p>
+            <!--
             <button
               class="w-full py-3 bg-black text-white text-sm font-medium rounded hover:bg-[#ec018c] hover:text-white transition"
             >
               КУПИТЬ В ОДИН КЛИК
             </button>
+            -->
           </div>
 
           <!-- Дополнительная информация -->

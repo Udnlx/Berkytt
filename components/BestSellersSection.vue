@@ -126,6 +126,7 @@
                 >
                   ПРОСМОТР
                 </a>
+                <!--
                 <a
                   :href="`/cart?add=${product.name}`"
                   class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
@@ -133,6 +134,7 @@
                 >
                   В КОРЗИНУ
                 </a>
+                -->
               </div>
 
               <!-- Sale Timer (for sale items) -->
