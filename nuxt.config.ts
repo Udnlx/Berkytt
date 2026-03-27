@@ -28,6 +28,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: "http://berkytt/api",
+      siteUrl: "http://localhost:3000",
     },
   },
 });

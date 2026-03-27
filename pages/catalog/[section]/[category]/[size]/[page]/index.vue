@@ -179,7 +179,7 @@ const seoData = computed(() => {
 });
 
 // SEO-метатеги для страницы каталога
-const siteUrl = "http://localhost:3000";
+const siteUrl = config.public.siteUrl;
 
 useHead(() => ({
   title: `${seoData.value.title} — BERKYTT`,

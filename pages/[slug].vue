@@ -17,7 +17,7 @@ const route = useRoute();
 const slug = route.params.slug as string;
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
-const siteUrl = "http://localhost:3000";
+const siteUrl = config.public.siteUrl;
 
 interface PageData {
   pageid: number;
