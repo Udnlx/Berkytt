@@ -1,12 +1,10 @@
 <template>
   <transition name="slide-down">
     <div
-      v-if="isVisible"
+      v-if="isVisible && bannerText"
       class="fixed top-0 left-0 right-0 z-[999] bg-black text-white h-9 flex items-center justify-center px-4"
     >
-      <p class="text-sm text-center">
-        🎉 Бесплатная доставка при заказе от 10 000 ₽
-      </p>
+      <p class="text-sm text-center" v-html="bannerText"></p>
 
       <!-- Кнопка закрытия (крестик) -->
       <button
@@ -35,10 +33,11 @@
 import { ref, onMounted } from "vue";
 
 const isVisible = ref(false);
+const bannerText = ref<string | null>(null);
 const BANNER_CLOSED_KEY = "top_banner_closed";
 const BANNER_DELAY_MS = 20 * 60 * 1000; // 20 минут
 
-onMounted(() => {
+onMounted(async () => {
   // Проверяем, закрывал ли пользователь баннер
   const closedAt = localStorage.getItem(BANNER_CLOSED_KEY);
 
@@ -51,10 +50,23 @@ onMounted(() => {
     }
   }
 
-  // Показываем баннер через 5 секунд после загрузки
-  setTimeout(() => {
-    isVisible.value = true;
-  }, 5000);
+  // Получаем данные баннера из API
+  try {
+    const response = await fetch("/api/topbanner");
+    const data = await response.json();
+
+    // Если topBanner не null, показываем баннер
+    if (data.topBanner) {
+      bannerText.value = data.topBanner;
+
+      // Показываем баннер через 5 секунд после загрузки
+      setTimeout(() => {
+        isVisible.value = true;
+      }, 5000);
+    }
+  } catch (error) {
+    console.error("Failed to fetch top banner:", error);
+  }
 });
 
 const closeBanner = () => {
