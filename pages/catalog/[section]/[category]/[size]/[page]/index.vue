@@ -154,16 +154,43 @@ const handleFilterUpdate = (filters: {
   });
 };
 
+// SEO данные в зависимости от раздела
+const seoData = computed(() => {
+  const sectionVal = section.value;
+
+  const seoConfig = {
+    men: {
+      title: "Мужская верхняя одежда",
+      description:
+        "Мужская верхняя одежда от BERKYTT. Пальто, полупальто, плащи и куртки по доступным ценам. Широкий ассортимент и качественные материалы.",
+      keywords:
+        "мужская верхняя одежда, мужское пальто, мужские плащи, мужские куртки, BERKYTT",
+    },
+    women: {
+      title: "Женская верхняя одежда",
+      description:
+        "Женская верхняя одежда от BERKYTT. Пальто, полупальто, плащи и куртки по доступным ценам. Стильные модели и качественная посадка.",
+      keywords:
+        "женская верхняя одежда, женское пальто, женские плащи, женские куртки, BERKYTT",
+    },
+  };
+
+  return seoConfig[sectionVal as keyof typeof seoConfig] || seoConfig.men;
+});
+
 // SEO-метатеги для страницы каталога
 const siteUrl = "http://localhost:3000";
 
-useHead({
-  title: "Каталог товаров — BERKYTT",
+useHead(() => ({
+  title: `${seoData.value.title} — BERKYTT`,
   meta: [
     {
       name: "description",
-      content:
-        "Широкий ассортимент товаров в интернет-магазине BERKYTT. Одежда и аксессуары по доступным ценам.",
+      content: seoData.value.description,
+    },
+    {
+      name: "keywords",
+      content: seoData.value.keywords,
     },
     {
       property: "og:type",
@@ -171,23 +198,30 @@ useHead({
     },
     {
       property: "og:title",
-      content: "Каталог товаров — BERKYTT",
+      content: `${seoData.value.title} — BERKYTT`,
     },
     {
       property: "og:description",
-      content:
-        "Широкий ассортимент товаров в интернет-магазине BERKYTT. Одежда и аксессуары по доступным ценам.",
+      content: seoData.value.description,
     },
     {
       property: "og:image",
-      content: "/images/forcards.jpg",
+      content: "/images/logo.jpg",
+    },
+    {
+      property: "og:locale",
+      content: "ru_RU",
+    },
+    {
+      property: "og:site_name",
+      content: "BERKYTT",
     },
   ],
   link: [
     {
       rel: "canonical",
-      href: `${siteUrl}/catalog/${section.value}/${category.value}`,
+      href: `${siteUrl}/catalog/${section.value}/coat/all/1`,
     },
   ],
-});
+}));
 </script>
