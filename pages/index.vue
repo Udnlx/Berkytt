@@ -18,14 +18,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { useHead, useRuntimeConfig } from "#app";
 
 const config = useRuntimeConfig();
 const API_BASE = config.public.apiBase as string;
+const siteUrl = config.public.siteUrl;
 // Базовый хост для изображений (без /api в конце)
 const IMAGE_BASE = API_BASE.replace("/api", "");
 
 interface MainPageData {
+  idMianPage: number;
   btnFiltersForNew: string[];
   productsForNew: Array<{
     id: number;
@@ -68,8 +71,24 @@ interface MainPageData {
     image: string;
     link: string;
   }>;
+  metaData: {
+    title: string;
+    description: string;
+    keywords: string;
+    canonicalUrl: string;
+  };
+  ogData: {
+    title: string;
+    description: string;
+    image: string;
+    imageAlt: string;
+    type: string;
+    locale: string;
+    siteName: string;
+  };
 }
 
+const mainPageData = ref<MainPageData | null>(null);
 const btnFiltersForNew = ref<MainPageData["btnFiltersForNew"]>([]);
 const productsForNew = ref<MainPageData["productsForNew"]>([]);
 const btnFiltersForBest = ref<MainPageData["btnFiltersForBest"]>([]);
@@ -82,6 +101,8 @@ onMounted(async () => {
     const response = await fetch("/api/mainpage");
     const data: MainPageData = await response.json();
     console.log("API Response:", data);
+
+    mainPageData.value = data;
 
     btnFiltersForNew.value = data.btnFiltersForNew || [];
     // Добавляем базовый URL к изображениям для NewProducts
@@ -136,5 +157,61 @@ onMounted(async () => {
   } catch (error) {
     console.error("Failed to fetch mainpage data:", error);
   }
+});
+
+// Динамические SEO теги на основе metaData и ogData из API
+useHead(() => {
+  const metaData = mainPageData.value?.metaData;
+  const ogData = mainPageData.value?.ogData;
+
+  return {
+    title: metaData?.title
+      ? `${metaData.title}`
+      : "Berkytt — Интернет-магазин верхней одежды",
+    meta: [
+      {
+        name: "description",
+        content: metaData?.description || "",
+      },
+      {
+        name: "keywords",
+        content: metaData?.keywords || "",
+      },
+      {
+        property: "og:type",
+        content: ogData?.type || "website",
+      },
+      {
+        property: "og:title",
+        content: ogData?.title || metaData?.title || "",
+      },
+      {
+        property: "og:description",
+        content: ogData?.description || metaData?.description || "",
+      },
+      {
+        property: "og:image",
+        content: ogData?.image || "",
+      },
+      {
+        property: "og:image:alt",
+        content: ogData?.imageAlt || "",
+      },
+      {
+        property: "og:locale",
+        content: ogData?.locale || "ru_RU",
+      },
+      {
+        property: "og:site_name",
+        content: ogData?.siteName || "BERKYTT",
+      },
+    ],
+    link: [
+      {
+        rel: "canonical",
+        href: metaData?.canonicalUrl || siteUrl,
+      },
+    ],
+  };
 });
 </script>
