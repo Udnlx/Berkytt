@@ -415,7 +415,7 @@ const menuItems = computed(() => [
       { label: "ГДЕ КУПИТЬ", href: "#" },
       { label: "УХОД-ХРАНЕНИЕ", href: "/ukhod-khranenie" },
       { label: "ДОСТАВКА", href: "/delivery" },
-      { label: "ВОЗВРАТ", href: "#" },
+      { label: "ВОЗВРАТ", href: "/vozvrat" },
       {
         label: "ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ",
         href: "/politika-konfidentcial-nosti",
