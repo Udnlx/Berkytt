@@ -92,7 +92,7 @@
         <SingleProductSection :product="mappedProduct" />
         <OptionProductSection :product="mappedProduct" />
         <ReviewProductSection :comments="mappedProduct.comments" />
-        <FormReviewSection />
+        <!-- <FormReviewSection /> -->
         <YouLikeItSection :products="mappedProduct.likeit" />
       </div>
     </main>
