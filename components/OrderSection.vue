@@ -221,6 +221,16 @@
                     Можно выбрать самовывоз из пунктов выдачи/постаматов, либо
                     курьерскую доставку.
                   </p>
+                  <button
+                    @click="openSdekModal"
+                    type="button"
+                    class="text-xs text-[#ec018c] underline hover:text-[#d4007c] transition-colors"
+                  >
+                    Выбрать пункт выдачи на карте
+                  </button>
+                  <p v-if="sdekSelectedPoint" class="text-xs text-gray-700">
+                    Выбран пункт: {{ sdekSelectedPoint.name }}
+                  </p>
                   <p class="text-xs text-[#ec018c] italic">
                     * В связи с техническими неполадками, при выборе доставки в
                     пункты выдачи СДЭК, просьба уточнять окончательную стоимость
@@ -336,11 +346,70 @@
         </div>
       </div>
     </div>
+
+    <!-- CDEK Modal -->
+    <div
+      id="modal-sdek"
+      class="fixed inset-0 z-50 overflow-y-auto"
+      style="display: none"
+    >
+      <div class="flex items-center justify-center min-h-screen px-4">
+        <!-- Backdrop -->
+        <div
+          class="fixed inset-0 bg-black opacity-50"
+          @click="closeSdekModal"
+        ></div>
+
+        <!-- Modal Dialog -->
+        <div class="relative bg-white rounded-lg max-w-6xl w-full mx-auto">
+          <!-- Close Button -->
+          <button
+            @click="closeSdekModal"
+            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
+            type="button"
+          >
+            <svg
+              class="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+
+          <!-- Header -->
+          <div class="px-6 py-4 border-b border-gray-200">
+            <p class="text-center text-lg font-bold text-gray-800">
+              ВЫБОР ПУНКТА И СПОСОБА ДОСТАВКИ СДЭК
+            </p>
+          </div>
+
+          <!-- Body -->
+          <div class="p-6">
+            <div
+              id="forpvzsdek"
+              style="height: 700px"
+              class="bg-gray-100 flex items-center justify-center"
+            >
+              <p class="text-gray-500">
+                Здесь будет карта СДЭК для выбора пункта выдачи
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import { reactive, computed, ref } from "vue";
+import { reactive, computed, ref, onMounted } from "vue";
 import { useCart } from "~/composables/useCart";
 import { useRouter } from "vue-router";
 
@@ -348,6 +417,42 @@ const router = useRouter();
 const { cartProducts, totalQuantity, clearCart } = useCart();
 
 const errorMessage = ref<string | null>(null);
+const sdekSelectedPoint = ref<{ name: string; code: string } | null>(null);
+const isSdekModalOpen = ref(false);
+
+// Загрузка виджета СДЭК
+onMounted(() => {
+  if (!(window as any).cdek) {
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "https://cdn.jsdelivr.net/npm/@cdek-it/widget@3";
+    script.charset = "utf-8";
+    document.head.appendChild(script);
+  }
+});
+
+const openSdekModal = () => {
+  isSdekModalOpen.value = true;
+  const modal = document.getElementById("modal-sdek");
+  if (modal) {
+    modal.style.display = "block";
+  }
+  // Здесь будет инициализация виджета СДЭК
+  initSdekWidget();
+};
+
+const closeSdekModal = () => {
+  isSdekModalOpen.value = false;
+  const modal = document.getElementById("modal-sdek");
+  if (modal) {
+    modal.style.display = "none";
+  }
+};
+
+const initSdekWidget = () => {
+  // Демо-режим: пока просто заглушка
+  console.log("Инициализация виджета СДЭК...");
+};
 
 const form = reactive({
   name: "",
