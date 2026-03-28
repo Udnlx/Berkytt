@@ -166,7 +166,10 @@
           <!-- Иконки справа -->
           <div class="flex items-center space-x-4 lg:space-x-6">
             <!-- Кнопка поиска -->
-            <button class="text-gray-700 hover:text-gray-900 transition">
+            <button
+              @click="toggleSearch"
+              class="text-gray-700 hover:text-gray-900 transition"
+            >
               <svg
                 class="w-5 h-5"
                 fill="none"
@@ -181,6 +184,40 @@
                 />
               </svg>
             </button>
+
+            <!-- Поисковая панель -->
+            <transition
+              enter-active-class="transition duration-200 ease-out"
+              enter-from-class="opacity-0 -translate-y-2"
+              enter-to-class="opacity-100 translate-y-0"
+              leave-active-class="transition duration-150 ease-in"
+              leave-from-class="opacity-100 translate-y-0"
+              leave-to-class="opacity-0 -translate-y-2"
+            >
+              <div
+                v-if="isSearchOpen"
+                class="absolute top-full right-0 bg-white border border-gray-200 shadow-lg py-3 px-4 z-40"
+                style="width: 320px"
+              >
+                <form
+                  @submit.prevent="handleSearch"
+                  class="flex gap-2 items-center"
+                >
+                  <input
+                    v-model="searchQuery"
+                    type="text"
+                    placeholder="Поиск товаров..."
+                    class="flex-1 px-3 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#ec018c] focus:border-transparent"
+                  />
+                  <button
+                    type="submit"
+                    class="px-4 py-1.5 bg-[#ec018c] text-white text-sm font-medium rounded hover:bg-[#d4007c] transition-colors"
+                  >
+                    НАЙТИ
+                  </button>
+                </form>
+              </div>
+            </transition>
 
             <div class="w-px h-5 bg-gray-200"></div>
 
@@ -289,9 +326,13 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useCart } from "~/composables/useCart";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const isMobileMenuOpen = ref(false);
 const openDropdown = ref<number | null>(null);
+const isSearchOpen = ref(false);
+const searchQuery = ref("");
 
 // Используем composable корзины
 const { totalQuantity } = useCart();
@@ -373,6 +414,27 @@ const toggleMobileMenu = () => {
 
 const toggleDropdown = (menuIndex: number) => {
   openDropdown.value = openDropdown.value === menuIndex ? null : menuIndex;
+};
+
+const toggleSearch = () => {
+  isSearchOpen.value = !isSearchOpen.value;
+  if (isSearchOpen.value) {
+    setTimeout(() => {
+      (
+        document.querySelector(
+          'input[placeholder="Поиск товаров..."]',
+        ) as HTMLInputElement
+      )?.focus();
+    }, 100);
+  }
+};
+
+const handleSearch = () => {
+  if (searchQuery.value.trim()) {
+    router.push(`/search?q=${encodeURIComponent(searchQuery.value.trim())}`);
+    isSearchOpen.value = false;
+    searchQuery.value = "";
+  }
 };
 
 // Формируем URL вида /catalog/{section}/{name}/all/1
