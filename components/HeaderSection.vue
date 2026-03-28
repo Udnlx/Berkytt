@@ -166,6 +166,7 @@
           <!-- Иконки справа -->
           <div class="flex items-center space-x-4 lg:space-x-6">
             <!-- Кнопка поиска -->
+            <!--
             <button
               @click="toggleSearch"
               class="text-gray-700 hover:text-gray-900 transition"
@@ -184,6 +185,7 @@
                 />
               </svg>
             </button>
+            -->
 
             <!-- Поисковая панель -->
             <transition
