@@ -25,7 +25,7 @@ const config = useRuntimeConfig();
 const API_BASE = config.public.apiBase as string;
 const siteUrl = config.public.siteUrl;
 // Базовый хост для изображений (без /api в конце)
-const IMAGE_BASE = API_BASE.replace("/api", "");
+const IMAGE_BASE = config.public.domain as string;
 
 interface MainPageData {
   idMianPage: number;
@@ -98,7 +98,9 @@ const ourCollections = ref<MainPageData["ourCollections"]>([]);
 
 onMounted(async () => {
   try {
-    const response = await fetch("/api/mainpage");
+    const config = useRuntimeConfig();
+    const apiBase = config.public.apiBase;
+    const response = await fetch(`${apiBase}/mainpage`);
     const data: MainPageData = await response.json();
     console.log("API Response:", data);
 

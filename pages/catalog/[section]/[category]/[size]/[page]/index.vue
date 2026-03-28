@@ -42,7 +42,7 @@ interface ProductsResponse {
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
 // Базовый хост для изображений (без /api)
-const apiHost = apiBase.replace("/api", "");
+const apiHost = config.public.domain;
 
 // Для запросов используем относительный путь, чтобы работал прокси через Nuxt
 const fetchApiBase = "/api";
@@ -115,7 +115,7 @@ const fetchProducts = async () => {
   try {
     const sizeParam = size.value || "all";
     const pageParam = page.value || "1";
-    const url = `${fetchApiBase}/getproducts/${section.value}/${category.value}/${sizeParam}/${pageParam}`;
+    const url = `${apiBase}/getproducts/${section.value}/${category.value}/${sizeParam}/${pageParam}`;
 
     console.log("Загрузка товаров:", url);
 

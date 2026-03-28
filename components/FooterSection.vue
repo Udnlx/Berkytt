@@ -242,6 +242,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase;
 
 interface MainInfo {
   address: string;
@@ -261,7 +263,7 @@ const mainInfo = ref<MainInfo>({
 
 onMounted(async () => {
   try {
-    const response = await fetch("/api/maininfo");
+    const response = await fetch(`${apiBase}/maininfo`);
     const data = await response.json();
     console.log("API Response:", data);
 
