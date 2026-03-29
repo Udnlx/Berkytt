@@ -354,14 +354,14 @@
               </div>
 
               <!-- JSON Output (для отладки) -->
-              <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+              <!-- <div class="mt-8 p-4 bg-gray-100 rounded-lg">
                 <h4 class="text-xs font-medium text-gray-500 mb-2 uppercase">
                   Данные заказа (JSON):
                 </h4>
                 <pre class="text-xs text-gray-700 overflow-auto max-h-96">{{
                   orderDataJson
                 }}</pre>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
