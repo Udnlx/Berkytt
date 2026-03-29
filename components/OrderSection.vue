@@ -352,6 +352,16 @@
                   ЗАКАЗАТЬ
                 </button>
               </div>
+
+              <!-- JSON Output (для отладки) -->
+              <div class="mt-8 p-4 bg-gray-100 rounded-lg">
+                <h4 class="text-xs font-medium text-gray-500 mb-2 uppercase">
+                  Данные заказа (JSON):
+                </h4>
+                <pre class="text-xs text-gray-700 overflow-auto max-h-96">{{
+                  orderDataJson
+                }}</pre>
+              </div>
             </div>
           </div>
         </div>
@@ -592,6 +602,29 @@ const deliveryCost = computed(() => {
 
 const total = computed(() => {
   return subtotal.value + deliveryCost.value;
+});
+
+const orderDataJson = computed(() => {
+  return JSON.stringify(
+    {
+      products: cartProducts.value,
+      buyer: {
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+      },
+      paymentMethod: form.paymentMethod,
+      deliveryMethod: form.deliveryMethod,
+      deliveryCost: deliveryCost.value,
+      deliveryType: sdekDeliveryType.value,
+      deliveryAddress: sdekDeliveryAddress.value,
+      totalItems: totalItems.value,
+      subtotal: subtotal.value,
+      total: total.value,
+    },
+    null,
+    2,
+  );
 });
 
 const formatPrice = (price: number): string => {

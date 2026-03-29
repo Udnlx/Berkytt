@@ -247,7 +247,7 @@
               </div>
 
               <!-- JSON Output (для отладки) -->
-              <!--
+
               <div class="mt-8 p-4 bg-gray-100 rounded-lg">
                 <h4 class="text-xs font-medium text-gray-500 mb-2 uppercase">
                   Данные заказа (JSON):
@@ -256,7 +256,6 @@
                   jsonData
                 }}</pre>
               </div>
-              -->
             </div>
           </div>
         </div>
