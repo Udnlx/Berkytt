@@ -173,6 +173,28 @@
               г.Москва, Сормовский проезд д. 11/7<br />
               с 9:00 до 17:00 Пн-Пт
             </p>
+            <div
+              v-if="order?.deliveryMethod === 'cdek' && order?.deliveryType"
+              class="mt-3 p-3 bg-blue-50 rounded-lg"
+            >
+              <p class="text-xs text-gray-600 mb-1">
+                <strong>Тип доставки:</strong>
+              </p>
+              <p
+                class="text-sm text-gray-800 mb-2"
+                v-html="order.deliveryType"
+              ></p>
+              <p class="text-xs text-gray-600 mb-1">
+                <strong>Адрес:</strong>
+              </p>
+              <p class="text-sm text-gray-800">{{ order.deliveryAddress }}</p>
+              <p class="text-xs text-gray-600 mb-1 mt-2">
+                <strong>Стоимость доставки:</strong>
+              </p>
+              <p class="text-sm text-gray-800">
+                {{ formatPrice(order.deliveryCost) }} ₽
+              </p>
+            </div>
           </div>
         </div>
 
@@ -247,7 +269,6 @@
               </div>
 
               <!-- JSON Output (для отладки) -->
-
               <div class="mt-8 p-4 bg-gray-100 rounded-lg">
                 <h4 class="text-xs font-medium text-gray-500 mb-2 uppercase">
                   Данные заказа (JSON):
@@ -287,9 +308,11 @@ interface OrderData {
   buyer: OrderBuyer;
   paymentMethod: string;
   deliveryMethod: string;
+  deliveryCost: number;
+  deliveryType: string;
+  deliveryAddress: string;
   totalItems: number;
   subtotal: number;
-  deliveryCost: number;
   total: number;
   orderDate: string;
   orderNumber: string;
