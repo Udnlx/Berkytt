@@ -228,9 +228,20 @@
                   >
                     Выбрать пункт выдачи на карте
                   </button>
-                  <p v-if="sdekSelectedPoint" class="text-xs text-gray-700">
-                    Выбран пункт: {{ sdekSelectedPoint.name }}
-                  </p>
+                  <div
+                    v-if="sdekDeliveryCost > 0"
+                    class="text-xs text-gray-700 space-y-1"
+                  >
+                    <p><strong>Выбран тип:</strong> {{ sdekDeliveryType }}</p>
+                    <p>
+                      <strong>Адрес:</strong>
+                      <span v-html="sdekDeliveryAddress"></span>
+                    </p>
+                    <p>
+                      <strong>Стоимость доставки:</strong>
+                      {{ formatPrice(sdekDeliveryCost) }} ₽
+                    </p>
+                  </div>
                   <p class="text-xs text-[#ec018c] italic">
                     * В связи с техническими неполадками, при выборе доставки в
                     пункты выдачи СДЭК, просьба уточнять окончательную стоимость
@@ -392,15 +403,7 @@
 
           <!-- Body -->
           <div class="p-6">
-            <div
-              id="forpvzsdek"
-              style="height: 700px"
-              class="bg-gray-100 flex items-center justify-center"
-            >
-              <p class="text-gray-500">
-                Здесь будет карта СДЭК для выбора пункта выдачи
-              </p>
-            </div>
+            <div id="forpvzsdek" style="height: 700px"></div>
           </div>
         </div>
       </div>
@@ -419,9 +422,24 @@ const { cartProducts, totalQuantity, clearCart } = useCart();
 const errorMessage = ref<string | null>(null);
 const sdekSelectedPoint = ref<{ name: string; code: string } | null>(null);
 const isSdekModalOpen = ref(false);
+const sdekDeliveryCost = ref(0);
+const sdekDeliveryType = ref("");
+const sdekDeliveryAddress = ref("");
 
 // Загрузка виджета СДЭК
 onMounted(() => {
+  // Инициализируем goods для виджета СДЭК
+  (window as any).goods = cartProducts.value.map((item) => ({
+    id: item.id,
+    name: item.product,
+    price: item.price,
+    quantity: item.qnt,
+    weight: 1, // Вес по умолчанию (кг)
+    height: 10, // Высота (см)
+    width: 10, // Ширина (см)
+    length: 10, // Длина (см)
+  }));
+
   if (!(window as any).cdek) {
     const script = document.createElement("script");
     script.type = "text/javascript";
@@ -437,8 +455,10 @@ const openSdekModal = () => {
   if (modal) {
     modal.style.display = "block";
   }
-  // Здесь будет инициализация виджета СДЭК
-  initSdekWidget();
+  // Небольшая задержка для готовности DOM
+  setTimeout(() => {
+    initSdekWidget();
+  }, 100);
 };
 
 const closeSdekModal = () => {
@@ -447,18 +467,99 @@ const closeSdekModal = () => {
   if (modal) {
     modal.style.display = "none";
   }
+  // Сбрасываем флаг, чтобы при следующем открытии виджет перерисовался
+  isSdekWidgetInitialized.value = false;
+};
+
+const isSdekWidgetInitialized = ref(false);
+
+const updateDeliveryCost = (price: number, type: string, address: string) => {
+  sdekDeliveryCost.value = price;
+  sdekDeliveryType.value = type;
+  sdekDeliveryAddress.value = address;
+};
+
+const onChoose = (type: string, tariff: any, address: any) => {
+  if (type === "door") {
+    const deliveryPrice = tariff.delivery_sum || 0;
+    const deliveryType = "Доставка курьером по адресу";
+    const deliveryAddress = address.formatted || "";
+    updateDeliveryCost(deliveryPrice, deliveryType, deliveryAddress);
+    closeSdekModal();
+  } else {
+    const deliveryPrice = tariff.delivery_sum || 0;
+    const deliveryType = `Доставка в пункт выдачи - (${address.name}) Время работы: ${address.work_time || "не указано"}`;
+    const deliveryAddress = `${address.city || ""}, ${address.address || ""}`;
+    updateDeliveryCost(deliveryPrice, deliveryType, deliveryAddress);
+    closeSdekModal();
+  }
 };
 
 const initSdekWidget = () => {
-  if ((window as any).CDEKWidget) {
-    new (window as any).CDEKWidget({
-      from: "Новосибирск",
-      root: "forpvzsdek",
-      apiKey: "ed0e0cc1-c7b8-4435-bbd5-2b4a55430a27",
-      servicePath: "/sdek/",
-      defaultLocation: "Новосибирск",
+  if (!(window as any).CDEKWidget) return;
+
+  // Если виджет уже инициализирован, не инициализируем повторно
+  if (isSdekWidgetInitialized.value) return;
+
+  const container = document.getElementById("forpvzsdek");
+  if (!container) return;
+
+  // Очищаем контейнер перед инициализацией
+  container.innerHTML = "";
+
+  let location = [37.453937, 55.682113];
+
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      const lon = position.coords.longitude || 37.453937;
+      const lat = position.coords.latitude || 55.682113;
+      document.cookie = `lon=${lon}`;
+      document.cookie = `lat=${lat}`;
     });
+
+    const resultsLon = document.cookie.match(/lon=(.+?)(;|$)/);
+    const resultsLat = document.cookie.match(/lat=(.+?)(;|$)/);
+    const lon = resultsLon?.[1] ?? "37.453937";
+    const lat = resultsLat?.[1] ?? "55.682113";
+    location = [parseFloat(lon), parseFloat(lat)];
   }
+
+  new (window as any).CDEKWidget({
+    from: "Москва",
+    root: "forpvzsdek",
+    apiKey: "ed0e0cc1-c7b8-4435-bbd5-2b4a55430a27",
+    canChoose: true,
+    servicePath: "/sdek/",
+    hideFilters: {
+      have_cashless: false,
+      have_cash: false,
+      is_dressing_room: false,
+      type: false,
+    },
+    forceFilters: {
+      type: "PVZ",
+    },
+    hideDeliveryOptions: {
+      office: false,
+      door: false,
+    },
+    debug: false,
+    goods: (window as any).goods || [],
+    defaultLocation: location,
+    lang: "rus",
+    currency: "RUB",
+    tariffs: {
+      office: [136],
+      door: [137],
+    },
+    onReady() {},
+    onCalculate() {},
+    onChoose(type: string, tariff: any, address: any) {
+      onChoose(type, tariff, address);
+    },
+  });
+
+  isSdekWidgetInitialized.value = true;
 };
 
 const form = reactive({
@@ -480,7 +581,13 @@ const subtotal = computed(() => {
 });
 
 const deliveryCost = computed(() => {
-  return form.deliveryMethod === "pickup" ? 0 : 500;
+  if (form.deliveryMethod === "pickup") {
+    return 0;
+  }
+  if (form.deliveryMethod === "cdek" && sdekDeliveryCost.value > 0) {
+    return sdekDeliveryCost.value;
+  }
+  return 500; // Значение по умолчанию для СДЭК
 });
 
 const total = computed(() => {

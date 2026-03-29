@@ -15,7 +15,6 @@ useHead({
     {
       type: "text/javascript",
       src: "https://cdn.jsdelivr.net/npm/@cdek-it/widget@3",
-      charset: "utf-8",
     },
   ],
 });
