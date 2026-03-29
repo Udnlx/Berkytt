@@ -10,5 +10,15 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  script: [
+    {
+      type: "text/javascript",
+      src: "https://cdn.jsdelivr.net/npm/@cdek-it/widget@3",
+      charset: "utf-8",
+    },
+  ],
+});
+
 // Логика страницы раздела
 </script>

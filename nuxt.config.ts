@@ -22,6 +22,13 @@ export default defineNuxtConfig({
       "/api": {
         target: "https://berkytt.ru/apiv2",
         changeOrigin: true,
+        // Локальное подключение
+        // target: "http://berkytt/api",
+        // changeOrigin: true,
+      },
+      "/sdek/": {
+        target: "https://berkytt.ru/sdek/",
+        changeOrigin: true,
       },
     },
   },
@@ -30,6 +37,10 @@ export default defineNuxtConfig({
       apiBase: "https://berkytt.ru/apiv2",
       siteUrl: "https://berkytt.ru",
       domain: "https://berkytt.ru",
+      // Локальное подключение
+      // apiBase: "/api",
+      // siteUrl: "http://localhost:3000",
+      // domain: "http://berkytt",
     },
   },
 });

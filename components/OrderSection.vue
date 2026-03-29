@@ -450,8 +450,15 @@ const closeSdekModal = () => {
 };
 
 const initSdekWidget = () => {
-  // Демо-режим: пока просто заглушка
-  console.log("Инициализация виджета СДЭК...");
+  if ((window as any).CDEKWidget) {
+    new (window as any).CDEKWidget({
+      from: "Новосибирск",
+      root: "forpvzsdek",
+      apiKey: "ed0e0cc1-c7b8-4435-bbd5-2b4a55430a27",
+      servicePath: "/sdek/",
+      defaultLocation: "Новосибирск",
+    });
+  }
 };
 
 const form = reactive({
