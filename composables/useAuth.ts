@@ -19,10 +19,6 @@ interface AuthResponse {
   message?: string;
 }
 
-// Используем runtimeConfig для API базового URL
-const config = useRuntimeConfig();
-const API_BASE = config.public.apiBase as string;
-
 // Состояние аутентификации
 const token: Ref<string | null> = ref(null);
 const user: Ref<User | null> = ref(null);
@@ -31,14 +27,20 @@ const error: Ref<string | null> = ref(null);
 
 // Инициализация при загрузке приложения
 export const useAuth = () => {
-  // Проверка токена при инициализации
-  const initAuth = () => {
-    const storedToken = localStorage.getItem("auth_token");
-    const storedUser = localStorage.getItem("auth_user");
+  // Получаем runtimeConfig внутри функции
+  const config = useRuntimeConfig();
+  const API_BASE = config.public.apiBase as string;
 
-    if (storedToken && storedUser) {
-      token.value = storedToken;
-      user.value = JSON.parse(storedUser);
+  // Проверка токена при инициализации (только на клиенте)
+  const initAuth = () => {
+    if (import.meta.client) {
+      const storedToken = localStorage.getItem("auth_token");
+      const storedUser = localStorage.getItem("auth_user");
+
+      if (storedToken && storedUser) {
+        token.value = storedToken;
+        user.value = JSON.parse(storedUser);
+      }
     }
   };
 
@@ -59,20 +61,22 @@ export const useAuth = () => {
       const data: AuthResponse = await response.json();
 
       if (response.ok && data.success && data.token) {
-        // Сохраняем токен и данные пользователя
+        // Сохраняем токен и данные пользователя (только на клиенте)
         token.value = data.token;
         user.value = data.user || null;
 
-        localStorage.setItem("auth_token", data.token);
-        if (data.user) {
-          localStorage.setItem("auth_user", JSON.stringify(data.user));
+        if (import.meta.client) {
+          localStorage.setItem("auth_token", data.token);
+          if (data.user) {
+            localStorage.setItem("auth_user", JSON.stringify(data.user));
+          }
         }
 
         isLoading.value = false;
         return true;
       } else {
         // Ошибка авторизации
-        error.value = data.message || "Ошибка при входе";
+        error.value = data.message || "Неверный логин или пароль";
         isLoading.value = false;
         return false;
       }
@@ -87,8 +91,10 @@ export const useAuth = () => {
   const logout = () => {
     token.value = null;
     user.value = null;
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("auth_user");
+    if (import.meta.client) {
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("auth_user");
+    }
   };
 
   // Проверка авторизации
