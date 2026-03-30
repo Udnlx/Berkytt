@@ -4,7 +4,9 @@ import type { Ref } from "vue";
 interface User {
   id: number;
   name: string;
+  title: string;
   email: string;
+  phone: string;
 }
 
 interface LoginCredentials {

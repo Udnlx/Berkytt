@@ -8,7 +8,7 @@
             <!-- Avatar -->
             <div class="text-center mb-6">
               <h2 class="text-lg font-bold text-gray-800">
-                {{ user.name }}
+                {{ user.title }}
               </h2>
               <p class="text-sm text-gray-500">{{ user.email }}</p>
             </div>
@@ -223,7 +223,7 @@
                   ФИО
                 </label>
                 <input
-                  v-model="user.name"
+                  v-model="user.title"
                   type="text"
                   class="w-full px-4 py-3 bg-white border border-gray-200 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#ec018c] focus:border-transparent rounded-lg"
                 />
@@ -276,16 +276,17 @@ import { useRouter } from "vue-router";
 import { useAuth } from "~/composables/useAuth";
 
 const router = useRouter();
-const { logout: authLogout } = useAuth();
+const { user: authUser, logout: authLogout } = useAuth();
 
 const activeTab = ref("orders");
 
-// Статические данные пользователя
-const user = ref({
-  name: "Иванов Иван Иванович",
-  email: "ivan@example.com",
-  phone: "+7 (999) 123-45-67",
-});
+// Данные пользователя из аутентификации
+const user = computed(() => ({
+  name: authUser.value?.name || "—",
+  title: authUser.value?.title || "—",
+  email: authUser.value?.email || "—",
+  phone: authUser.value?.phone || "",
+}));
 
 // Статические данные заказов
 const orders = ref([
