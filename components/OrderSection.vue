@@ -425,9 +425,11 @@
 import { reactive, computed, ref, onMounted } from "vue";
 import { useCart } from "~/composables/useCart";
 import { useRouter } from "vue-router";
+import { useAuth } from "~/composables/useAuth";
 
 const router = useRouter();
 const { cartProducts, totalQuantity, clearCart } = useCart();
+const { user: authUser } = useAuth();
 
 const errorMessage = ref<string | null>(null);
 const sdekSelectedPoint = ref<{ name: string; code: string } | null>(null);
@@ -438,6 +440,13 @@ const sdekDeliveryAddress = ref("");
 
 // Загрузка виджета СДЭК
 onMounted(() => {
+  // Автозаполнение данных пользователя если авторизован
+  if (authUser.value) {
+    form.name = authUser.value.title || "";
+    form.email = authUser.value.email || "";
+    form.phone = authUser.value.phone || "";
+  }
+
   // Инициализируем goods для виджета СДЭК
   (window as any).goods = cartProducts.value.map((item) => ({
     id: item.id,
