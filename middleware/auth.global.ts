@@ -1,14 +1,16 @@
 export default defineNuxtRouteMiddleware((to) => {
-  // Получаем состояние аутентификации
-  const { isAuthenticated } = useAuth();
+  // Проверка авторизации только на клиенте
+  if (import.meta.client) {
+    const { isAuthenticated } = useAuth();
 
-  // Защищённые страницы (требуют авторизации)
-  const protectedPages = ["/profile"];
+    // Защищённые страницы (требуют авторизации)
+    const protectedPages = ["/profile"];
 
-  if (protectedPages.some((path) => to.path.startsWith(path))) {
-    if (!isAuthenticated.value) {
-      // Если не авторизован - редирект на login
-      return navigateTo("/login");
+    if (protectedPages.some((path) => to.path.startsWith(path))) {
+      if (!isAuthenticated.value) {
+        // Если не авторизован - редирект на login
+        return navigateTo("/login");
+      }
     }
   }
 });
