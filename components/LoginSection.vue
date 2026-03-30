@@ -126,13 +126,6 @@
             </NuxtLink>
           </p>
         </div>
-
-        <!-- Demo Info -->
-        <div class="mt-8 p-4 bg-blue-50 rounded-lg">
-          <p class="text-xs text-blue-700">
-            <strong>Демо-режим:</strong> Введите любые данные для входа
-          </p>
-        </div>
       </div>
     </div>
   </section>
@@ -141,8 +134,10 @@
 <script setup lang="ts">
 import { ref, reactive } from "vue";
 import { useRouter } from "vue-router";
+import { useAuth } from "~/composables/useAuth";
 
 const router = useRouter();
+const { login, error: authError } = useAuth();
 
 const isLoading = ref(false);
 const errorMessage = ref<string | null>(null);
@@ -152,7 +147,7 @@ const form = reactive({
   password: "",
 });
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   isLoading.value = true;
   errorMessage.value = null;
 
@@ -163,10 +158,19 @@ const handleSubmit = () => {
     return;
   }
 
-  // Демо-режим: имитация задержки и переход в профиль
-  setTimeout(() => {
-    isLoading.value = false;
+  // Попытка входа
+  const success = await login({
+    email: form.email,
+    password: form.password,
+  });
+
+  if (success) {
+    // Успешный вход - переход в профиль
     router.push("/profile");
-  }, 500);
+  } else {
+    // Ошибка - показываем сообщение
+    errorMessage.value = authError.value || "Ошибка при входе";
+    isLoading.value = false;
+  }
 };
 </script>
