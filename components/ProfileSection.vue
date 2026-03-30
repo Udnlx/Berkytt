@@ -273,8 +273,10 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
+import { useAuth } from "~/composables/useAuth";
 
 const router = useRouter();
+const { logout: authLogout } = useAuth();
 
 const activeTab = ref("orders");
 
@@ -356,6 +358,7 @@ const saveProfile = () => {
 
 const logout = () => {
   if (confirm("Вы уверены, что хотите выйти?")) {
+    authLogout();
     router.push("/");
   }
 };
