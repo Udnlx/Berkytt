@@ -3,7 +3,7 @@
     <HeaderSection />
     <main class="pt-[80px] min-h-screen bg-gray-50">
       <UpSimpleSection title="Вход в личный кабинет" />
-      <LoginSection v-if="!isAuthenticated" />
+      <LoginSection v-if="!isCheckingAuth" />
     </main>
     <FooterSection />
   </div>
@@ -11,18 +11,24 @@
 
 <script setup lang="ts">
 import { useHead, useRuntimeConfig, navigateTo } from "#app";
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useAuth } from "~/composables/useAuth";
 
 const config = useRuntimeConfig();
 const siteUrl = config.public.siteUrl;
 const { isAuthenticated } = useAuth();
+const isCheckingAuth = ref(true);
 
 // Если пользователь уже авторизован - сразу редиректим на профиль
 onMounted(() => {
-  if (isAuthenticated.value) {
-    navigateTo("/profile");
-  }
+  // Небольшая задержка для инициализации auth
+  setTimeout(() => {
+    if (isAuthenticated.value) {
+      navigateTo("/profile");
+    } else {
+      isCheckingAuth.value = false;
+    }
+  }, 100);
 });
 
 // Статические SEO теги для страницы авторизации
