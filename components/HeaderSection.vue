@@ -223,8 +223,8 @@
 
             <div class="w-px h-5 bg-gray-200"></div>
 
-            <a
-              href="/login"
+            <NuxtLink
+              :to="isAuthenticated ? '/profile' : '/login'"
               class="text-gray-700 hover:text-gray-900 transition"
             >
               <svg
@@ -240,7 +240,7 @@
                   d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                 />
               </svg>
-            </a>
+            </NuxtLink>
 
             <a
               href="/cart"
@@ -333,6 +333,7 @@ import { ref, onMounted, computed } from "vue";
 import { useCart } from "~/composables/useCart";
 import { useRouter } from "vue-router";
 import { useRuntimeConfig } from "#app";
+import { useAuth } from "~/composables/useAuth";
 
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
@@ -344,6 +345,9 @@ const searchQuery = ref("");
 
 // Используем composable корзины
 const { totalQuantity } = useCart();
+
+// Используем composable авторизации
+const { isAuthenticated } = useAuth();
 
 interface MainInfo {
   address: string;
