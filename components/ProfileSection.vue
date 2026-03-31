@@ -116,31 +116,18 @@
                 <div class="flex justify-between items-start mb-3">
                   <div>
                     <p class="text-sm font-bold text-gray-800">
-                      Заказ №{{ order.number }}
+                      {{ order.title }}
                     </p>
-                    <p class="text-xs text-gray-500">{{ order.date }}</p>
+                    <p class="text-xs text-gray-500">{{ order.dateOrder }}</p>
                   </div>
                   <span
                     :class="[
                       'px-3 py-1 rounded-full text-xs font-medium',
-                      getStatusClass(order.status),
+                      getStatusClass(order.orderStatus),
                     ]"
                   >
-                    {{ order.status }}
+                    {{ order.orderStatus }}
                   </span>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 mb-3">
-                  <div>
-                    <p class="text-xs text-gray-500 mb-1">Товары</p>
-                    <p class="text-sm text-gray-800">{{ order.items }} шт.</p>
-                  </div>
-                  <div>
-                    <p class="text-xs text-gray-500 mb-1">Сумма</p>
-                    <p class="text-sm font-bold text-gray-800">
-                      {{ formatPrice(order.total) }} ₽
-                    </p>
-                  </div>
                 </div>
 
                 <!-- Товары в заказе -->
@@ -148,18 +135,19 @@
                   <p class="text-xs text-gray-500 mb-2">Товары:</p>
                   <div class="space-y-2">
                     <div
-                      v-for="product in order.products"
-                      :key="product.name"
+                      v-for="product in order.cart.items"
+                      :key="product.id"
                       class="flex justify-between items-center text-sm"
                     >
                       <div>
-                        <p class="text-gray-800">{{ product.name }}</p>
+                        <p class="text-gray-800">{{ product.product }}</p>
                         <p class="text-xs text-gray-500">
-                          Размер: {{ product.size }} | {{ product.qnt }} шт.
+                          Размер: {{ product.sizeRussian }} |
+                          {{ product.quantity }} шт.
                         </p>
                       </div>
                       <p class="text-gray-800 font-medium">
-                        {{ formatPrice(product.price * product.qnt) }} ₽
+                        {{ formatPrice(product.price * product.quantity) }} ₽
                       </p>
                     </div>
                   </div>
@@ -169,15 +157,12 @@
                   <div class="flex justify-between items-center">
                     <div class="text-xs text-gray-500">
                       <p class="font-medium text-gray-700 mb-1">Доставка:</p>
-                      <p>{{ order.deliveryMethod }}</p>
-                      <p v-if="order.deliveryAddress">
-                        {{ order.deliveryAddress }}
-                      </p>
+                      <p>{{ order.address }}</p>
                     </div>
                     <div class="text-right">
                       <p class="text-xs text-gray-500 mb-1">Итого:</p>
                       <p class="text-lg font-bold text-[#ec018c]">
-                        {{ formatPrice(order.total) }} ₽
+                        {{ formatPrice(order.totalSum) }} ₽
                       </p>
                     </div>
                   </div>
@@ -185,7 +170,7 @@
               </div>
             </div>
 
-            <div v-else class="text-center py-12">
+            <div v-else-if="!isLoading" class="text-center py-12">
               <svg
                 class="w-16 h-16 text-gray-300 mx-auto mb-4"
                 fill="none"
@@ -206,6 +191,30 @@
               >
                 Перейти в каталог
               </NuxtLink>
+            </div>
+
+            <!-- Индикатор загрузки -->
+            <div v-if="isLoading" class="text-center py-12">
+              <svg
+                class="animate-spin w-8 h-8 text-[#ec018c] mx-auto mb-4"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                />
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+              <p class="text-gray-500">Загрузка заказов...</p>
             </div>
           </div>
 
@@ -271,14 +280,19 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "~/composables/useAuth";
+import { useRuntimeConfig } from "#app";
 
 const router = useRouter();
-const { user: authUser, logout: authLogout } = useAuth();
+const config = useRuntimeConfig();
+const { user: authUser, logout: authLogout, getAuthHeaders } = useAuth();
+
+const API_BASE = config.public.apiBase as string;
 
 const activeTab = ref("orders");
+const isLoading = ref(false);
 
 // Данные пользователя из аутентификации
 const user = computed(() => ({
@@ -288,50 +302,62 @@ const user = computed(() => ({
   phone: authUser.value?.phone || "",
 }));
 
-// Статические данные заказов
-const orders = ref([
-  {
-    id: 1,
-    number: "ORD-1234567890",
-    date: "15 марта 2026, 14:30",
-    status: "В обработке",
-    items: 3,
-    total: 15990,
-    deliveryMethod: "Доставка СДЭК",
-    deliveryAddress: "г. Москва, ул. Ленина, 66А",
-    products: [
-      { name: "Пальто женское демисезонное", size: "44", price: 7990, qnt: 1 },
-      { name: "Жилет женский", size: "46", price: 4000, qnt: 2 },
-    ],
-  },
-  {
-    id: 2,
-    number: "ORD-1234567889",
-    date: "10 марта 2026, 10:15",
-    status: "Доставлен",
-    items: 2,
-    total: 8990,
-    deliveryMethod: "Доставка СДЭК",
-    deliveryAddress: "г. Москва, ул. Пушкина, 10",
-    products: [
-      { name: "Куртка осенняя", size: "48", price: 5990, qnt: 1 },
-      { name: "Шарф вязаный", size: "One Size", price: 3000, qnt: 1 },
-    ],
-  },
-  {
-    id: 3,
-    number: "ORD-1234567888",
-    date: "1 марта 2026, 16:45",
-    status: "Доставлен",
-    items: 1,
-    total: 5490,
-    deliveryMethod: "Забрать со склада",
-    deliveryAddress: "г. Москва, Сормовский проезд д. 11/7",
-    products: [
-      { name: "Пальто мужское классическое", size: "50", price: 5490, qnt: 1 },
-    ],
-  },
-]);
+// Динамические данные заказов
+interface OrderProduct {
+  id: number;
+  name: string;
+  product: string;
+  size: string;
+  sizeRussian: string;
+  quantity: number;
+  price: number;
+}
+
+interface Order {
+  id: number;
+  name: string;
+  title: string;
+  dateOrder: string;
+  cart: {
+    items: OrderProduct[];
+    totalQuantity: number;
+    totalPrice: number;
+  };
+  address: string;
+  deliveryPrice: number;
+  totalSum: number;
+  orderStatus: string;
+}
+
+const orders = ref<Order[]>([]);
+
+// Загрузка заказов при монтировании
+onMounted(async () => {
+  if (authUser.value) {
+    await fetchOrders();
+  }
+});
+
+const fetchOrders = async () => {
+  isLoading.value = true;
+
+  try {
+    const response = await fetch(`${API_BASE}/getorders/`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.userOrders) {
+      orders.value = data.userOrders;
+    }
+  } catch (e) {
+    console.error("Ошибка при загрузке заказов:", e);
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 // Статус заказа
 const getStatusClass = (status: string) => {
