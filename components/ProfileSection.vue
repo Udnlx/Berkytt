@@ -154,12 +154,18 @@
                 </div>
 
                 <div class="pt-3 border-t border-gray-100">
-                  <div class="flex justify-between items-center">
-                    <div class="text-xs text-gray-500">
+                  <div class="flex justify-between items-center gap-4">
+                    <div class="text-xs text-gray-500 max-w-[60%]">
                       <p class="font-medium text-gray-700 mb-1">Доставка:</p>
-                      <p>{{ order.address }}</p>
+                      <p class="break-words">{{ order.address }}</p>
+                      <p class="mt-1 text-gray-600">
+                        Стоимость:
+                        <span class="font-medium"
+                          >{{ formatPrice(order.deliveryPrice) }} ₽</span
+                        >
+                      </p>
                     </div>
-                    <div class="text-right">
+                    <div class="text-right flex-shrink-0">
                       <p class="text-xs text-gray-500 mb-1">Итого:</p>
                       <p class="text-lg font-bold text-[#ec018c]">
                         {{ formatPrice(order.totalSum) }} ₽
@@ -364,10 +370,14 @@ const getStatusClass = (status: string) => {
   switch (status) {
     case "В обработке":
       return "bg-yellow-100 text-yellow-800";
-    case "Доставлен":
+    case "Доставка":
+      return "bg-blue-100 text-blue-800";
+    case "Выполнен":
       return "bg-green-100 text-green-800";
     case "Отменен":
       return "bg-red-100 text-red-800";
+    case "Не удался":
+      return "bg-orange-100 text-orange-800";
     default:
       return "bg-gray-100 text-gray-800";
   }
