@@ -268,13 +268,30 @@
                 />
               </div>
 
+              <!-- Success Message -->
+              <div
+                v-if="saveSuccess"
+                class="p-4 bg-green-50 border border-green-200 rounded-lg"
+              >
+                <p class="text-sm text-green-700">✓ Данные успешно сохранены</p>
+              </div>
+
+              <!-- Error Message -->
+              <div
+                v-if="saveError"
+                class="p-4 bg-red-50 border border-red-200 rounded-lg"
+              >
+                <p class="text-sm text-red-700">✗ {{ saveError }}</p>
+              </div>
+
               <!-- Save Button -->
               <div class="pt-4">
                 <button
                   @click="saveProfile"
-                  class="px-8 py-4 bg-[#ec018c] text-white text-sm font-medium rounded-lg hover:bg-[#d4007c] transition-colors"
+                  :disabled="isSaving"
+                  class="px-8 py-4 bg-[#ec018c] text-white text-sm font-medium rounded-lg hover:bg-[#d4007c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  СОХРАНИТЬ ИЗМЕНЕНИЯ
+                  {{ isSaving ? "Сохранение..." : "СОХРАНИТЬ ИЗМЕНЕНИЯ" }}
                 </button>
               </div>
             </div>
@@ -299,14 +316,82 @@ const API_BASE = config.public.apiBase as string;
 
 const activeTab = ref("orders");
 const isLoading = ref(false);
+const isSaving = ref(false);
+const saveSuccess = ref(false);
+const saveError = ref<string | null>(null);
 
-// Данные пользователя из аутентификации
-const user = computed(() => ({
-  name: authUser.value?.name || "—",
-  title: authUser.value?.title || "—",
-  email: authUser.value?.email || "—",
-  phone: authUser.value?.phone || "",
-}));
+// Данные пользователя для редактирования
+const user = ref({
+  name: "",
+  title: "",
+  email: "",
+  phone: "",
+});
+
+// Загрузка данных пользователя при монтировании
+onMounted(async () => {
+  if (authUser.value) {
+    // Загружаем данные пользователя
+    user.value = {
+      name: authUser.value.name || "",
+      title: authUser.value.title || "",
+      email: authUser.value.email || "",
+      phone: authUser.value.phone || "",
+    };
+
+    await fetchOrders();
+  }
+});
+
+// Сохранение данных пользователя
+const saveProfile = async () => {
+  isSaving.value = true;
+  saveError.value = null;
+  saveSuccess.value = false;
+
+  try {
+    console.log("Отправка данных:", {
+      name: user.value.title,
+      email: user.value.email,
+      phone: user.value.phone,
+    });
+
+    const response = await fetch(`${API_BASE}/replaceuserdata/`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        name: user.value.title,
+        email: user.value.email,
+        phone: user.value.phone,
+      }),
+    });
+
+    console.log("Status:", response.status);
+    const data = await response.json();
+    console.log("Response:", data);
+
+    if (response.ok && data.userInfo && data.userInfo.success) {
+      saveSuccess.value = true;
+      // Обновляем данные в auth
+      localStorage.setItem(
+        "auth_user",
+        JSON.stringify({
+          ...authUser.value,
+          name: user.value.title,
+          email: user.value.email,
+          phone: user.value.phone,
+        }),
+      );
+    } else {
+      saveError.value =
+        data.message || data.userInfo?.message || "Ошибка при сохранении";
+    }
+  } catch (e) {
+    saveError.value = "Не удалось подключиться к серверу";
+  } finally {
+    isSaving.value = false;
+  }
+};
 
 // Динамические данные заказов
 interface OrderProduct {
@@ -386,11 +471,6 @@ const getStatusClass = (status: string) => {
 // Форматирование цены
 const formatPrice = (price: number): string => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-};
-
-// Действия
-const saveProfile = () => {
-  alert("Профиль сохранён (демо-режим)");
 };
 
 const logout = () => {
