@@ -369,8 +369,19 @@ const saveProfile = async () => {
     console.log("Status:", response.status);
     const data = await response.json();
     console.log("Response:", data);
+    console.log("data.userInfo:", data.userInfo);
+    console.log("data.userInfo.error:", data.userInfo?.error);
 
-    if (response.ok && data.userInfo && data.userInfo.success) {
+    // Проверяем error в ответе
+    const error = data.userInfo?.error || data.error;
+
+    if (error && error !== "") {
+      // Если error не пустой - показываем ошибку
+      console.log("Ошибка от сервера:", error);
+      saveError.value = error;
+    } else {
+      // Если error пустой - сохранение успешно
+      console.log("Сохранение успешно!");
       saveSuccess.value = true;
       // Обновляем данные в auth
       localStorage.setItem(
@@ -382,11 +393,9 @@ const saveProfile = async () => {
           phone: user.value.phone,
         }),
       );
-    } else {
-      saveError.value =
-        data.message || data.userInfo?.message || "Ошибка при сохранении";
     }
   } catch (e) {
+    console.error("Ошибка при сохранении:", e);
     saveError.value = "Не удалось подключиться к серверу";
   } finally {
     isSaving.value = false;
