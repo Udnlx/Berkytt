@@ -10,7 +10,7 @@
               <h2 class="text-lg font-bold text-gray-800">
                 {{ user.title }}
               </h2>
-              <p class="text-sm text-gray-500">{{ user.email }}</p>
+              <p class="text-sm text-gray-500">{{ originalEmail }}</p>
             </div>
 
             <!-- Navigation -->
@@ -328,6 +328,9 @@ const user = ref({
   phone: "",
 });
 
+// Оригинальный email (для отображения до успешного сохранения)
+const originalEmail = ref("");
+
 // Загрузка данных пользователя при монтировании
 onMounted(async () => {
   if (authUser.value) {
@@ -338,6 +341,7 @@ onMounted(async () => {
       email: authUser.value.email || "",
       phone: authUser.value.phone || "",
     };
+    originalEmail.value = authUser.value.email || "";
 
     await fetchOrders();
   }
@@ -383,6 +387,8 @@ const saveProfile = async () => {
       // Если error пустой - сохранение успешно
       console.log("Сохранение успешно!");
       saveSuccess.value = true;
+      // Обновляем оригинальный email
+      originalEmail.value = user.value.email;
       // Обновляем данные в auth
       localStorage.setItem(
         "auth_user",
