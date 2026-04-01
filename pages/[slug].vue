@@ -17,6 +17,7 @@ const route = useRoute();
 const slug = route.params.slug as string;
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
+const apiKey = config.public.apiKey;
 const siteUrl = config.public.siteUrl;
 
 interface PageData {
@@ -43,6 +44,11 @@ interface PageData {
 
 const { data: pageData, error } = await useFetch<PageData>(
   `${apiBase}/getpage/${slug}`,
+  {
+    headers: {
+      "X-API-KEY": apiKey,
+    },
+  },
 );
 
 if (error.value || !pageData.value?.name) {

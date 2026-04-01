@@ -22,7 +22,8 @@ import { ref, onMounted, computed } from "vue";
 import { useHead, useRuntimeConfig } from "#app";
 
 const config = useRuntimeConfig();
-const API_BASE = config.public.apiBase as string;
+const apiBase = config.public.apiBase as string;
+const apiKey = config.public.apiKey as string;
 const siteUrl = config.public.siteUrl;
 // Базовый хост для изображений (без /api в конце)
 const IMAGE_BASE = config.public.domain as string;
@@ -98,9 +99,11 @@ const ourCollections = ref<MainPageData["ourCollections"]>([]);
 
 onMounted(async () => {
   try {
-    const config = useRuntimeConfig();
-    const apiBase = config.public.apiBase;
-    const response = await fetch(`${apiBase}/mainpage`);
+    const response = await fetch(`${apiBase}/mainpage`, {
+      headers: {
+        "X-API-KEY": apiKey,
+      },
+    });
     const data: MainPageData = await response.json();
     console.log("API Response:", data);
 

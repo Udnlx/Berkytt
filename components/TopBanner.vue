@@ -31,6 +31,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import { useRuntimeConfig } from "#app";
+
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase;
+const apiKey = config.public.apiKey;
 
 const isVisible = ref(false);
 const bannerText = ref<string | null>(null);
@@ -52,7 +57,11 @@ onMounted(async () => {
 
   // Получаем данные баннера из API
   try {
-    const response = await fetch("/api/topbanner");
+    const response = await fetch(`${apiBase}/topbanner`, {
+      headers: {
+        "X-API-KEY": apiKey,
+      },
+    });
     const data = await response.json();
 
     // Если topBanner не null, показываем баннер
