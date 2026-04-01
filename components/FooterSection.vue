@@ -244,6 +244,7 @@
 import { ref, onMounted } from "vue";
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
+const apiKey = config.public.apiKey;
 
 interface MainInfo {
   address: string;
@@ -263,7 +264,11 @@ const mainInfo = ref<MainInfo>({
 
 onMounted(async () => {
   try {
-    const response = await fetch(`${apiBase}/maininfo`);
+    const response = await fetch(`${apiBase}/maininfo`, {
+      headers: {
+        "X-API-KEY": apiKey,
+      },
+    });
     const data = await response.json();
     console.log("API Response:", data);
 

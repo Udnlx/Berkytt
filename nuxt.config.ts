@@ -41,6 +41,7 @@ export default defineNuxtConfig({
       apiBase: "http://localhost:3000/api",
       siteUrl: "http://localhost:3000",
       domain: "http://berkytt",
+      apiKey: "",
     },
   },
 });

@@ -337,6 +337,7 @@ import { useAuth } from "~/composables/useAuth";
 
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
+const apiKey = config.public.apiKey;
 const router = useRouter();
 const isMobileMenuOpen = ref(false);
 const openDropdown = ref<number | null>(null);
@@ -384,7 +385,11 @@ const menuData = ref<MenuData>({
 
 onMounted(async () => {
   try {
-    const response = await fetch(`${apiBase}/maininfo`);
+    const response = await fetch(`${apiBase}/maininfo`, {
+      headers: {
+        "X-API-KEY": apiKey,
+      },
+    });
     const data = await response.json();
     console.log("API Response:", data);
 

@@ -32,6 +32,7 @@ export const useAuth = () => {
   // Получаем runtimeConfig внутри функции
   const config = useRuntimeConfig();
   const API_BASE = config.public.apiBase as string;
+  const API_KEY = config.public.apiKey as string;
 
   // Проверка токена при инициализации (только на клиенте)
   const initAuth = () => {
@@ -56,6 +57,7 @@ export const useAuth = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-API-KEY": API_KEY,
         },
         body: JSON.stringify(credentials),
       });
@@ -108,6 +110,7 @@ export const useAuth = () => {
   const getAuthHeaders = () => {
     const headers: HeadersInit = {
       "Content-Type": "application/json",
+      "X-API-KEY": API_KEY,
     };
 
     if (token.value) {
