@@ -50,7 +50,7 @@
           <ul class="space-y-3">
             <li>
               <a
-                href="#"
+                href="/wheretobuy"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
                 ГДЕ КУПИТЬ

@@ -484,7 +484,7 @@ const menuItems = computed(() => [
     label: "ИНФОРМАЦИЯ",
     type: "dropdown",
     items: [
-      { label: "ГДЕ КУПИТЬ", href: "#" },
+      { label: "ГДЕ КУПИТЬ", href: "/wheretobuy" },
       { label: "УХОД-ХРАНЕНИЕ", href: "/ukhod-khranenie" },
       { label: "ДОСТАВКА", href: "/delivery" },
       { label: "ВОЗВРАТ", href: "/vozvrat" },
