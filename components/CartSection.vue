@@ -452,7 +452,7 @@ const removeItem = (
 };
 
 const checkout = () => {
-  console.log("Checkout:", cartProducts.value);
+  // console.log("Checkout:", cartProducts.value);
   // Здесь будет логика оформления заказа
 };
 </script>

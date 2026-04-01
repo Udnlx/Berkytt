@@ -118,18 +118,14 @@ const fetchProducts = async () => {
     const pageParam = page.value || "1";
     const url = `${apiBase}/getproducts/${section.value}/${category.value}/${sizeParam}/${pageParam}`;
 
-    console.log("Загрузка товаров:", url);
-
     const response = await $fetch<ProductsResponse>(url, {
       headers: {
         "X-API-KEY": apiKey,
       },
     });
-    console.log("Ответ API:", response);
 
     products.value = (response.products || []).map(normalizeProduct);
     totalPages.value = response.totalPage || 1;
-    console.log("Товары загружены:", products.value.length);
   } catch (error) {
     console.error("Ошибка загрузки товаров:", error);
     products.value = [];

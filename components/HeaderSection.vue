@@ -391,8 +391,6 @@ onMounted(async () => {
       },
     });
     const data = await response.json();
-    console.log("API Response:", data);
-
     // info - отдельно, menuMan/menuWoman - в корне
     const infoData = data.info && data.info[0] ? data.info[0] : null;
 
@@ -409,17 +407,12 @@ onMounted(async () => {
     // Получаем меню для мужчин (приходит в корне data)
     if (data.menuMan && Array.isArray(data.menuMan)) {
       menuData.value.menuMan = data.menuMan;
-      console.log("Set menuMan:", menuData.value.menuMan);
     }
 
     // Получаем меню для женщин (приходит в корне data)
     if (data.menuWoman && Array.isArray(data.menuWoman)) {
       menuData.value.menuWoman = data.menuWoman;
-      console.log("Set menuWoman:", menuData.value.menuWoman);
     }
-
-    console.log("Header mainInfo:", mainInfo.value);
-    console.log("Menu data:", menuData.value);
   } catch (error) {
     console.error("Failed to fetch maininfo data:", error);
   }

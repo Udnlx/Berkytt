@@ -81,7 +81,7 @@ const form = reactive({
 });
 
 const submitForm = () => {
-  console.log("Form submitted:", form);
+  // console.log("Form submitted:", form);
   // Здесь будет логика отправки формы
 };
 </script>

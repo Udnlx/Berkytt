@@ -354,12 +354,6 @@ const saveProfile = async () => {
   saveSuccess.value = false;
 
   try {
-    console.log("Отправка данных:", {
-      name: user.value.title,
-      email: user.value.email,
-      phone: user.value.phone,
-    });
-
     const response = await fetch(`${API_BASE}/replaceuserdata/`, {
       method: "POST",
       headers: getAuthHeaders(),
@@ -370,22 +364,16 @@ const saveProfile = async () => {
       }),
     });
 
-    console.log("Status:", response.status);
     const data = await response.json();
-    console.log("Response:", data);
-    console.log("data.userInfo:", data.userInfo);
-    console.log("data.userInfo.error:", data.userInfo?.error);
 
     // Проверяем error в ответе
     const error = data.userInfo?.error || data.error;
 
     if (error && error !== "") {
       // Если error не пустой - показываем ошибку
-      console.log("Ошибка от сервера:", error);
       saveError.value = error;
     } else {
       // Если error пустой - сохранение успешно
-      console.log("Сохранение успешно!");
       saveSuccess.value = true;
       // Обновляем оригинальный email
       originalEmail.value = user.value.email;

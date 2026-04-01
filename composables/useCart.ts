@@ -60,9 +60,7 @@ const addToCart = (
     // Добавляем новый товар
     cartProducts.value.push({ id, idSize, product, size, qnt, price });
   }
-
   saveToStorage();
-  console.log("Корзина обновлена:", cartProducts.value);
 };
 
 // Удаление товара из корзины
@@ -82,14 +80,12 @@ const removeFromCart = (
       ),
   );
   saveToStorage();
-  console.log("Товар удалён из корзины:", cartProducts.value);
 };
 
 // Очистка корзины
 const clearCart = () => {
   cartProducts.value = [];
   saveToStorage();
-  console.log("Корзина очищена");
 };
 
 // Обновление количества товара
@@ -110,7 +106,6 @@ const updateQuantity = (
   if (item) {
     item.qnt = qnt;
     saveToStorage();
-    console.log("Количество обновлено:", cartProducts.value);
   }
 };
 

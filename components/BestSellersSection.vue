@@ -227,10 +227,6 @@ onMounted(() => {
   timerInterval = setInterval(() => {
     currentTime.value = Date.now();
   }, 1000);
-
-  console.log("BestSellers: props.filters =", props.filters);
-  console.log("BestSellers: props.products =", props.products);
-  console.log("BestSellers: activeFilter =", activeFilter.value);
 });
 
 onUnmounted(() => {

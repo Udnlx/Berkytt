@@ -277,11 +277,6 @@ const handleSubmit = async () => {
       password: form.password,
     };
 
-    console.log("Отправка данных на регистрацию:", {
-      url: `${apiBase}/register/`,
-      body: requestBody,
-    });
-
     const response = await fetch(`${apiBase}/register/`, {
       method: "POST",
       headers: {
@@ -303,10 +298,7 @@ const handleSubmit = async () => {
       return;
     }
 
-    console.log("Прошли проверку error, продолжаем регистрацию...");
-
     // Если error пустой - регистрация успешна
-    console.log("Регистрация успешна!");
     successMessage.value = "Регистрация успешна! Перенаправление...";
     isLoading.value = false;
     // Перенаправляем на страницу входа через 2 секунды

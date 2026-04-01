@@ -105,7 +105,6 @@ onMounted(async () => {
       },
     });
     const data: MainPageData = await response.json();
-    console.log("API Response:", data);
 
     mainPageData.value = data;
 
@@ -152,13 +151,6 @@ onMounted(async () => {
 
     // Загружаем комментарии
     commentsForMain.value = data.commentsForMain || [];
-
-    console.log("btnFiltersForNew:", btnFiltersForNew.value);
-    console.log("productsForNew:", productsForNew.value);
-    console.log("btnFiltersForBest:", btnFiltersForBest.value);
-    console.log("productsForBest:", productsForBest.value);
-    console.log("commentsForMain:", commentsForMain.value);
-    console.log("ourCollections:", ourCollections.value);
   } catch (error) {
     console.error("Failed to fetch mainpage data:", error);
   }

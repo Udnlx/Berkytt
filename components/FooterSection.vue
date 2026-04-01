@@ -270,7 +270,6 @@ onMounted(async () => {
       },
     });
     const data = await response.json();
-    console.log("API Response:", data);
 
     // API возвращает { info: [...] }
     const infoData = data.info && data.info[0] ? data.info[0] : null;
@@ -284,7 +283,6 @@ onMounted(async () => {
         email: infoData.email || "",
       };
     }
-    console.log("Header mainInfo:", mainInfo.value);
   } catch (error) {
     console.error("Failed to fetch maininfo data:", error);
   }
