@@ -80,8 +80,9 @@
           <!-- Toolbar -->
           <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
             <!-- View Mode & Sale Filter -->
+            <!--
             <div class="flex items-center gap-4">
-              <!-- <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2">
                 <button
                   class="w-8 h-8 bg-gray-900 text-white rounded flex items-center justify-center"
                 >
@@ -116,7 +117,7 @@
                     />
                   </svg>
                 </button>
-              </div> -->
+              </div>
               <label
                 class="flex items-center gap-2 text-sm text-gray-600 cursor-pointer text-sm text-gray-900 font-medium"
               >
@@ -127,8 +128,10 @@
                 Показать только товары распродаж
               </label>
             </div>
+             -->
 
             <!-- Sort Dropdown -->
+            <!--
             <div class="flex items-center gap-2">
               <span class="text-sm text-gray-900 font-medium">Сортировка</span>
               <div class="relative">
@@ -159,6 +162,7 @@
                 </div>
               </div>
             </div>
+             -->
           </div>
 
           <!-- Products Grid -->
@@ -370,6 +374,7 @@ const route = useRoute();
 const router = useRouter();
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
+const apiKey = config.public.apiKey;
 
 const currentPage = computed(() => Number(route.params.page) || 1);
 
@@ -405,6 +410,11 @@ const fetchCategories = async () => {
   try {
     const response = await $fetch<Category[] | CategoriesResponse>(
       `${apiBase}/getcategories/${section}/`,
+      {
+        headers: {
+          "X-API-KEY": apiKey,
+        },
+      },
     );
 
     // Пробуем разные варианты структуры ответа
@@ -421,6 +431,11 @@ const fetchCategories = async () => {
     // Загружаем размеры для текущей секции
     const sizesResponse = await $fetch<SizesResponse>(
       `${apiBase}/getcategories/${section}/`,
+      {
+        headers: {
+          "X-API-KEY": apiKey,
+        },
+      },
     );
 
     if (sizesResponse && "sizes" in sizesResponse) {

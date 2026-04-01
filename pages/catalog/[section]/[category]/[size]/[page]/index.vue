@@ -41,6 +41,7 @@ interface ProductsResponse {
 
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
+const apiKey = config.public.apiKey;
 // Базовый хост для изображений (без /api)
 const apiHost = config.public.domain;
 
@@ -119,7 +120,11 @@ const fetchProducts = async () => {
 
     console.log("Загрузка товаров:", url);
 
-    const response = await $fetch<ProductsResponse>(url);
+    const response = await $fetch<ProductsResponse>(url, {
+      headers: {
+        "X-API-KEY": apiKey,
+      },
+    });
     console.log("Ответ API:", response);
 
     products.value = (response.products || []).map(normalizeProduct);

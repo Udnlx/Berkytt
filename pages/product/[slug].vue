@@ -251,6 +251,7 @@ const config = useRuntimeConfig();
 const productSlug = computed(() => route.params.slug as string);
 
 const apiBase = config.public.apiBase;
+const apiKey = config.public.apiKey;
 const apiHost = config.public.domain; // Базовый хост для изображений и видео
 const siteUrl = config.public.siteUrl; // URL сайта для canonical
 
@@ -266,6 +267,9 @@ const {
   lazy: false,
   server: true,
   default: () => null,
+  headers: {
+    "X-API-KEY": apiKey,
+  },
 });
 
 // Маппинг данных из API в формат компонентов

@@ -86,6 +86,7 @@
                 {{ product?.name || "Название продукта" }}
               </h1>
             </div>
+            <!--
             <button
               class="p-2 border border-gray-200 rounded hover:border-gray-400 transition"
             >
@@ -103,6 +104,7 @@
                 />
               </svg>
             </button>
+            -->
           </div>
 
           <!-- Рейтинг -->
