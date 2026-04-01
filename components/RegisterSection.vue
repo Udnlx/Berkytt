@@ -293,33 +293,26 @@ const handleSubmit = async () => {
 
     const data = await response.json();
 
-    console.log("=== ОТВЕТ ОТ БЭКЕНДА ===");
-    console.log("response.status:", response.status);
-    console.log("response.ok:", response.ok);
-    console.log("data (полный ответ):", data);
-    console.log("data.userInfo:", data.userInfo);
-    console.log("========================");
-
     // Бэкенд возвращает { userInfo: { success: true, user: {...}, error: "" } }
     const responseData = data.userInfo || data;
 
-    console.log("responseData:", responseData);
-    console.log("responseData.success:", responseData.success);
-
-    if (response.ok && responseData.success) {
-      console.log("Регистрация успешна!");
-      successMessage.value = "Регистрация успешна! Перенаправление...";
-      // Перенаправляем на страницу входа через 2 секунды
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
-    } else {
-      console.log("Регистрация не удалась");
-      console.log("responseData.message:", responseData.message);
-      console.log("responseData.error:", responseData.error);
-      errorMessage.value =
-        responseData.message || responseData.error || "Ошибка при регистрации";
+    // Если error не пустой - показываем ошибку и не сбрасываем поля
+    if (responseData.error && responseData.error !== "") {
+      errorMessage.value = responseData.error;
+      isLoading.value = false;
+      return;
     }
+
+    console.log("Прошли проверку error, продолжаем регистрацию...");
+
+    // Если error пустой - регистрация успешна
+    console.log("Регистрация успешна!");
+    successMessage.value = "Регистрация успешна! Перенаправление...";
+    isLoading.value = false;
+    // Перенаправляем на страницу входа через 2 секунды
+    setTimeout(() => {
+      router.push("/login");
+    }, 2000);
   } catch (e) {
     console.error("Ошибка при регистрации:", e);
     errorMessage.value = "Не удалось подключиться к серверу";
