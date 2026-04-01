@@ -287,6 +287,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
+import { useRuntimeConfig } from "#app";
+
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase;
+const apiKey = config.public.apiKey;
 
 interface OrderProduct {
   id: number;
@@ -328,10 +333,11 @@ const sendOrderToApi = async (orderData: OrderData) => {
   error.value = null;
 
   try {
-    const response = await fetch("http://berkytt/api/confirmorder/", {
+    const response = await fetch(`${apiBase}/confirmorder/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-API-KEY": apiKey,
       },
       body: JSON.stringify(orderData),
     });
