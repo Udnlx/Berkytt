@@ -60,7 +60,8 @@
         <div>
           <button
             type="submit"
-            class="px-8 py-3 border border-black bg-white text-black text-sm font-semibold rounded hover:bg-[#ec018c] hover:text-white transition-colors duration-300 cursor-pointer"
+            :disabled="!form.saveData"
+            class="px-8 py-3 border border-black bg-white text-black text-sm font-semibold rounded hover:bg-[#ec018c] hover:text-white transition-colors duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-black"
           >
             ОТПРАВИТЬ
           </button>
@@ -71,7 +72,10 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from "vue";
+import { reactive, onMounted } from "vue";
+import { useAuth } from "~/composables/useAuth";
+
+const { user } = useAuth();
 
 const form = reactive({
   name: "",
@@ -80,8 +84,28 @@ const form = reactive({
   saveData: false,
 });
 
+// Предзаполняем поля данными из авторизации
+onMounted(() => {
+  if (user.value) {
+    form.name = user.value.title || user.value.name || "";
+    form.email = user.value.email || "";
+  }
+});
+
 const submitForm = () => {
-  // console.log("Form submitted:", form);
+  // Проверка заполнения всех полей
+  if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
+    alert("Пожалуйста, заполните все поля");
+    return;
+  }
+
+  // Проверка галочки согласия
+  if (!form.saveData) {
+    alert("Необходимо согласиться с условиями и политикой конфиденциальности");
+    return;
+  }
+
+  console.log("Form submitted:", form);
   // Здесь будет логика отправки формы
 };
 </script>
