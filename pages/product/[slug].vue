@@ -92,7 +92,7 @@
         <SingleProductSection :product="mappedProduct" />
         <OptionProductSection :product="mappedProduct" />
         <ReviewProductSection :comments="mappedProduct.comments" />
-        <!-- <FormReviewSection /> -->
+        <FormReviewSection v-if="isAuthenticated" />
         <YouLikeItSection :products="mappedProduct.likeit" />
       </div>
     </main>
@@ -104,6 +104,7 @@
 // @ts-nocheck
 import { computed } from "vue";
 import { useRoute, useHead, useRuntimeConfig } from "#app";
+import { useAuth } from "~/composables/useAuth";
 
 // Интерфейс ответа от API
 interface ApiProductData {
@@ -249,6 +250,8 @@ interface ProductData {
 const route = useRoute();
 const config = useRuntimeConfig();
 const productSlug = computed(() => route.params.slug as string);
+
+const { isAuthenticated } = useAuth();
 
 const apiBase = config.public.apiBase;
 const apiKey = config.public.apiKey;
