@@ -5,7 +5,32 @@
         Оставьте отзыв о товаре
       </h2>
 
-      <form @submit.prevent="submitForm" class="space-y-5">
+      <!-- Сообщение об успешной отправке -->
+      <div
+        v-if="isSent"
+        class="bg-green-50 border border-green-200 rounded-lg p-6 mb-6"
+      >
+        <div class="flex items-center gap-3">
+          <svg
+            class="w-6 h-6 text-green-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          <p class="text-green-700">
+            Ваш отзыв принят и будет опубликован после модерации.
+          </p>
+        </div>
+      </div>
+
+      <form v-else @submit.prevent="submitForm" class="space-y-5">
         <!-- Name and Email Row -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
@@ -72,10 +97,23 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted } from "vue";
+import { reactive, onMounted, ref } from "vue";
 import { useAuth } from "~/composables/useAuth";
+import { useRuntimeConfig } from "#app";
 
-const { user } = useAuth();
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase;
+const apiKey = config.public.apiKey;
+
+const { user, token, getAuthHeaders } = useAuth();
+
+// Получаем slug товара из родительского компонента
+const props = defineProps<{
+  productSlug: string;
+}>();
+
+const isSent = ref(false);
+const isLoading = ref(false);
 
 const form = reactive({
   name: "",
@@ -92,7 +130,7 @@ onMounted(() => {
   }
 });
 
-const submitForm = () => {
+const submitForm = async () => {
   // Проверка заполнения всех полей
   if (!form.name.trim() || !form.email.trim() || !form.message.trim()) {
     alert("Пожалуйста, заполните все поля");
@@ -105,7 +143,32 @@ const submitForm = () => {
     return;
   }
 
-  console.log("Form submitted:", form);
-  // Здесь будет логика отправки формы
+  isLoading.value = true;
+
+  try {
+    const response = await fetch(`${apiBase}/addcomment/`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+      body: JSON.stringify({
+        name: props.productSlug,
+        author: form.name,
+        feedback: form.message,
+        email: form.email,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      isSent.value = true;
+    } else {
+      alert(data.message || data.error || "Ошибка при отправке отзыва");
+    }
+  } catch (e) {
+    console.error("Ошибка отправки:", e);
+    alert("Не удалось отправить отзыв. Попробуйте позже.");
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
