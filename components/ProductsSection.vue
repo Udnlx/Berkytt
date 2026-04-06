@@ -314,7 +314,6 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useRuntimeConfig } from "#app";
 
 interface Product {
   id: number;
@@ -332,34 +331,6 @@ interface Product {
   endDate?: string;
 }
 
-interface Category {
-  name: string;
-  title: string;
-  count: number;
-  slug?: string;
-  id?: string | number;
-}
-
-interface CategoriesResponse {
-  categories: Category[];
-}
-
-interface ProductType {
-  label: string;
-  category: string;
-  count: number;
-}
-
-interface Size {
-  id: number | string;
-  russianSize: string;
-  title: string;
-}
-
-interface SizesResponse {
-  sizes: Size[];
-}
-
 const props = defineProps<{
   products: Product[];
   loading?: boolean;
@@ -372,9 +343,6 @@ const emit = defineEmits<{
 
 const route = useRoute();
 const router = useRouter();
-const config = useRuntimeConfig();
-const apiBase = config.public.apiBase;
-const apiKey = config.public.apiKey;
 
 const currentPage = computed(() => Number(route.params.page) || 1);
 
@@ -389,92 +357,22 @@ const changePage = (page: number) => {
   });
 };
 
-// Динамические категории из API
-const productTypes = ref<ProductType[]>([]);
-const categoriesLoading = ref(false);
-
-// Динамические размеры из API
-const availableSizes = ref<
-  {
-    value: number | string;
-    label: string;
-    id: number | string;
-    russianSize: string;
-  }[]
->([]);
-
-// Функция загрузки категорий
-const fetchCategories = async () => {
-  const section = route.params.section || "men";
-  categoriesLoading.value = true;
-  try {
-    const response = await $fetch<Category[] | CategoriesResponse>(
-      `${apiBase}/getcategories/${section}/`,
-      {
-        headers: {
-          "X-API-KEY": apiKey,
-        },
-      },
-    );
-
-    // Пробуем разные варианты структуры ответа
-    const categories: Category[] = Array.isArray(response)
-      ? response
-      : (response as CategoriesResponse).categories || [];
-
-    productTypes.value = categories.map((cat: Category) => ({
-      label: (cat.title || cat.name || "Без названия").toUpperCase(),
-      category: cat.name || cat.slug || String(cat.id) || "unknown",
-      count: cat.count || 0,
-    }));
-
-    // Загружаем размеры для текущей секции
-    const sizesResponse = await $fetch<SizesResponse>(
-      `${apiBase}/getcategories/${section}/`,
-      {
-        headers: {
-          "X-API-KEY": apiKey,
-        },
-      },
-    );
-
-    if (sizesResponse && "sizes" in sizesResponse) {
-      availableSizes.value = [
-        { value: "all", label: "Все размеры", id: "all", russianSize: "" },
-        ...sizesResponse.sizes.map((size: Size) => ({
-          value: size.id,
-          label: `${size.russianSize} - ${size.title}`,
-          id: size.id,
-          russianSize: size.russianSize,
-        })),
-      ];
-    }
-  } catch (error) {
-    console.error("Ошибка загрузки категорий:", error);
-    productTypes.value = [];
-    availableSizes.value = [];
-  } finally {
-    categoriesLoading.value = false;
-  }
-};
+// Используем composable с кешированием категорий
+const { productTypes, availableSizes, categoriesLoading, fetchCategories } =
+  useCategoriesCache();
 
 const selectedSize = ref<number | string>("all");
 
 // Следим за изменением section и перезагружаем категории
 watch(
   () => route.params.section,
-  async () => {
-    await fetchCategories();
-    // Сбрасываем размер при смене секции
-    selectedSize.value = "";
-    // Сбрасываем категорию на первую при смене секции
-    if (productTypes.value.length > 0) {
-      const firstCategory = productTypes.value[0];
-      if (firstCategory) {
-        router.push({
-          path: `/catalog/${route.params.section}/${firstCategory.category}/all/1`,
-        });
-      }
+  async (newSection, oldSection) => {
+    // Загружаем категории только если section реально изменился
+    if (newSection && newSection !== oldSection) {
+      await fetchCategories();
+      // Сбрасываем размер при смене секции
+      selectedSize.value = "";
+      // НЕ делаем router.push — навигация уже произошла извне
     }
   },
 );
