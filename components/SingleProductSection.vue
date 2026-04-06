@@ -176,9 +176,12 @@
           <div v-if="product?.sizes && product.sizes.length > 0">
             <div class="flex justify-between items-center mb-3">
               <p class="text-sm font-medium">Размер:</p>
-              <a :href="sizeGuideLink" class="text-sm text-black underline"
-                >О размерах</a
+              <button
+                @click="openSizeGuide"
+                class="text-sm text-black underline hover:text-[#ec018c] transition"
               >
+                О размерах
+              </button>
             </div>
             <div class="size-table">
               <table>
@@ -404,12 +407,14 @@
       </div>
     </div>
   </section>
+  <SizeGuideModal ref="sizeGuideModalRef" />
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useCart } from "~/composables/useCart";
+import SizeGuideModal from "~/components/SizeGuideModal.vue";
 
 interface ProductData {
   id: number;
@@ -517,17 +522,16 @@ const sizesData = computed(() => {
   return props.product?.sizes || [];
 });
 
-// Ссылка на таблицу размеров в зависимости от категории
-const sizeGuideLink = computed(() => {
+// Модалка с таблицей размеров
+const sizeGuideModalRef = ref<InstanceType<typeof SizeGuideModal> | null>(null);
+
+const openSizeGuide = () => {
   const categories = props.product?.categories?.join(", ") || "";
-  if (categories.toLowerCase().includes("для женщин")) {
-    return "/sizes-female";
-  }
-  if (categories.toLowerCase().includes("для мужчин")) {
-    return "/sizes";
-  }
-  return "#";
-});
+  const type = categories.toLowerCase().includes("для женщин")
+    ? "sizes-female"
+    : "sizes";
+  sizeGuideModalRef.value?.open(type);
+};
 
 // Размерная сетка - группируем по russianSize и сортируем
 const sizeGrid = computed(() => {
