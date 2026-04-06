@@ -332,12 +332,9 @@
 import { ref, onMounted, computed } from "vue";
 import { useCart } from "~/composables/useCart";
 import { useRouter } from "vue-router";
-import { useRuntimeConfig } from "#app";
 import { useAuth } from "~/composables/useAuth";
+import { useMainInfo } from "~/composables/useMainInfo";
 
-const config = useRuntimeConfig();
-const apiBase = config.public.apiBase;
-const apiKey = config.public.apiKey;
 const router = useRouter();
 const isMobileMenuOpen = ref(false);
 const openDropdown = ref<number | null>(null);
@@ -350,13 +347,8 @@ const { totalQuantity } = useCart();
 // Используем composable авторизации
 const { isAuthenticated } = useAuth();
 
-interface MainInfo {
-  address: string;
-  phone: string;
-  mobilePhone: string;
-  whatsapp: string;
-  email: string;
-}
+// Используем composable mainInfo
+const { mainInfo, load: loadMainInfo } = useMainInfo();
 
 interface MenuItem {
   id: number;
@@ -370,40 +362,15 @@ interface MenuData {
   menuWoman: MenuItem[];
 }
 
-const mainInfo = ref<MainInfo>({
-  address: "",
-  phone: "",
-  mobilePhone: "",
-  whatsapp: "",
-  email: "",
-});
-
 const menuData = ref<MenuData>({
   menuMan: [],
   menuWoman: [],
 });
 
 onMounted(async () => {
-  try {
-    const response = await fetch(`${apiBase}/maininfo`, {
-      headers: {
-        "X-API-KEY": apiKey,
-      },
-    });
-    const data = await response.json();
-    // info - отдельно, menuMan/menuWoman - в корне
-    const infoData = data.info && data.info[0] ? data.info[0] : null;
+  const data = await loadMainInfo();
 
-    if (infoData) {
-      mainInfo.value = {
-        address: infoData.address?.replace(/<[^>]*>/g, "") || "",
-        phone: infoData.main_phone || "",
-        mobilePhone: infoData.mobile_phone || "",
-        whatsapp: infoData.whatsapp || "",
-        email: infoData.email || "",
-      };
-    }
-
+  if (data) {
     // Получаем меню для мужчин (приходит в корне data)
     if (data.menuMan && Array.isArray(data.menuMan)) {
       menuData.value.menuMan = data.menuMan;
@@ -413,8 +380,6 @@ onMounted(async () => {
     if (data.menuWoman && Array.isArray(data.menuWoman)) {
       menuData.value.menuWoman = data.menuWoman;
     }
-  } catch (error) {
-    console.error("Failed to fetch maininfo data:", error);
   }
 });
 

@@ -241,51 +241,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-const config = useRuntimeConfig();
-const apiBase = config.public.apiBase;
-const apiKey = config.public.apiKey;
+import { onMounted } from "vue";
+import { useMainInfo } from "~/composables/useMainInfo";
 
-interface MainInfo {
-  address: string;
-  phone: string;
-  mobilePhone: string;
-  whatsapp: string;
-  email: string;
-}
-
-const mainInfo = ref<MainInfo>({
-  address: "",
-  phone: "",
-  mobilePhone: "",
-  whatsapp: "",
-  email: "",
-});
+const { mainInfo, load: loadMainInfo } = useMainInfo();
 
 onMounted(async () => {
-  try {
-    const response = await fetch(`${apiBase}/maininfo`, {
-      headers: {
-        "X-API-KEY": apiKey,
-      },
-    });
-    const data = await response.json();
-
-    // API возвращает { info: [...] }
-    const infoData = data.info && data.info[0] ? data.info[0] : null;
-
-    if (infoData) {
-      mainInfo.value = {
-        address: infoData.address?.replace(/<[^>]*>/g, "") || "", // Удаляем HTML теги
-        phone: infoData.main_phone || "",
-        mobilePhone: infoData.mobile_phone || "",
-        whatsapp: infoData.whatsapp || "",
-        email: infoData.email || "",
-      };
-    }
-  } catch (error) {
-    console.error("Failed to fetch maininfo data:", error);
-  }
+  await loadMainInfo();
 });
 
 const scrollToTop = () => {
