@@ -138,7 +138,44 @@ const fetchProducts = async () => {
 // Загружаем товары при изменении параметров маршрута
 watch(
   () => route.fullPath,
-  () => {
+  async () => {
+    // При смене секции проверяем, существует ли категория в новой секции
+    const currentSection = section.value;
+    const currentCategory = category.value;
+
+    try {
+      const categoriesResponse = await $fetch<any>(
+        `${apiBase}/getcategories/${currentSection}/`,
+        {
+          headers: { "X-API-KEY": apiKey },
+        },
+      );
+
+      const categories = Array.isArray(categoriesResponse)
+        ? categoriesResponse
+        : categoriesResponse.categories || [];
+
+      const availableCategories = categories.map(
+        (c: any) => c.name || c.slug || String(c.id),
+      );
+
+      if (
+        currentCategory &&
+        !availableCategories.includes(currentCategory) &&
+        categories.length > 0
+      ) {
+        // Категория не существует в этой секции — переключаемся на первую
+        const firstCategory =
+          categories[0].name || categories[0].slug || String(categories[0].id);
+        await navigateTo(`/catalog/${currentSection}/${firstCategory}/all/1`, {
+          replace: true,
+        });
+        return;
+      }
+    } catch (e) {
+      console.error("Ошибка проверки категорий:", e);
+    }
+
     fetchProducts();
   },
   { immediate: true },

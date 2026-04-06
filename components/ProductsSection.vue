@@ -367,12 +367,9 @@ const selectedSize = ref<number | string>("all");
 watch(
   () => route.params.section,
   async (newSection, oldSection) => {
-    // Загружаем категории только если section реально изменился
     if (newSection && newSection !== oldSection) {
       await fetchCategories();
-      // Сбрасываем размер при смене секции
       selectedSize.value = "";
-      // НЕ делаем router.push — навигация уже произошла извне
     }
   },
 );

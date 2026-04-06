@@ -59,14 +59,14 @@ export function useCategoriesCache() {
       }));
 
       // Загружаем размеры
-      const sizesResponse = await $fetch(`${apiBase}/getcategories/${sec}/`, {
+      const sizesResponse = (await $fetch(`${apiBase}/getcategories/${sec}/`, {
         headers: {
           "X-API-KEY": apiKey,
         },
-      });
+      })) as any;
 
       let mappedSizes: SizeData[] = [];
-      if (sizesResponse && "sizes" in sizesResponse) {
+      if (sizesResponse && sizesResponse.sizes) {
         mappedSizes = [
           { value: "all", label: "Все размеры", id: "all", russianSize: "" },
           ...sizesResponse.sizes.map((size: any) => ({
