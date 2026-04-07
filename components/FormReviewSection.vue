@@ -1,5 +1,5 @@
 <template>
-  <section class="py-10 bg-gray-50">
+  <section v-if="canReview" class="py-10 bg-gray-50">
     <div class="max-w-[1200px] mx-auto container mx-auto px-4">
       <h2 class="text-2xl font-bold text-black mb-6">
         Оставьте отзыв о товаре
@@ -97,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, ref } from "vue";
+import { reactive, onMounted, ref, computed } from "vue";
 import { useAuth } from "~/composables/useAuth";
 import { useRuntimeConfig } from "#app";
 
@@ -105,12 +105,17 @@ const config = useRuntimeConfig();
 const apiBase = config.public.apiBase;
 const apiKey = config.public.apiKey;
 
-const { user, token, getAuthHeaders } = useAuth();
+const { user, token, getAuthHeaders, isProductPurchased } = useAuth();
 
 // Получаем slug товара из родительского компонента
 const props = defineProps<{
   productSlug: string;
 }>();
+
+// Проверяем, куплен ли этот товар и аутентифицирован ли пользователь
+const canReview = computed(() => {
+  return user.value && isProductPurchased(props.productSlug);
+});
 
 const isSent = ref(false);
 const isLoading = ref(false);

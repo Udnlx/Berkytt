@@ -92,7 +92,7 @@
         <SingleProductSection :product="mappedProduct" />
         <OptionProductSection :product="mappedProduct" />
         <ReviewProductSection :comments="mappedProduct.comments" />
-        <FormReviewSection v-if="isAuthenticated" :product-slug="productSlug" />
+        <FormReviewSection :product-slug="productSlug" />
         <YouLikeItSection :products="mappedProduct.likeit" />
       </div>
     </main>
