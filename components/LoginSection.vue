@@ -79,7 +79,7 @@
           <!-- Forgot -->
           <div class="text-right">
             <NuxtLink
-              to="/forgot-password"
+              to="/passremind"
               class="text-sm text-[#ec018c] hover:text-[#d4007c] font-medium transition-colors"
             >
               Забыли пароль?

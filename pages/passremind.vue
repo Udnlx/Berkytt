@@ -20,7 +20,8 @@ useHead({
   meta: [
     {
       name: "description",
-      content: "Восстановление пароля для доступа к личному кабинету интернет-магазина Berkytt.",
+      content:
+        "Восстановление пароля для доступа к личному кабинету интернет-магазина Berkytt.",
     },
     {
       property: "og:type",
@@ -42,7 +43,7 @@ useHead({
   link: [
     {
       rel: "canonical",
-      href: `${siteUrl}/forgot-password`,
+      href: `${siteUrl}/passremind`,
     },
   ],
 });
