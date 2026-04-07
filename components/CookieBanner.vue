@@ -2,56 +2,41 @@
   <transition name="cookie-slide">
     <div
       v-if="isVisible"
-      class="fixed bottom-4 left-4 z-50 max-w-sm bg-white shadow-2xl border border-gray-200"
+      class="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.1)] border-t border-gray-200"
     >
-      <!-- Кнопка закрытия (крестик) -->
-      <button
-        @click="closeBanner"
-        class="absolute top-2 right-2 text-gray-400 hover:text-gray-600 transition-colors"
-      >
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+      <div class="container mx-auto px-4 py-4 sm:py-5">
+        <div
+          class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-6"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
+          <!-- Текст -->
+          <div class="text-xs sm:text-sm text-gray-700 leading-relaxed">
+            <p>
+              Мы используем cookie-файлы, чтобы получить статистику, которая
+              помогает нам улучшить сервис для Вас с целью персонализации
+              сервисов и предложений. Вы можете прочитать подробнее о
+              cookie-файлах или изменить настройки браузера. Продолжая
+              пользоваться сайтом, вы даёте согласие на использование ваших
+              cookie-файлов.
+            </p>
+          </div>
 
-      <!-- Контент -->
-      <div class="p-4">
-        <!-- Текст -->
-        <div class="text-xs text-gray-700 leading-relaxed mb-4 pr-4">
-          <p>
-            Мы используем cookie-файлы, чтобы получить статистику, которая
-            помогает нам улучшить сервис для Вас с целью персонализации сервисов
-            и предложений. Вы можете прочитать подробнее о cookie-файлах или
-            изменить настройки браузера. Продолжая пользоваться сайтом, вы даёте
-            согласие на использование ваших cookie-файлов.
-          </p>
-        </div>
+          <!-- Кнопки -->
+          <div class="flex gap-2 sm:gap-3 flex-shrink-0 w-full sm:w-auto">
+            <button
+              @click="acceptCookies"
+              class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 text-white text-xs sm:text-sm font-medium rounded-md transition transform hover:scale-105 hover:shadow-lg text-center"
+              style="background-color: #ec018c"
+            >
+              ПРИНЯТЬ
+            </button>
 
-        <!-- Кнопки -->
-        <div class="flex gap-2">
-          <button
-            @click="acceptCookies"
-            class="flex-1 py-2 bg-[#ec018c] text-white text-xs font-medium hover:bg-[#d4007c] transition-colors duration-200"
-          >
-            ПРИНЯТЬ
-          </button>
-
-          <a
-            href="/soglashenie-na-ispol-zovanie-kuki"
-            class="flex-1 py-2 bg-black text-white text-xs font-medium hover:bg-gray-800 transition-colors duration-200 text-center block"
-          >
-            ИНФОРМАЦИЯ
-          </a>
+            <a
+              href="/soglashenie-na-ispol-zovanie-kuki"
+              class="flex-1 sm:flex-none px-4 sm:px-6 py-2.5 bg-gray-900 text-white text-xs sm:text-sm font-medium rounded-md transition transform hover:scale-105 hover:shadow-lg text-center"
+            >
+              ИНФОРМАЦИЯ
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -81,24 +66,16 @@ const acceptCookies = () => {
   localStorage.setItem(COOKIE_ACCEPTED_KEY, "true");
   isVisible.value = false;
 };
-
-const closeBanner = () => {
-  // Просто закрываем баннер (без сохранения в localStorage)
-  isVisible.value = false;
-};
 </script>
 
 <style scoped>
 .cookie-slide-enter-active,
 .cookie-slide-leave-active {
-  transition:
-    transform 0.3s ease-out,
-    opacity 0.3s ease-out;
+  transition: transform 0.3s ease-out;
 }
 
 .cookie-slide-enter-from,
 .cookie-slide-leave-to {
   transform: translateY(100%);
-  opacity: 0;
 }
 </style>
