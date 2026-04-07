@@ -4,7 +4,9 @@
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
         <!-- Header -->
         <div class="text-center mb-8">
-          <h2 class="text-2xl font-bold text-gray-800 mb-2">Восстановление пароля</h2>
+          <h2 class="text-2xl font-bold text-gray-800 mb-2">
+            Восстановление пароля
+          </h2>
           <p class="text-sm text-gray-500">
             Введите email, указанный при регистрации
           </p>
@@ -86,6 +88,11 @@
 
 <script setup lang="ts">
 import { ref, reactive } from "vue";
+import { useRuntimeConfig } from "#app";
+
+const config = useRuntimeConfig();
+const apiBase = config.public.apiBase;
+const apiKey = config.public.apiKey;
 
 const isLoading = ref(false);
 const errorMessage = ref<string | null>(null);
@@ -106,9 +113,31 @@ const handleSubmit = async () => {
     return;
   }
 
-  // TODO: реализовать отправку запроса на восстановление пароля
-  // Пока заглушка
-  successMessage.value = "Функция восстановления пароля будет доступна позже";
-  isLoading.value = false;
+  try {
+    const response = await fetch(`${apiBase}/passremind/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-KEY": apiKey,
+      },
+      body: JSON.stringify({ email: form.email.trim() }),
+    });
+
+    const data = await response.json();
+
+    if (data.userInfo?.success) {
+      successMessage.value =
+        data.userInfo.error ||
+        "Пароль сгенерирован и отправлен вам на указанную почту";
+    } else {
+      errorMessage.value =
+        data.userInfo?.error || "Произошла ошибка при восстановлении пароля";
+    }
+  } catch (error) {
+    console.error("Ошибка при запросе восстановления пароля:", error);
+    errorMessage.value = "Не удалось подключиться к серверу. Попробуйте позже.";
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
