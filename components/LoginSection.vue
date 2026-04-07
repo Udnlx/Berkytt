@@ -78,12 +78,12 @@
 
           <!-- Forgot -->
           <div class="text-right">
-            <a
-              href="#"
+            <NuxtLink
+              to="/forgot-password"
               class="text-sm text-[#ec018c] hover:text-[#d4007c] font-medium transition-colors"
             >
               Забыли пароль?
-            </a>
+            </NuxtLink>
           </div>
 
           <!-- Error Message -->
