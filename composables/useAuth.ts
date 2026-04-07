@@ -19,6 +19,7 @@ interface AuthResponse {
   token?: string;
   user?: User;
   message?: string;
+  purchasedProducts?: string[];
 }
 
 // Состояние аутентификации
@@ -45,6 +46,26 @@ export const useAuth = () => {
         user.value = JSON.parse(storedUser);
       }
     }
+  };
+
+  // Получение купленных продуктов из localStorage
+  const getPurchasedProducts = (): string[] => {
+    if (import.meta.client) {
+      const stored = localStorage.getItem("purchased_products");
+      if (stored) {
+        try {
+          return JSON.parse(stored);
+        } catch {
+          return [];
+        }
+      }
+    }
+    return [];
+  };
+
+  // Проверка, куплен ли конкретный продукт
+  const isProductPurchased = (productName: string): boolean => {
+    return getPurchasedProducts().includes(productName);
   };
 
   // Вход
@@ -74,6 +95,13 @@ export const useAuth = () => {
           if (data.user) {
             localStorage.setItem("auth_user", JSON.stringify(data.user));
           }
+          // Сохраняем купленные продукты
+          if (data.purchasedProducts && Array.isArray(data.purchasedProducts)) {
+            localStorage.setItem(
+              "purchased_products",
+              JSON.stringify(data.purchasedProducts),
+            );
+          }
         }
 
         isLoading.value = false;
@@ -98,6 +126,7 @@ export const useAuth = () => {
     if (import.meta.client) {
       localStorage.removeItem("auth_token");
       localStorage.removeItem("auth_user");
+      localStorage.removeItem("purchased_products");
     }
   };
 
@@ -150,5 +179,7 @@ export const useAuth = () => {
     initAuth,
     getAuthHeaders,
     authFetch,
+    getPurchasedProducts,
+    isProductPurchased,
   };
 };
