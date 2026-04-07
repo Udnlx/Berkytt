@@ -11,13 +11,20 @@
         v-if="props.filters && props.filters.length > 0"
         class="flex justify-center mb-10"
       >
-        <div class="inline-flex bg-gray-100 rounded-full px-2 py-1">
+        <div
+          class="inline-flex bg-gray-100 rounded-full px-2 py-1 overflow-x-auto scrollbar-hide"
+          style="
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            max-width: 100%;
+          "
+        >
           <button
             v-for="filter in props.filters"
             :key="filter"
             @click="activeFilter = filter"
             :class="[
-              'px-4 py-2 text-sm rounded-full transition-all uppercase',
+              'px-3 sm:px-4 py-2 text-xs sm:text-sm rounded-full transition-all uppercase whitespace-nowrap flex-shrink-0',
               activeFilter === filter
                 ? 'bg-white text-gray-900 shadow-sm'
                 : 'text-gray-500 hover:text-gray-700',
@@ -321,5 +328,10 @@ const formatPrice = (price: number) => {
 <style scoped>
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 </style>
