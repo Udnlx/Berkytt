@@ -16,6 +16,12 @@
           </p>
           <div class="flex items-center space-x-4">
             <!-- Адрес -->
+            <img
+              src="/images/map.svg"
+              alt="Email"
+              class="w-5 h-5"
+              style="filter: brightness(1) invert(1)"
+            />
             <span class="text-sm hidden lg:inline">
               {{ mainInfo.address || "г. Москва, Сормовский проезд, д.11с1" }}
             </span>
@@ -27,8 +33,8 @@
               <img
                 src="/images/mail.svg"
                 alt="Email"
-                class="w-4 h-4"
-                style="filter: brightness(0) invert(1)"
+                class="w-5 h-5"
+                style="filter: brightness(1) invert(1)"
               />
             </a>
             <!-- Телефонная трубка -->
@@ -39,7 +45,7 @@
               <img
                 src="/images/phone.svg"
                 alt="Phone"
-                class="w-4 h-4"
+                class="w-5 h-5"
                 style="filter: brightness(0) invert(1)"
               />
             </a>
@@ -51,7 +57,7 @@
               <img
                 src="/images/mobile.svg"
                 alt="Mobile"
-                class="w-4 h-4"
+                class="w-5 h-5"
                 style="filter: brightness(0) invert(1)"
               />
             </a>
@@ -68,7 +74,7 @@
               <img
                 src="/images/whatsapp.svg"
                 alt="WhatsApp"
-                class="w-4 h-4"
+                class="w-5 h-5"
                 style="filter: brightness(0) invert(1)"
               />
             </a>
