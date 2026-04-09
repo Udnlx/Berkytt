@@ -1,11 +1,14 @@
 <template>
-  <section class="relative h-screen overflow-hidden bg-gray-50">
+  <section
+    class="relative overflow-hidden bg-gray-50"
+    style="height: calc(100vh - 100px)"
+  >
     <!-- Слайды -->
-    <div class="relative h-full pt-[70px] sm:pt-[80px] md:pt-[100px]">
+    <div class="relative h-full">
       <div
         v-for="(slide, index) in slides"
         :key="index"
-        class="absolute inset-0 top-[70px] sm:top-[80px] md:top-[100px] transition-opacity duration-700"
+        class="absolute inset-0 transition-opacity duration-700"
         :class="[
           currentSlide === index
             ? 'opacity-100 z-10'

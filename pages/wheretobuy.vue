@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeaderSection />
-    <main class="pt-[80px] min-h-screen bg-gray-50">
+    <main class="min-h-screen bg-gray-50">
       <UpSimpleSection :title="pageTitle" />
 
       <!-- Контент страницы -->

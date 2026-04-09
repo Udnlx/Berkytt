@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeaderSection />
-    <main class="pt-[80px] min-h-screen">
+    <main class="min-h-screen">
       <div v-if="pending" class="min-h-screen flex items-center justify-center">
         <div class="text-center">
           <div

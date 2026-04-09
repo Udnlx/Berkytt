@@ -1,14 +1,13 @@
 <template>
   <div>
     <HeaderSection />
-    <main class="pt-[80px] min-h-screen flex items-center justify-center bg-gray-50">
+    <main class="min-h-screen flex items-center justify-center bg-gray-50">
       <div class="text-center px-4">
         <h1 class="text-9xl font-bold text-gray-900 mb-4">404</h1>
-        <p class="text-2xl text-gray-600 mb-8">
-          Страница не найдена
-        </p>
+        <p class="text-2xl text-gray-600 mb-8">Страница не найдена</p>
         <p class="text-gray-500 mb-8 max-w-md mx-auto">
-          К сожалению, страница, которую вы ищете, не существует или была перемещена.
+          К сожалению, страница, которую вы ищете, не существует или была
+          перемещена.
         </p>
         <a
           href="/"

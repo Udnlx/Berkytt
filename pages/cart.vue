@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeaderSection />
-    <main class="pt-[80px] min-h-screen">
+    <main class="min-h-screen">
       <UpSimpleSection title="Корзина" />
       <CartSection />
     </main>

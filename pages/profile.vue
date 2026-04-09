@@ -1,7 +1,7 @@
 <template>
   <div>
     <HeaderSection />
-    <main class="pt-[80px] min-h-screen bg-gray-50">
+    <main class="min-h-screen bg-gray-50">
       <UpSimpleSection title="Личный кабинет" />
       <ProfileSection />
     </main>
@@ -21,11 +21,13 @@ useHead({
   meta: [
     {
       name: "description",
-      content: "Личный кабинет покупателя в интернет-магазине Berkytt. История заказов, персональные данные, настройки.",
+      content:
+        "Личный кабинет покупателя в интернет-магазине Berkytt. История заказов, персональные данные, настройки.",
     },
     {
       name: "keywords",
-      content: "личный кабинет, профиль, история заказов, Berkytt, верхняя одежда, интернет-магазин",
+      content:
+        "личный кабинет, профиль, история заказов, Berkytt, верхняя одежда, интернет-магазин",
     },
     {
       property: "og:type",
@@ -37,7 +39,8 @@ useHead({
     },
     {
       property: "og:description",
-      content: "Личный кабинет покупателя в интернет-магазине Berkytt. История заказов, персональные данные, настройки.",
+      content:
+        "Личный кабинет покупателя в интернет-магазине Berkytt. История заказов, персональные данные, настройки.",
     },
     {
       property: "og:locale",

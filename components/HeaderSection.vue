@@ -1,7 +1,11 @@
 <template>
-  <header class="bg-white fixed top-0 left-0 right-0 z-50">
+  <header>
     <!-- Верхняя полоса -->
-    <div class="text-white py-2" style="background-color: #ec018c">
+    <div
+      ref="topBarRef"
+      class="text-white py-2"
+      style="background-color: #ec018c"
+    >
       <div class="container mx-auto px-4">
         <div class="flex items-center justify-between">
           <p
@@ -74,7 +78,16 @@
     </div>
 
     <!-- Основная навигация -->
-    <div class="border-b border-gray-100">
+    <div
+      ref="navRef"
+      :class="[
+        'bg-[#1f1f1f] border-b border-gray-800 transition-all duration-300',
+        isSticky
+          ? 'fixed top-0 left-0 right-0 z-50 shadow-md'
+          : 'relative z-50',
+      ]"
+      :style="isSticky ? { marginTop: navOffset + 'px' } : {}"
+    >
       <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
           <!-- Логотип и кнопка меню -->
@@ -82,7 +95,7 @@
             <!-- Кнопка бургер для мобильных и планшетов -->
             <button
               @click="toggleMobileMenu"
-              class="lg:hidden text-gray-700 hover:text-gray-900 transition mr-4"
+              class="lg:hidden text-white hover:text-gray-300 transition mr-4"
             >
               <svg
                 class="w-6 h-6"
@@ -109,7 +122,7 @@
             <!-- Логотип -->
             <a href="/">
               <img
-                src="/images/logo.png"
+                src="/images/logo_white.png"
                 alt="Berkytt"
                 class="h-8 lg:h-10 w-auto"
               />
@@ -122,14 +135,14 @@
                 <a
                   v-if="!item.type"
                   :href="item.href"
-                  class="text-sm font-medium text-gray-600 hover:text-gray-900 transition"
+                  class="text-sm font-medium text-white hover:text-gray-300 transition"
                 >
                   {{ item.label }}
                 </a>
                 <!-- Выпадающее меню -->
                 <div v-else class="relative group">
                   <button
-                    class="text-sm font-medium text-gray-600 hover:text-gray-900 transition flex items-center"
+                    class="text-sm font-medium text-white hover:text-gray-300 transition flex items-center"
                   >
                     {{ item.label }}
                     <svg
@@ -147,13 +160,13 @@
                     </svg>
                   </button>
                   <div
-                    class="absolute left-0 mt-2 w-56 bg-white border border-gray-100 shadow-lg rounded-md py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+                    class="absolute left-0 mt-2 w-56 bg-[#1f1f1f] border border-gray-700 shadow-lg rounded-md py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
                   >
                     <a
                       v-for="(subItem, subIndex) in item.items || []"
                       :key="subIndex"
                       :href="subItem?.href || '#'"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition whitespace-normal break-words"
+                      class="block px-4 py-2 text-sm text-white hover:bg-gray-700 hover:text-white transition whitespace-normal break-words"
                     >
                       {{ subItem?.label || "" }}
                     </a>
@@ -198,7 +211,7 @@
             >
               <div
                 v-if="isSearchOpen"
-                class="absolute top-full right-0 bg-white border border-gray-200 shadow-lg py-3 px-4 z-40"
+                class="absolute top-full right-0 bg-[#1f1f1f] border border-gray-700 shadow-lg py-3 px-4 z-40"
                 style="width: 320px"
               >
                 <form
@@ -221,11 +234,9 @@
               </div>
             </transition>
 
-            <div class="w-px h-5 bg-gray-200"></div>
-
             <NuxtLink
               :to="isAuthenticated ? '/profile' : '/login'"
-              class="text-gray-700 hover:text-gray-900 transition"
+              class="text-white hover:text-gray-300 transition"
             >
               <svg
                 class="w-5 h-5"
@@ -244,7 +255,7 @@
 
             <a
               href="/cart"
-              class="text-gray-700 hover:text-gray-900 transition relative"
+              class="text-white hover:text-gray-300 transition relative"
             >
               <svg
                 class="w-5 h-5"
@@ -261,7 +272,7 @@
               </svg>
               <span
                 v-if="totalQuantity > 0"
-                class="absolute -top-1 -right-1 bg-gray-900 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center"
+                class="absolute -top-1 -right-1 bg-white text-gray-900 text-xs w-4 h-4 rounded-full flex items-center justify-center"
               >
                 {{ totalQuantity }}
               </span>
@@ -272,7 +283,7 @@
         <!-- Мобильное меню (для экранов меньше lg) -->
         <div
           v-if="isMobileMenuOpen"
-          class="lg:hidden mt-4 pb-4 border-t border-gray-100 pt-4"
+          class="lg:hidden mt-4 pb-4 border-t border-gray-700 pt-4"
         >
           <nav class="flex flex-col space-y-3">
             <template v-for="(item, index) in menuItems" :key="index">
@@ -280,7 +291,7 @@
               <a
                 v-if="!item.type"
                 :href="item.href"
-                class="text-sm font-medium text-gray-600 hover:text-gray-900 transition py-2"
+                class="text-sm font-medium text-white hover:text-gray-300 transition py-2"
               >
                 {{ item.label }}
               </a>
@@ -288,7 +299,7 @@
               <div v-else>
                 <button
                   @click="toggleDropdown(index)"
-                  class="text-sm font-medium text-gray-600 hover:text-gray-900 transition flex items-center justify-between w-full py-2"
+                  class="text-sm font-medium text-white hover:text-gray-300 transition flex items-center justify-between w-full py-2"
                 >
                   {{ item.label }}
                   <svg
@@ -314,7 +325,7 @@
                     v-for="(subItem, subIndex) in item.items || []"
                     :key="subIndex"
                     :href="subItem?.href || '#'"
-                    class="block text-sm text-gray-500 hover:text-gray-900 transition py-1"
+                    class="block text-sm text-white hover:text-gray-400 transition py-1"
                   >
                     {{ subItem?.label || "" }}
                   </a>
@@ -325,11 +336,19 @@
         </div>
       </div>
     </div>
+
+    <!-- Placeholder для компенсации высоты навигации при fixed -->
+    <div
+      v-if="isSticky"
+      ref="placeholderRef"
+      class="bg-[#1f1f1f] border-b border-gray-800"
+      aria-hidden="true"
+    ></div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, onBeforeUnmount, computed, nextTick } from "vue";
 import { useCart } from "~/composables/useCart";
 import { useRouter } from "vue-router";
 import { useAuth } from "~/composables/useAuth";
@@ -340,6 +359,37 @@ const isMobileMenuOpen = ref(false);
 const openDropdown = ref<number | null>(null);
 const isSearchOpen = ref(false);
 const searchQuery = ref("");
+const isSticky = ref(false);
+const navRef = ref<HTMLElement | null>(null);
+const topBarRef = ref<HTMLElement | null>(null);
+const placeholderRef = ref<HTMLElement | null>(null);
+
+const handleScroll = () => {
+  if (topBarRef.value) {
+    const topBarRect = topBarRef.value.getBoundingClientRect();
+    const shouldBeSticky = topBarRect.bottom <= 0;
+
+    if (shouldBeSticky && !isSticky.value) {
+      isSticky.value = true;
+      nextTick(() => {
+        if (navRef.value && placeholderRef.value) {
+          const navHeight = navRef.value.offsetHeight;
+          placeholderRef.value.style.height = navHeight + "px";
+        }
+      });
+    } else if (!shouldBeSticky && isSticky.value) {
+      isSticky.value = false;
+    }
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll, { passive: true });
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
 
 // Используем composable корзины
 const { totalQuantity } = useCart();
@@ -434,7 +484,6 @@ const womanMenuItems = computed(() => {
 
 // Единый массив пунктов меню (вычисляемое свойство)
 const menuItems = computed(() => [
-  { label: "О БРЕНДЕ", href: "/o-brende" },
   {
     label: "ДЛЯ МУЖЧИН",
     type: "dropdown",
