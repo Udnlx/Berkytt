@@ -86,7 +86,6 @@
           ? 'fixed top-0 left-0 right-0 z-50 shadow-md'
           : 'relative z-50',
       ]"
-      :style="isSticky ? { marginTop: navOffset + 'px' } : {}"
     >
       <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between">
@@ -141,7 +140,8 @@
                 </a>
                 <!-- Выпадающее меню -->
                 <div v-else class="relative group">
-                  <button
+                  <a
+                    :href="item.href || '#'"
                     class="text-sm font-medium text-white hover:text-gray-300 transition flex items-center"
                   >
                     {{ item.label }}
@@ -158,7 +158,7 @@
                         d="M19 9l-7 7-7-7"
                       />
                     </svg>
-                  </button>
+                  </a>
                   <div
                     class="absolute left-0 mt-2 w-56 bg-[#1f1f1f] border border-gray-700 shadow-lg rounded-md py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
                   >
@@ -486,11 +486,13 @@ const womanMenuItems = computed(() => {
 const menuItems = computed(() => [
   {
     label: "ДЛЯ МУЖЧИН",
+    href: "http://localhost:3000/catalog/men/coat/all/1",
     type: "dropdown",
     items: manMenuItems.value,
   },
   {
     label: "ДЛЯ ЖЕНЩИН",
+    href: "http://localhost:3000/catalog/women/raincoats/all/1",
     type: "dropdown",
     items: womanMenuItems.value,
   },
