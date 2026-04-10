@@ -61,6 +61,13 @@
               >
                 {{ badgeItem.title }}
               </span>
+              <!-- Бейдж скидки под РАСПРОДАЖА -->
+              <span
+                v-if="product.discount && hasSaleBadgeForProduct(product)"
+                class="px-2 py-1 text-xs font-medium rounded-md w-fit bg-[#ec018c] text-[#ffffff]"
+              >
+                -{{ product.discount }}%
+              </span>
             </div>
 
             <!-- Main Image (default state) -->
@@ -115,12 +122,6 @@
                 class="text-sm text-gray-400 line-through"
               >
                 ₽{{ formatPrice(product.fullPrice) }}
-              </span>
-              <span
-                v-if="product.discount"
-                class="px-2 py-0.5 text-xs font-medium bg-[#ec018c] text-[#ffffff] rounded-full"
-              >
-                -{{ product.discount }}%
               </span>
             </div>
           </div>
@@ -224,6 +225,11 @@ const filteredProducts = computed(() => {
     (p) => !p.category || p.category === activeFilter.value,
   );
 });
+
+// Проверка наличия бейджа РАСПРОДАЖА у конкретного товара
+const hasSaleBadgeForProduct = (product: NewProduct) => {
+  return product.badge?.some((b) => b.title === "РАСПРОДАЖА") ?? false;
+};
 
 // Форматирование цены с разделителем тысяч
 const formatPrice = (price: number) => {
