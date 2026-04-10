@@ -4,7 +4,7 @@
     class="py-16 bg-white"
   >
     <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-medium text-center mb-6">Наши новинки</h2>
+      <h2 class="text-3xl font-medium text-center mb-6">Новинки</h2>
 
       <!-- Filters -->
       <div
@@ -35,150 +35,89 @@
         </div>
       </div>
 
-      <!-- Products Carousel -->
-      <div class="relative">
-        <!-- Navigation Arrows -->
-        <button
-          v-if="showArrows"
-          @click="scrollLeft"
-          class="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition"
-        >
-          <svg
-            class="w-5 h-5 text-gray-700"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-
-        <button
-          v-if="showArrows"
-          @click="scrollRight"
-          class="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-50 transition"
-        >
-          <svg
-            class="w-5 h-5 text-gray-700"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
-
+      <!-- Products Grid -->
+      <div class="flex flex-wrap justify-center gap-6">
         <div
-          ref="carouselRef"
-          class="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth pb-4 snap-x snap-mandatory"
-          style="scrollbar-width: none; -ms-overflow-style: none"
+          v-for="product in filteredProducts"
+          :key="product.id"
+          class="group cursor-pointer w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(25%-18px)]"
         >
+          <!-- Image Container -->
           <div
-            v-for="product in filteredProducts"
-            :key="product.id"
-            class="group cursor-pointer flex-shrink-0 snap-start"
-            :class="[
-              'w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(50%-16px)] lg:w-[calc(33.333%-18px)] xl:w-[calc(25%-18px)]',
-            ]"
+            class="relative overflow-hidden rounded-2xl bg-gray-100 aspect-[3/4]"
           >
-            <!-- Image Container -->
-            <div
-              class="relative overflow-hidden rounded-2xl bg-gray-100 aspect-[3/4]"
+            <!-- Badge -->
+            <span
+              v-if="product.badge"
+              :class="[
+                'absolute top-3 left-3 px-2 py-1 text-xs font-medium rounded-md z-10',
+                product.badgeType === 'new'
+                  ? 'bg-[#ec018c] text-[#ffffff]'
+                  : 'bg-[#303030] text-[#ffffff]',
+              ]"
             >
-              <!-- Badge -->
-              <span
-                v-if="product.badge"
-                :class="[
-                  'absolute top-3 left-3 px-2 py-1 text-xs font-medium rounded-md z-10',
-                  product.badgeType === 'new'
-                    ? 'bg-[#ec018c] text-[#ffffff]'
-                    : 'bg-[#303030] text-[#ffffff]',
-                ]"
+              {{ product.badge }}
+            </span>
+
+            <!-- Main Image (default state) -->
+            <img
+              :src="product.image"
+              :alt="product.title"
+              class="w-full h-full object-cover absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"
+            />
+
+            <!-- Hover Image -->
+            <img
+              :src="product.hoverImage || product.image"
+              :alt="product.title"
+              class="w-full h-full object-cover absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            />
+
+            <!-- Quick View / Quick Shop Buttons -->
+            <div
+              class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
+            >
+              <a
+                :href="`/product/${product.name}`"
+                class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
+                @click.stop
               >
-                {{ product.badge }}
-              </span>
-
-              <!-- Action Buttons (Wishlist, Compare) -->
-
-              <!-- Main Image (default state) -->
-              <img
-                :src="product.image"
-                :alt="product.title"
-                class="w-full h-full object-cover absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"
-              />
-
-              <!-- Hover Image -->
-              <img
-                :src="product.hoverImage || product.image"
-                :alt="product.title"
-                class="w-full h-full object-cover absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              />
-
-              <!-- Quick View / Quick Shop Buttons -->
-              <div
-                class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
-              >
-                <a
-                  :href="`/product/${product.name}`"
-                  class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
-                  @click.stop
-                >
-                  ПРОСМОТР
-                </a>
-                <!--
-                <a
-                  :href="`/cart?add=${product.name}`"
-                  class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
-                  @click.stop
-                >
-                  В КОРЗИНУ
-                </a>
-                -->
-              </div>
-
-              <!-- Sale Timer (for sale items) -->
-              <div
-                v-if="product.endDate"
-                class="absolute bottom-0 left-0 right-0 bg-black/30 px-3 py-2 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-300"
-              >
-                <span class="text-xs text-white font-medium">
-                  {{ formatTimeLeft(product.endDate) }}
-                </span>
-              </div>
+                ПРОСМОТР
+              </a>
             </div>
 
-            <!-- Product Info -->
-            <div class="mt-4">
-              <h3 class="text-sm font-medium text-gray-900">
-                {{ product.title }}
-              </h3>
-              <div class="flex items-center gap-2 mt-1">
-                <span class="text-sm font-medium"
-                  >₽{{ formatPrice(product.price) }}</span
-                >
-                <span
-                  v-if="product.fullPrice && product.discount"
-                  class="text-sm text-gray-400 line-through"
-                >
-                  ₽{{ formatPrice(product.fullPrice) }}
-                </span>
-                <span
-                  v-if="product.discount"
-                  class="px-2 py-0.5 text-xs font-medium bg-[#ec018c] text-[#ffffff] rounded-full"
-                >
-                  -{{ product.discount }}%
-                </span>
-              </div>
+            <!-- Sale Timer (for sale items) -->
+            <div
+              v-if="product.endDate"
+              class="absolute bottom-0 left-0 right-0 bg-black/30 px-3 py-2 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-300"
+            >
+              <span class="text-xs text-white font-medium">
+                {{ formatTimeLeft(product.endDate) }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="mt-4">
+            <h3 class="text-sm font-medium text-gray-900">
+              {{ product.title }}
+            </h3>
+            <div class="flex items-center gap-2 mt-1">
+              <span class="text-sm font-medium"
+                >₽{{ formatPrice(product.price) }}</span
+              >
+              <span
+                v-if="product.fullPrice && product.discount"
+                class="text-sm text-gray-400 line-through"
+              >
+                ₽{{ formatPrice(product.fullPrice) }}
+              </span>
+              <span
+                v-if="product.discount"
+                class="px-2 py-0.5 text-xs font-medium bg-[#ec018c] text-[#ffffff] rounded-full"
+              >
+                -{{ product.discount }}%
+              </span>
             </div>
           </div>
         </div>
@@ -188,7 +127,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 
 interface NewProduct {
   id: number;
@@ -214,9 +153,7 @@ const activeFilter = ref("");
 const currentTime = ref(Date.now());
 
 watch(activeFilter, () => {
-  nextTick(() => {
-    checkArrows();
-  });
+  // Можно добавить логику при смене фильтра
 });
 
 watch(
@@ -278,46 +215,6 @@ const filteredProducts = computed(() => {
     (p) => !p.category || p.category === activeFilter.value,
   );
 });
-
-const carouselRef = ref<HTMLElement | null>(null);
-const showArrows = ref(false);
-
-const checkArrows = () => {
-  if (carouselRef.value) {
-    // Стрелки нужны, если контент прокручивается (scrollWidth > clientWidth)
-    showArrows.value =
-      carouselRef.value.scrollWidth > carouselRef.value.clientWidth;
-  }
-};
-
-onMounted(() => {
-  timerInterval = setInterval(() => {
-    currentTime.value = Date.now();
-  }, 1000);
-
-  // Проверяем, нужны ли стрелки при загрузке и при изменении размера окна
-  checkArrows();
-  window.addEventListener("resize", checkArrows);
-});
-
-onUnmounted(() => {
-  if (timerInterval) {
-    clearInterval(timerInterval);
-  }
-  window.removeEventListener("resize", checkArrows);
-});
-
-const scrollLeft = () => {
-  if (carouselRef.value) {
-    carouselRef.value.scrollBy({ left: -300, behavior: "smooth" });
-  }
-};
-
-const scrollRight = () => {
-  if (carouselRef.value) {
-    carouselRef.value.scrollBy({ left: 300, behavior: "smooth" });
-  }
-};
 
 // Форматирование цены с разделителем тысяч
 const formatPrice = (price: number) => {
