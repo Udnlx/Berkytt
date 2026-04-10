@@ -46,18 +46,22 @@
           <div
             class="relative overflow-hidden rounded-2xl bg-gray-100 aspect-[3/4]"
           >
-            <!-- Badge -->
-            <span
-              v-if="product.badge"
-              :class="[
-                'absolute top-3 left-3 px-2 py-1 text-xs font-medium rounded-md z-10',
-                product.badgeType === 'new'
-                  ? 'bg-[#ec018c] text-[#ffffff]'
-                  : 'bg-[#303030] text-[#ffffff]',
-              ]"
+            <!-- Badges -->
+            <div
+              v-if="product.badge && product.badge.length > 0"
+              class="absolute top-3 left-3 flex flex-col gap-1 z-10"
             >
-              {{ product.badge }}
-            </span>
+              <span
+                v-for="(badgeItem, badgeIndex) in product.badge"
+                :key="badgeIndex"
+                :class="[
+                  'px-2 py-1 text-xs font-medium rounded-md',
+                  getBadgeTypeClass(badgeItem.title),
+                ]"
+              >
+                {{ badgeItem.title }}
+              </span>
+            </div>
 
             <!-- Main Image (default state) -->
             <img
@@ -129,6 +133,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 
+interface Badge {
+  id: number;
+  title: string;
+}
+
 interface NewProduct {
   id: number;
   name: string;
@@ -138,7 +147,7 @@ interface NewProduct {
   price: number;
   fullPrice: number;
   discount: number;
-  badge?: string;
+  badge?: Badge[];
   badgeType?: string;
   endDate?: string;
   category?: string;
@@ -207,7 +216,10 @@ const filteredProducts = computed(() => {
   if (!props.products || props.products.length === 0) {
     return [];
   }
-  // Если у товара нет category или она совпадает с фильтром — показываем
+  if (!activeFilter.value) {
+    return props.products;
+  }
+  // Фильтрация по категории
   return props.products.filter(
     (p) => !p.category || p.category === activeFilter.value,
   );
@@ -216,6 +228,18 @@ const filteredProducts = computed(() => {
 // Форматирование цены с разделителем тысяч
 const formatPrice = (price: number) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
+
+// Определение стиля бейджа по его названию
+const getBadgeTypeClass = (title: string) => {
+  if (title === "НОВИНКА") {
+    return "bg-[#ec018c] text-[#ffffff]";
+  }
+  if (title === "РАСПРОДАЖА") {
+    return "bg-[#303030] text-[#ffffff]";
+  }
+  // Для всех остальных ярлыков — единый стиль
+  return "bg-[#f59e0b] text-[#ffffff]";
 };
 </script>
 
