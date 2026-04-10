@@ -87,8 +87,31 @@
 
             <!-- Quick View / Quick Shop Buttons -->
             <div
-              class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
+              class="absolute bottom-4 left-4 right-4 z-10 flex flex-col gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
             >
+              <!-- Миниатюры sameModels -->
+              <div
+                v-if="product.sameModels && product.sameModels.length > 0"
+                class="flex gap-2 justify-center"
+              >
+                <NuxtLink
+                  v-for="(model, idx) in product.sameModels"
+                  :key="idx"
+                  :to="`/product/${model.name}`"
+                  class="w-10 h-12 rounded-md overflow-hidden border border-white/50 hover:border-white transition"
+                  @click.stop
+                >
+                  <img
+                    :src="
+                      model.image.startsWith('http')
+                        ? model.image
+                        : `http://berkytt${model.image}`
+                    "
+                    :alt="model.name"
+                    class="w-full h-full object-cover"
+                  />
+                </NuxtLink>
+              </div>
               <span
                 class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
               >
@@ -138,6 +161,12 @@ interface Badge {
   title: string;
 }
 
+interface SameModel {
+  id: number;
+  name: string;
+  image: string;
+}
+
 interface NewProduct {
   id: number;
   name: string;
@@ -151,6 +180,7 @@ interface NewProduct {
   badgeType?: string;
   endDate?: string;
   category?: string;
+  sameModels?: SameModel[];
 }
 
 const props = defineProps<{
