@@ -55,7 +55,7 @@
                 v-for="(badgeItem, badgeIndex) in product.badge"
                 :key="badgeIndex"
                 :class="[
-                  'px-2 py-1 text-xs font-medium rounded-md',
+                  'px-2 py-1 text-xs font-medium rounded-md w-fit',
                   getBadgeTypeClass(badgeItem.title),
                 ]"
               >
@@ -92,7 +92,7 @@
 
             <!-- Sale Timer (for sale items) -->
             <div
-              v-if="product.endDate"
+              v-if="product.endDate && !isDatePassed(product.endDate)"
               class="absolute bottom-0 left-0 right-0 bg-black/30 px-3 py-2 text-center opacity-100 group-hover:opacity-0 transition-opacity duration-300"
             >
               <span class="text-xs text-white font-medium">
@@ -228,6 +228,12 @@ const filteredProducts = computed(() => {
 // Форматирование цены с разделителем тысяч
 const formatPrice = (price: number) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
+
+// Проверка, прошла ли дата
+const isDatePassed = (endDate: string) => {
+  const end = new Date(endDate).getTime();
+  return end <= currentTime.value;
 };
 
 // Определение стиля бейджа по его названию
