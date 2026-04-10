@@ -207,9 +207,6 @@ const filteredProducts = computed(() => {
   if (!props.products || props.products.length === 0) {
     return [];
   }
-  if (!activeFilter.value || activeFilter.value === "Все новинки") {
-    return props.products;
-  }
   // Если у товара нет category или она совпадает с фильтром — показываем
   return props.products.filter(
     (p) => !p.category || p.category === activeFilter.value,
