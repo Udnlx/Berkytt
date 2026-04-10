@@ -37,9 +37,10 @@
 
       <!-- Products Grid -->
       <div class="flex flex-wrap justify-center gap-6">
-        <div
+        <NuxtLink
           v-for="product in filteredProducts"
           :key="product.id"
+          :to="`/product/${product.name}`"
           class="group cursor-pointer w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(25%-18px)]"
         >
           <!-- Image Container -->
@@ -88,13 +89,11 @@
             <div
               class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
             >
-              <a
-                :href="`/product/${product.name}`"
+              <span
                 class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
-                @click.stop
               >
                 ПРОСМОТР
-              </a>
+              </span>
             </div>
 
             <!-- Sale Timer (for sale items) -->
@@ -109,23 +108,23 @@
           </div>
 
           <!-- Product Info -->
-          <div class="mt-4">
-            <h3 class="text-sm font-medium text-gray-900">
+          <div class="mt-1">
+            <h3 class="text-lg font-medium text-gray-900">
               {{ product.title }}
             </h3>
-            <div class="flex items-center gap-2 mt-1">
-              <span class="text-sm font-medium"
-                >₽{{ formatPrice(product.price) }}</span
+            <div class="flex items-center gap-2">
+              <span class="text-lg font-medium"
+                >{{ formatPrice(product.price) }} ₽</span
               >
               <span
                 v-if="product.fullPrice && product.discount"
-                class="text-sm text-gray-400 line-through"
+                class="text-base text-gray-400 line-through"
               >
-                ₽{{ formatPrice(product.fullPrice) }}
+                {{ formatPrice(product.fullPrice) }} ₽
               </span>
             </div>
           </div>
-        </div>
+        </NuxtLink>
       </div>
     </div>
   </section>
