@@ -20,7 +20,7 @@
           <img
             :src="slide.image"
             :alt="slide.title"
-            class="w-full h-full object-cover md:object-center object-right"
+            class="w-full h-full object-cover object-[80%_top] md:object-center md:object-top"
           />
           <!-- Затемнение для читаемости текста -->
           <div class="absolute inset-0 bg-black/30"></div>
