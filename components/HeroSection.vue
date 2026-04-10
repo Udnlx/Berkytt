@@ -37,7 +37,7 @@
                   {{ slide.subtitle }}
                 </p>
                 <h1
-                  class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-white mb-3 sm:mb-4 md:mb-6 lg:mb-8 leading-tight"
+                  class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white mb-3 sm:mb-4 md:mb-6 lg:mb-8 leading-tight"
                 >
                   {{ slide.title }}
                 </h1>
@@ -57,23 +57,24 @@
 
     <!-- Навигация (точки) -->
     <div
-      class="absolute bottom-3 sm:bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 sm:space-x-2.5 md:space-x-3 z-20"
+      class="absolute bottom-3 sm:bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 flex items-center space-x-2 sm:space-x-2.5 md:space-x-3 z-20"
     >
       <button
         v-for="(slide, index) in slides"
         :key="index"
         @click="currentSlide = index"
-        class="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full border-2 transition-all cursor-pointer"
+        class="transition-all duration-300 cursor-pointer rounded-full"
         :class="
           currentSlide === index
-            ? 'bg-[#ec018c] border-[#000000]'
-            : 'bg-transparent border-gray-900 hover:border-[#ec018c]'
+            ? 'w-8 h-2 bg-white'
+            : 'w-2 h-2 bg-gray-400 hover:bg-gray-300'
         "
         :aria-label="'Перейти к слайду ' + (index + 1)"
       />
     </div>
 
     <!-- Кнопки навигации -->
+    <!--
     <button
       @click="prevSlide"
       class="absolute left-1 sm:left-2 md:left-4 top-1/2 transform -translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-12 lg:h-12 bg-white/80 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition z-20"
@@ -113,6 +114,7 @@
         />
       </svg>
     </button>
+    -->
   </section>
 </template>
 
@@ -150,7 +152,7 @@ const prevSlide = () => {
 const startAutoplay = () => {
   autoplayInterval = setInterval(() => {
     nextSlide();
-  }, 5000);
+  }, 7000);
 };
 
 const stopAutoplay = () => {
