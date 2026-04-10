@@ -41,7 +41,7 @@
           v-for="product in filteredProducts"
           :key="product.id"
           :to="`/product/${product.name}`"
-          class="group cursor-pointer w-[calc(100%/1)] sm:w-[calc(50%-12px)] md:w-[calc(25%-18px)]"
+          class="group cursor-pointer w-[calc(100%/1)] sm:w-[calc(50%-12px)] lg:w-[calc(25%-18px)]"
         >
           <!-- Image Container -->
           <div
