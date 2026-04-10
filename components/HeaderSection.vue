@@ -9,7 +9,7 @@
       <div class="container mx-auto px-4">
         <div class="flex items-center justify-between">
           <p
-            class="text-xs sm:text-sm font-medium"
+            class="text-xs sm:text-sm font-medium max-[400px]:hidden"
             style="text-transform: uppercase"
           >
             Berkytt - Интернет магазин
@@ -289,9 +289,9 @@
         <!-- Мобильное меню (для экранов меньше lg) -->
         <div
           v-if="isMobileMenuOpen"
-          class="lg:hidden mt-4 pb-4 border-t border-gray-700 pt-4"
+          class="lg:hidden absolute left-0 right-0 bg-[#1f1f1f] border-t border-gray-700 z-50 shadow-lg"
         >
-          <nav class="flex flex-col space-y-3">
+          <nav class="flex flex-col space-y-3 px-4 py-4">
             <template v-for="(item, index) in menuItems" :key="index">
               <!-- Обычная ссылка -->
               <a
