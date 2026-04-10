@@ -15,20 +15,29 @@
             : 'opacity-0 z-0 pointer-events-none',
         ]"
       >
-        <div class="container mx-auto px-3 sm:px-4 h-full">
+        <!-- Фоновое изображение на всю ширину -->
+        <div class="absolute inset-0">
+          <img
+            :src="slide.image"
+            :alt="slide.title"
+            class="w-full h-full object-cover md:object-center object-right"
+          />
+          <!-- Затемнение для читаемости текста -->
+          <div class="absolute inset-0 bg-black/30"></div>
+        </div>
+
+        <!-- Контент поверх изображения -->
+        <div class="relative z-10 container mx-auto px-3 sm:px-4 h-full">
           <div class="flex items-center h-full">
-            <div
-              class="grid md:grid-cols-2 gap-3 sm:gap-4 md:gap-8 items-center w-full h-full"
-            >
-              <!-- Текст слева -->
-              <div class="order-2 md:order-1 text-center md:text-left">
+            <div class="w-full md:w-1/2">
+              <div class="text-center md:text-left">
                 <p
-                  class="text-[10px] sm:text-xs md:text-sm font-medium text-gray-800 mb-1 sm:mb-2 md:mb-4 uppercase tracking-wider"
+                  class="text-[10px] sm:text-xs md:text-sm font-medium text-white mb-1 sm:mb-2 md:mb-4 uppercase tracking-wider"
                 >
                   {{ slide.subtitle }}
                 </p>
                 <h1
-                  class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-gray-900 mb-3 sm:mb-4 md:mb-6 lg:mb-8 leading-tight"
+                  class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold text-white mb-3 sm:mb-4 md:mb-6 lg:mb-8 leading-tight"
                 >
                   {{ slide.title }}
                 </h1>
@@ -39,17 +48,6 @@
                 >
                   {{ slide.buttonText }}
                 </NuxtLink>
-              </div>
-
-              <!-- Изображение справа -->
-              <div
-                class="order-1 md:order-2 flex justify-center items-end h-full"
-              >
-                <img
-                  :src="slide.image"
-                  :alt="slide.title"
-                  class="h-auto w-auto max-h-full object-contain md:absolute md:h-full"
-                />
               </div>
             </div>
           </div>
@@ -130,21 +128,14 @@ const slides = [
     title: "Стильная верхняя одежда для вас",
     buttonText: "В КАТАЛОГ",
     buttonLink: "/catalog/men/coat/all/1",
-    image: "/images/slide_men.png",
+    image: "/images/background01.png",
   },
   {
     subtitle: "НОВАЯ КОЛЛЕКЦИЯ 2026",
     title: "Откройте свой идеальный образ",
     buttonText: "СМОТРЕТЬ",
     buttonLink: "/catalog/women/raincoats/all/1",
-    image: "/images/slide_woman.png",
-  },
-  {
-    subtitle: "ОГРАНИЧЕННАЯ СЕРИЯ",
-    title: "Эксклюзивные модели курток",
-    buttonText: "ПОДРОБНЕЕ",
-    buttonLink: "/catalog/men/kurtki/all/1",
-    image: "/images/slide_men2.png",
+    image: "/images/background02.png",
   },
 ];
 
