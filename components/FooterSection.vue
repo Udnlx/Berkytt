@@ -45,7 +45,7 @@
         </div>
 
         <!-- Quick Shop -->
-        <div class="text-center">
+        <div class="text-left md:text-right lg:text-center">
           <h3 class="text-sm font-medium text-gray-900 mb-4">КАТАЛОГ</h3>
           <ul class="space-y-3">
             <li>
@@ -68,7 +68,7 @@
         </div>
 
         <!-- Customer Services -->
-        <div class="text-center">
+        <div class="text-left md:text-left lg:text-center">
           <h3 class="text-sm font-medium text-gray-900 mb-4">ОБСЛУЖИВАНИЕ</h3>
           <ul class="space-y-3">
             <li>
@@ -107,7 +107,7 @@
         </div>
 
         <!-- Information -->
-        <div class="text-center">
+        <div class="text-left md:text-right lg:text-center">
           <h3 class="text-sm font-medium text-gray-900 mb-4">ИНФОРМАЦИЯ</h3>
           <ul class="space-y-3">
             <li>
