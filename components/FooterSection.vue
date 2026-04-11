@@ -1,10 +1,10 @@
 <template>
-  <footer class="bg-gray-50">
-    <div class="container mx-auto px-4 py-12">
+  <footer>
+    <div class="container mx-auto px-4 py-12 border-t border-gray-200 pt-6">
       <!-- Main Footer Content -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         <!-- Brand & Contact Info -->
-        <div class="lg:col-span-2">
+        <div>
           <img
             src="/images/logo.png"
             alt="Berkytt"
@@ -44,58 +44,9 @@
           </div>
         </div>
 
-        <!-- Information -->
-        <div>
-          <h3 class="text-sm font-medium text-gray-900 mb-4">ИНФОРМАЦИЯ</h3>
-          <ul class="space-y-3">
-            <li>
-              <a
-                href="/wheretobuy"
-                class="text-sm text-gray-600 hover:text-gray-900 transition"
-              >
-                ГДЕ КУПИТЬ
-              </a>
-            </li>
-            <li>
-              <a
-                href="/ukhod-khranenie"
-                class="text-sm text-gray-600 hover:text-gray-900 transition"
-              >
-                УХОД-ХРАНЕНИЕ
-              </a>
-            </li>
-            <li>
-              <a
-                href="/delivery"
-                class="text-sm text-gray-600 hover:text-gray-900 transition"
-              >
-                ДОСТАВКА
-              </a>
-            </li>
-            <li>
-              <a
-                href="/vozvrat"
-                class="text-sm text-gray-600 hover:text-gray-900 transition"
-              >
-                ВОЗВРАТ
-              </a>
-            </li>
-            <li>
-              <a
-                href="/contact"
-                class="text-sm text-gray-600 hover:text-gray-900 transition"
-              >
-                КОНТАКТЫ
-              </a>
-            </li>
-          </ul>
-        </div>
-
         <!-- Quick Shop -->
         <div>
-          <h3 class="text-sm font-medium text-gray-900 mb-4">
-            БЫСТРАЯ ПОКУПКА
-          </h3>
+          <h3 class="text-sm font-medium text-gray-900 mb-4">КАТАЛОГ</h3>
           <ul class="space-y-3">
             <li>
               <a
@@ -155,44 +106,51 @@
           </ul>
         </div>
 
-        <!-- Newsletter -->
+        <!-- Information -->
         <div>
-          <h3 class="text-sm font-medium text-gray-900 mb-4">СОЦСЕТИ</h3>
-          <!-- <p class="text-sm text-gray-600 mb-4">
-            Sign up for our newsletter and get 10% off your first purchase
-          </p>
-          <form class="flex gap-2">
-            <input
-              type="email"
-              placeholder="Enter your e-mail"
-              class="flex-1 px-4 py-2.5 bg-white border border-gray-200 rounded-l-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-            />
-            <button
-              type="submit"
-              class="px-4 py-2.5 bg-gray-900 text-white rounded-r-lg hover:bg-gray-800 transition"
-            >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          <h3 class="text-sm font-medium text-gray-900 mb-4">ИНФОРМАЦИЯ</h3>
+          <ul class="space-y-3">
+            <li>
+              <a
+                href="/wheretobuy"
+                class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M14 5l7 7m0 0l-7 7m7-7H3"
-                />
-              </svg>
-            </button>
-          </form> -->
-
-          <!-- Social Icons -->
-          <div class="flex gap-4">
-            <a href="#" class="text-gray-900 hover:text-gray-600 transition">
-              <img src="/images/vk.svg" alt="VK" class="w-6 h-6" />
-            </a>
-          </div>
+                ГДЕ КУПИТЬ
+              </a>
+            </li>
+            <li>
+              <a
+                href="/ukhod-khranenie"
+                class="text-sm text-gray-600 hover:text-gray-900 transition"
+              >
+                УХОД-ХРАНЕНИЕ
+              </a>
+            </li>
+            <li>
+              <a
+                href="/delivery"
+                class="text-sm text-gray-600 hover:text-gray-900 transition"
+              >
+                ДОСТАВКА
+              </a>
+            </li>
+            <li>
+              <a
+                href="/vozvrat"
+                class="text-sm text-gray-600 hover:text-gray-900 transition"
+              >
+                ВОЗВРАТ
+              </a>
+            </li>
+            <li>
+              <a
+                href="/contact"
+                class="text-sm text-gray-600 hover:text-gray-900 transition"
+              >
+                КОНТАКТЫ
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
 
