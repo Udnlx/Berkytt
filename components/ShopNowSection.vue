@@ -1,19 +1,61 @@
 <template>
-  <section
-    class="py-20 bg-gradient-to-r from-purple-600 to-pink-600 text-white"
-  >
-    <div class="container mx-auto px-4 text-center">
-      <h2 class="text-4xl font-bold mb-6">Готовы обновить гардероб?</h2>
-      <p class="text-xl mb-8 text-purple-100">
-        Более 1000 новых товаров уже ждут вас в каталоге
-      </p>
-      <a
-        :href="`/catalog/men/coat/all/1`"
-        class="bg-white text-purple-600 px-10 py-4 rounded-full font-semibold hover:bg-purple-50 transition transform hover:scale-105"
-        @click.stop
-      >
-        Перейти в каталог
-      </a>
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        <!-- Мы — производитель -->
+        <div>
+          <h3
+            class="text-2xl font-semibold text-[#c2185b] mb-4 pb-3 border-b border-gray-200"
+          >
+            Мы — производитель
+          </h3>
+          <p class="text-gray-700 leading-relaxed text-base">
+            Приобретая товар у нас — вы покупаете товар без посредников. Мы
+            заботимся о качестве нашей продукции и делаем всё, чтобы Вы остались
+            довольны!
+          </p>
+        </div>
+
+        <!-- Ассортимент -->
+        <div>
+          <h3
+            class="text-2xl font-semibold text-[#c2185b] mb-4 pb-3 border-b border-gray-200"
+          >
+            Ассортимент
+          </h3>
+          <p class="text-gray-700 leading-relaxed text-base">
+            Новинки первыми публикуются в нашем интернет - магазине. Кроме того,
+            в наличии большой ассортимент размеров и цветовых вариаций.
+          </p>
+        </div>
+
+        <!-- Доставка -->
+        <div>
+          <h3
+            class="text-2xl font-semibold text-[#c2185b] mb-4 pb-3 border-b border-gray-200"
+          >
+            Доставка
+          </h3>
+          <p class="text-gray-700 leading-relaxed text-base">
+            Мы доставляем по всей России совместно с транспортной службой СДЭК.
+            Также возможен самовывоз.
+          </p>
+        </div>
+
+        <!-- Цены -->
+        <div>
+          <h3
+            class="text-2xl font-semibold text-[#c2185b] mb-4 pb-3 border-b border-gray-200"
+          >
+            Цены
+          </h3>
+          <p class="text-gray-700 leading-relaxed text-base">
+            У нас действует гибкая система скидок и акций. Мы ценим наших
+            Клиентов и регулярно радуем акциями и спецпредложениями! Не упустите
+            момент!
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 </template>
