@@ -5,7 +5,7 @@
         <!-- Мы — производитель -->
         <div>
           <h3
-            class="text-2xl font-semibold text-[#c2185b] mb-4 pb-3 border-b border-gray-200"
+            class="text-2xl font-semibold text-[#ec018c] mb-4 pb-3 border-b border-gray-200"
           >
             Мы — производитель
           </h3>
@@ -19,7 +19,7 @@
         <!-- Ассортимент -->
         <div>
           <h3
-            class="text-2xl font-semibold text-[#c2185b] mb-4 pb-3 border-b border-gray-200"
+            class="text-2xl font-semibold text-[#ec018c] mb-4 pb-3 border-b border-gray-200"
           >
             Ассортимент
           </h3>
@@ -32,7 +32,7 @@
         <!-- Доставка -->
         <div>
           <h3
-            class="text-2xl font-semibold text-[#c2185b] mb-4 pb-3 border-b border-gray-200"
+            class="text-2xl font-semibold text-[#ec018c] mb-4 pb-3 border-b border-gray-200"
           >
             Доставка
           </h3>
@@ -45,7 +45,7 @@
         <!-- Цены -->
         <div>
           <h3
-            class="text-2xl font-semibold text-[#c2185b] mb-4 pb-3 border-b border-gray-200"
+            class="text-2xl font-semibold text-[#ec018c] mb-4 pb-3 border-b border-gray-200"
           >
             Цены
           </h3>
