@@ -28,6 +28,17 @@ const siteUrl = config.public.siteUrl;
 // Базовый хост для изображений (без /api в конце)
 const IMAGE_BASE = config.public.domain as string;
 
+interface Badge {
+  id: number;
+  title: string;
+}
+
+interface SameModel {
+  id: number;
+  title: string;
+  image: string;
+}
+
 interface MainPageData {
   idMianPage: number;
   btnFiltersForNew: string[];
@@ -40,9 +51,10 @@ interface MainPageData {
     price: number;
     fullPrice: number;
     discount: number;
-    badge?: string;
-    badgeType?: string;
+    badge?: Badge[];
     endDate?: string;
+    category?: string;
+    sameModels?: SameModel[];
   }>;
   btnFiltersForBest: string[];
   productsForBest: Array<{
@@ -54,9 +66,10 @@ interface MainPageData {
     price: number;
     fullPrice: number;
     discount: number;
-    badge?: string;
-    badgeType?: string;
+    badge?: Badge[];
     endDate?: string;
+    category?: string;
+    sameModels?: SameModel[];
   }>;
   commentsForMain: Array<{
     id: number;
@@ -120,6 +133,12 @@ onMounted(async () => {
         : product.hoverImage
           ? `${IMAGE_BASE}${product.hoverImage}`
           : undefined,
+      sameModels: (product.sameModels || []).map((model) => ({
+        ...model,
+        image: model.image?.startsWith("http")
+          ? model.image
+          : `${IMAGE_BASE}${model.image}`,
+      })),
     }));
 
     // Добавляем базовый URL к изображениям для OurCollections
@@ -147,6 +166,12 @@ onMounted(async () => {
         : product.hoverImage
           ? `${IMAGE_BASE}${product.hoverImage}`
           : undefined,
+      sameModels: (product.sameModels || []).map((model) => ({
+        ...model,
+        image: model.image?.startsWith("http")
+          ? model.image
+          : `${IMAGE_BASE}${model.image}`,
+      })),
     }));
 
     // Загружаем комментарии
