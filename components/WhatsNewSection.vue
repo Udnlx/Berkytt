@@ -105,7 +105,7 @@
                         ? model.image
                         : `${baseUrl}${model.image}`
                     "
-                    :alt="model.name"
+                    :alt="model.title"
                     class="w-full h-full object-cover"
                   />
                 </div>
@@ -164,7 +164,7 @@ interface Badge {
 
 interface SameModel {
   id: number;
-  name: string;
+  title: string;
   image: string;
 }
 
