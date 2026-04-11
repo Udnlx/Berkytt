@@ -12,6 +12,7 @@
       <ShopNowSection />
       <AboutUsSection />
       <CommentsSection :comments="commentsForMain" />
+      <FaqSection />
     </main>
     <FooterSection />
   </div>
