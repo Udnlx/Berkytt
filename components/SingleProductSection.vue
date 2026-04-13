@@ -3,7 +3,7 @@
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Галерея изображений -->
-        <div class="flex gap-4 sticky top-4 self-start max-h-[85vh] min-h-0">
+        <div class="flex gap-4 sticky top-24 self-start max-h-[85vh] min-h-0">
           <!-- Миниатюры слева -->
           <div class="flex flex-col gap-3 flex-shrink-0 overflow-y-auto pr-1">
             <!-- Миниатюры изображений -->
@@ -70,13 +70,13 @@
               loop
               muted
               playsinline
-              class="w-full h-full object-contain max-h-[75vh]"
+              class="w-full h-full object-cover max-h-[75vh]"
             ></video>
             <img
               v-else
               :src="currentMedia"
               :alt="product?.name || 'Product image'"
-              class="w-full h-full object-contain max-h-[75vh]"
+              class="w-full h-full object-cover max-h-[75vh]"
             />
           </div>
         </div>
