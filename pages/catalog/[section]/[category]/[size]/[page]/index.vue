@@ -2,7 +2,6 @@
   <div>
     <HeaderSection />
     <main class="min-h-screen">
-      <UpNavigationSection />
       <ProductsSection
         :products="products"
         :loading="loading"
