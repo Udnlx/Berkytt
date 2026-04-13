@@ -146,9 +146,11 @@
           </div>
 
           <!-- Описание -->
+          <!--
           <p class="text-gray-600 leading-relaxed">
             {{ product?.description || "Описание продукта" }}
           </p>
+          -->
 
           <hr class="border-gray-100" />
 

@@ -88,7 +88,6 @@
         </div>
       </div>
       <div v-else>
-        <TitlePageSection :product="mappedProduct" />
         <SingleProductSection :product="mappedProduct" />
         <OptionProductSection :product="mappedProduct" />
         <ReviewProductSection :comments="mappedProduct.comments" />
