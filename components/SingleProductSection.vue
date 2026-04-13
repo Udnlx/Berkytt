@@ -3,35 +3,15 @@
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Галерея изображений -->
-        <div class="relative">
-          <!-- Основное изображение или видео -->
-          <div
-            class="bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center"
-          >
-            <video
-              v-if="currentMediaType === 'video' && product?.video"
-              :src="product.video"
-              autoplay
-              loop
-              muted
-              playsinline
-              class="w-full h-auto object-contain"
-            ></video>
-            <img
-              v-else
-              :src="currentMedia"
-              :alt="product?.name || 'Product image'"
-              class="w-full h-auto object-contain"
-            />
-          </div>
-          <!-- Миниатюры поверх изображения (слева) -->
-          <div class="absolute left-3 top-3 bottom-3 flex flex-col gap-3">
+        <div class="flex gap-4">
+          <!-- Миниатюры слева -->
+          <div class="flex flex-col gap-3 flex-shrink-0">
             <!-- Миниатюры изображений -->
             <div
               v-for="(thumb, index) in product?.thumbnails || thumbnails"
               :key="index"
-              class="w-12 h-30 sm:w-20 sm:h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0"
-              :class="{ 'ring-2 ring-black': currentIndex === index }"
+              class="w-16 h-20 sm:w-20 sm:h-28 bg-gray-100 rounded-xl overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0"
+              :class="{ 'ring-2 ring-[#ec018c]': currentIndex === index }"
               @click="selectImage(index)"
             >
               <img
@@ -43,9 +23,9 @@
             <!-- Миниатюра видео (последняя) -->
             <div
               v-if="product?.video"
-              class="w-12 h-30 sm:w-20 sm:h-30 bg-gray-100 rounded-lg overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0 relative"
+              class="w-16 h-20 sm:w-20 sm:h-28 bg-gray-100 rounded-xl overflow-hidden cursor-pointer hover:ring-2 hover:ring-[#ec018c] transition flex items-center justify-center flex-shrink-0 relative"
               :class="{
-                'ring-2 ring-black':
+                'ring-2 ring-[#ec018c]':
                   currentIndex ===
                   (product?.thumbnails?.length || thumbnails.length),
               }"
@@ -71,6 +51,27 @@
                 </div>
               </div>
             </div>
+          </div>
+
+          <!-- Основное изображение или видео -->
+          <div
+            class="flex-1 bg-gray-100 rounded-2xl overflow-hidden flex items-center justify-center"
+          >
+            <video
+              v-if="currentMediaType === 'video' && product?.video"
+              :src="product.video"
+              autoplay
+              loop
+              muted
+              playsinline
+              class="w-full h-auto object-contain"
+            ></video>
+            <img
+              v-else
+              :src="currentMedia"
+              :alt="product?.name || 'Product image'"
+              class="w-full h-auto object-contain"
+            />
           </div>
         </div>
 
