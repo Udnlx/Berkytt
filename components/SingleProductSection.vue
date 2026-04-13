@@ -140,12 +140,12 @@
           <!-- Цена -->
           <div class="flex items-center gap-3">
             <span class="text-2xl font-medium"
-              >₽{{ formatPrice(product?.price) }}</span
+              >{{ formatPrice(product?.price) }} ₽</span
             >
             <span
               v-if="product?.discount && product.discount > 0"
               class="text-lg text-gray-400 line-through"
-              >₽{{ formatPrice(product.oldPrice) }}</span
+              >{{ formatPrice(product.oldPrice) }} ₽</span
             >
             <span
               v-if="product?.discount && product.discount > 0"
