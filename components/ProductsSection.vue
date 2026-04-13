@@ -7,33 +7,39 @@
           <!-- Products Type -->
           <div class="mb-8">
             <h3 class="text-sm font-medium text-gray-900 mb-4">Категории</h3>
-            <ul class="space-y-2">
-              <!-- Loading state -->
-              <li v-if="categoriesLoading" class="text-sm text-gray-500 py-4">
-                Загрузка категорий...
-              </li>
-              <!-- Categories -->
-              <li
-                v-else
-                v-for="item in productTypes"
-                :key="item.category"
-                class="flex justify-between items-center"
+            <div class="relative">
+              <select
+                v-model="selectedCategory"
+                class="appearance-none w-full text-sm border-2 border-gray-900 rounded px-4 py-2 pr-8 text-gray-900 font-medium focus:outline-none focus:border-[#ec018c] cursor-pointer bg-white"
+                @change="onCategoryChange"
               >
-                <a
-                  href="#"
-                  @click.prevent="selectCategory(item.category)"
-                  :class="[
-                    'text-sm transition',
-                    activeCategory === item.category
-                      ? 'text-[#ec018c] font-medium'
-                      : 'text-gray-600 hover:text-gray-900',
-                  ]"
+                <option value="" disabled>Выберите категорию</option>
+                <option
+                  v-for="item in productTypes"
+                  :key="item.category"
+                  :value="item.category"
                 >
-                  {{ item.label }}
-                </a>
-                <span class="text-xs text-gray-400">{{ item.count }}</span>
-              </li>
-            </ul>
+                  {{ item.label }} ({{ item.count }})
+                </option>
+              </select>
+              <div
+                class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-gray-900"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
 
           <!-- Size Filter -->
@@ -362,6 +368,7 @@ const { productTypes, availableSizes, categoriesLoading, fetchCategories } =
   useCategoriesCache();
 
 const selectedSize = ref<number | string>("all");
+const selectedCategory = ref<string>("");
 
 // Следим за изменением section и перезагружаем категории
 watch(
@@ -369,7 +376,8 @@ watch(
   async (newSection, oldSection) => {
     if (newSection && newSection !== oldSection) {
       await fetchCategories();
-      selectedSize.value = "";
+      selectedSize.value = "all";
+      selectedCategory.value = "";
     }
   },
 );
@@ -387,14 +395,25 @@ watch(
   { immediate: true },
 );
 
-const activeCategory = computed(() => route.params.category || "coat");
+// Следим за изменением category в URL и устанавливаем выбранную категорию
+watch(
+  () => route.params.category,
+  (newCategory) => {
+    if (newCategory && !Array.isArray(newCategory)) {
+      selectedCategory.value = newCategory;
+    }
+  },
+  { immediate: true },
+);
 
-const selectCategory = (category: string) => {
-  const section = route.params.section || "men";
-  const size = route.params.size || "all";
-  router.push({
-    path: `/catalog/${section}/${category}/${size}/1`,
-  });
+const onCategoryChange = () => {
+  if (selectedCategory.value) {
+    const section = route.params.section || "men";
+    const size = route.params.size || "all";
+    router.push({
+      path: `/catalog/${section}/${selectedCategory.value}/${size}/1`,
+    });
+  }
 };
 
 const onSizeChange = () => {
