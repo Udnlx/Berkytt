@@ -3,7 +3,9 @@
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Галерея изображений -->
-        <div class="flex gap-4 sticky top-24 self-start max-h-[85vh] min-h-0">
+        <div
+          class="flex gap-4 lg:sticky lg:top-24 self-start max-h-[85vh] min-h-0"
+        >
           <!-- Миниатюры слева -->
           <div class="flex flex-col gap-3 flex-shrink-0 overflow-y-auto pr-1">
             <!-- Миниатюры изображений -->
