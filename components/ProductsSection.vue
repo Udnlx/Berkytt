@@ -3,6 +3,13 @@
     <div class="container mx-auto px-4">
       <!-- Filters Bar -->
       <div class="flex flex-wrap gap-4 mb-8">
+        <!-- Section Label -->
+        <div class="w-full">
+          <p class="text-lg font-semibold text-gray-900 mb-4">
+            {{ sectionLabel }}
+          </p>
+        </div>
+
         <!-- Categories -->
         <div class="w-full sm:w-64">
           <h3 class="text-sm font-medium text-gray-900 mb-2">Категории</h3>
@@ -304,6 +311,15 @@ const router = useRouter();
 const currentPage = computed(() => Number(route.params.page) || 1);
 
 const totalPagesComputed = computed(() => props.totalPages || 1);
+
+// Текст текущей секции
+const sectionLabel = computed(() => {
+  const section = route.params.section;
+  if (section === "women") {
+    return "ДЛЯ ЖЕНЩИН";
+  }
+  return "ДЛЯ МУЖЧИН";
+});
 
 // Умная пагинация с многоточиями
 const visiblePages = computed(() => {
