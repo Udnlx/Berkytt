@@ -492,13 +492,13 @@ const womanMenuItems = computed(() => {
 const menuItems = computed(() => [
   {
     label: "ДЛЯ МУЖЧИН",
-    href: "http://localhost:3000/catalog/men/coat/all/1",
+    href: "http://localhost:3000/catalog/men/all/all/1",
     type: "dropdown",
     items: manMenuItems.value,
   },
   {
     label: "ДЛЯ ЖЕНЩИН",
-    href: "http://localhost:3000/catalog/women/raincoats/all/1",
+    href: "http://localhost:3000/catalog/women/all/all/1",
     type: "dropdown",
     items: womanMenuItems.value,
   },

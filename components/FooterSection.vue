@@ -50,7 +50,7 @@
           <ul class="space-y-3">
             <li>
               <a
-                href="/catalog/men/coat/all/1"
+                href="/catalog/men/all/all/1"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
                 ДЛЯ МУЖЧИН
@@ -58,7 +58,7 @@
             </li>
             <li>
               <a
-                href="/catalog/women/raincoats/all/1"
+                href="/catalog/women/all/all/1"
                 class="text-sm text-gray-600 hover:text-gray-900 transition"
               >
                 ДЛЯ ЖЕНЩИН
