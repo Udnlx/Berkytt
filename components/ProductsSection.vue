@@ -232,15 +232,18 @@
         <div class="flex justify-center mt-12">
           <div class="flex items-center gap-2">
             <button
-              v-for="pageNum in totalPagesComputed"
+              v-for="pageNum in visiblePages"
               :key="pageNum"
-              @click="changePage(pageNum)"
+              @click="pageNum !== '...' && changePage(pageNum as number)"
               :class="[
                 'w-10 h-10 rounded flex items-center justify-center text-sm font-medium transition',
-                currentPage === pageNum
+                typeof pageNum === 'number' && currentPage === pageNum
                   ? 'bg-gray-900 text-white'
-                  : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50',
+                  : pageNum === '...'
+                    ? 'bg-transparent text-gray-400 cursor-default'
+                    : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50',
               ]"
+              :disabled="pageNum === '...'"
             >
               {{ pageNum }}
             </button>
@@ -301,6 +304,46 @@ const router = useRouter();
 const currentPage = computed(() => Number(route.params.page) || 1);
 
 const totalPagesComputed = computed(() => props.totalPages || 1);
+
+// Умная пагинация с многоточиями
+const visiblePages = computed(() => {
+  const total = totalPagesComputed.value;
+  const current = currentPage.value;
+
+  if (total <= 7) {
+    // Если страниц мало, показываем все
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+
+  const pages: (number | string)[] = [];
+
+  if (current <= 4) {
+    // Показываем первые 5 страниц + многоточие + последнюю
+    for (let i = 1; i <= 5; i++) {
+      pages.push(i);
+    }
+    pages.push("...");
+    pages.push(total);
+  } else if (current >= total - 3) {
+    // Показываем первую + многоточие + последние 5 страниц
+    pages.push(1);
+    pages.push("...");
+    for (let i = total - 4; i <= total; i++) {
+      pages.push(i);
+    }
+  } else {
+    // Показываем первую + многоточие + текущую и соседние + многоточие + последнюю
+    pages.push(1);
+    pages.push("...");
+    for (let i = current - 1; i <= current + 1; i++) {
+      pages.push(i);
+    }
+    pages.push("...");
+    pages.push(total);
+  }
+
+  return pages;
+});
 
 const changePage = (page: number) => {
   const section = route.params.section || "men";
