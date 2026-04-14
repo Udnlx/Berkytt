@@ -82,7 +82,6 @@
 
       <!-- Products Grid -->
       <div>
-        <!-- Products Grid -->
         <div
           class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
         >
@@ -105,54 +104,93 @@
           </div>
 
           <!-- Products -->
-          <div
+          <NuxtLink
             v-else
             v-for="product in props.products"
             :key="product.id"
+            :to="`/product/${product.name}`"
             class="group cursor-pointer"
           >
             <!-- Image Container -->
             <div
               class="relative overflow-hidden rounded-2xl bg-gray-100 aspect-[3/4]"
             >
-              <!-- Badge -->
-              <span
-                v-if="product.badge"
-                :class="[
-                  'absolute top-3 left-3 px-2 py-1 text-xs font-medium rounded-md z-10',
-                  product.badgeType === 'top' || product.badgeType === 'new'
-                    ? 'bg-[#ec018c] text-[#ffffff]'
-                    : 'bg-[#303030] text-[#ffffff]',
-                ]"
+              <!-- Badges -->
+              <div
+                v-if="product.badge && product.badge.length > 0"
+                class="absolute top-3 left-3 flex flex-col gap-1 z-10"
               >
-                {{ product.badge }}
-              </span>
+                <span
+                  v-for="(badgeItem, badgeIndex) in product.badge"
+                  :key="badgeIndex"
+                  :class="[
+                    'px-2 py-1 text-xs font-medium rounded-md w-fit',
+                    getBadgeTypeClass(badgeItem.title),
+                  ]"
+                >
+                  {{ badgeItem.title }}
+                </span>
+                <!-- Бейдж скидки под РАСПРОДАЖА -->
+                <span
+                  v-if="product.discount && hasSaleBadgeForProduct(product)"
+                  class="px-2 py-1 text-xs font-medium rounded-md w-fit bg-[#ec018c] text-[#ffffff]"
+                >
+                  -{{ product.discount }}%
+                </span>
+              </div>
 
               <!-- Main Image (default state) -->
               <img
-                :src="product.image"
-                :alt="product.name"
+                :src="
+                  product.image.startsWith('http')
+                    ? product.image
+                    : `${baseUrl}${product.image}`
+                "
+                :alt="product.title"
                 class="w-full h-full object-cover absolute inset-0 group-hover:opacity-0 transition-opacity duration-300"
               />
 
               <!-- Hover Image -->
               <img
-                :src="product.hoverImage || product.image"
-                :alt="product.name"
+                :src="
+                  (product.hoverImage || product.image).startsWith('http')
+                    ? product.hoverImage || product.image
+                    : `${baseUrl}${product.hoverImage || product.image}`
+                "
+                :alt="product.title"
                 class="w-full h-full object-cover absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
               />
 
               <!-- Quick View / Quick Shop Buttons -->
               <div
-                class="absolute bottom-4 left-4 right-4 z-10 flex gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
+                class="absolute bottom-4 left-4 right-4 z-10 flex flex-col gap-2 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-300"
               >
-                <a
-                  :href="`/product/${product.name}`"
+                <!-- Миниатюры sameModels -->
+                <div
+                  v-if="product.sameModels && product.sameModels.length > 0"
+                  class="flex gap-2 justify-start"
+                >
+                  <div
+                    v-for="(model, idx) in product.sameModels"
+                    :key="idx"
+                    class="w-14 h-16 rounded-md overflow-hidden border border-white/50 flex-shrink-0"
+                  >
+                    <img
+                      :src="
+                        model.image.startsWith('http')
+                          ? model.image
+                          : `${baseUrl}${model.image}`
+                      "
+                      :alt="model.title"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+                <span
                   class="flex-1 bg-white/95 backdrop-blur-sm text-gray-900 text-xs font-medium py-2.5 px-4 rounded-full hover:bg-white transition shadow-lg text-center"
-                  @click.stop
                 >
                   ПРОСМОТР
-                </a>
+                </span>
               </div>
 
               <!-- Sale Timer (for sale items) -->
@@ -170,29 +208,23 @@
             </div>
 
             <!-- Product Info -->
-            <div class="mt-4">
-              <h3 class="text-sm font-medium text-gray-900">
+            <div class="mt-1">
+              <h3 class="text-lg font-medium text-gray-900">
                 {{ product.title }}
               </h3>
-              <div class="flex items-center gap-2 mt-1">
-                <span class="text-sm font-medium"
-                  >₽{{ formatPrice(product.price) }}</span
+              <div class="flex items-center gap-2">
+                <span class="text-lg font-medium"
+                  >{{ formatPrice(product.price) }} ₽</span
                 >
                 <span
-                  v-if="product.discount"
-                  class="text-sm text-gray-400 line-through"
+                  v-if="product.fullPrice && product.discount"
+                  class="text-base text-gray-400 line-through"
                 >
-                  ₽{{ formatPrice(product.oldPrice) }}
-                </span>
-                <span
-                  v-if="product.discount"
-                  class="px-2 py-0.5 text-xs font-medium bg-[#ec018c] text-[#ffffff] rounded-full"
-                >
-                  -{{ product.discount }}%
+                  {{ formatPrice(product.fullPrice) }} ₽
                 </span>
               </div>
             </div>
-          </div>
+          </NuxtLink>
         </div>
 
         <!-- Pagination -->
@@ -220,22 +252,36 @@
 
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, useRuntimeConfig } from "#app";
+
+const config = useRuntimeConfig();
+const baseUrl = config.public.domain as string;
+
+interface Badge {
+  id: number;
+  title: string;
+}
+
+interface SameModel {
+  id: number;
+  title: string;
+  image: string;
+}
 
 interface Product {
   id: number;
   name: string;
   title: string;
   price: number;
-  oldPrice?: number;
-  discount?: string;
-  badge?: string;
-  badgeType?: string;
+  fullPrice?: number;
+  discount?: number;
+  badge?: Badge[];
   image: string;
   hoverImage?: string;
   colors?: string[];
   category?: string;
   endDate?: string;
+  sameModels?: SameModel[];
 }
 
 const props = defineProps<{
@@ -374,5 +420,21 @@ onUnmounted(() => {
 const formatPrice = (price: number | undefined | null) => {
   if (!price) return "0";
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+};
+
+// Проверка наличия бейджа РАСПРОДАЖА у конкретного товара
+const hasSaleBadgeForProduct = (product: Product) => {
+  return product.badge?.some((b) => b.title === "РАСПРОДАЖА") ?? false;
+};
+
+// Определение стиля бейджа по его названию
+const getBadgeTypeClass = (title: string) => {
+  if (title === "НОВИНКА") {
+    return "bg-[#ec018c] text-[#ffffff]";
+  }
+  if (title === "РАСПРОДАЖА") {
+    return "bg-[#303030] text-[#ffffff]";
+  }
+  return "bg-[#f59e0b] text-[#ffffff]";
 };
 </script>
