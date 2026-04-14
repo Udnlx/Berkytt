@@ -13,6 +13,7 @@
               @change="onCategoryChange"
             >
               <option value="" disabled>Выберите категорию</option>
+              <option value="all">Все категории</option>
               <option
                 v-for="item in productTypes"
                 :key="item.category"
@@ -315,7 +316,7 @@ const { productTypes, availableSizes, categoriesLoading, fetchCategories } =
   useCategoriesCache();
 
 const selectedSize = ref<number | string>("all");
-const selectedCategory = ref<string>("");
+const selectedCategory = ref<string>("all");
 
 // Следим за изменением section и перезагружаем категории
 watch(
@@ -324,7 +325,7 @@ watch(
     if (newSection && newSection !== oldSection) {
       await fetchCategories();
       selectedSize.value = "all";
-      selectedCategory.value = "";
+      selectedCategory.value = "all";
     }
   },
 );
@@ -348,6 +349,8 @@ watch(
   (newCategory) => {
     if (newCategory && !Array.isArray(newCategory)) {
       selectedCategory.value = newCategory;
+    } else {
+      selectedCategory.value = "all";
     }
   },
   { immediate: true },

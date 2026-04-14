@@ -176,13 +176,12 @@ watch(
 
       if (
         currentCategory &&
+        currentCategory !== "all" &&
         !availableCategories.includes(currentCategory) &&
         categories.length > 0
       ) {
-        // Категория не существует в этой секции — переключаемся на первую
-        const firstCategory =
-          categories[0].name || categories[0].slug || String(categories[0].id);
-        await navigateTo(`/catalog/${currentSection}/${firstCategory}/all/1`, {
+        // Категория не существует в этой секции — переключаемся на "Все категории"
+        await navigateTo(`/catalog/${currentSection}/all/all/1`, {
           replace: true,
         });
         return;
