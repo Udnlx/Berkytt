@@ -31,6 +31,7 @@ interface Product {
   colors?: string[];
   category?: string;
   endDate?: string;
+  sameModels?: { id: number; title: string; image: string }[];
 }
 
 interface ProductsResponse {
@@ -85,6 +86,12 @@ const normalizeProduct = (product: any): Product => {
     colors: product.colors,
     category: product.category,
     endDate: product.endDate,
+    sameModels: (product.sameModels || []).map((m: any) => ({
+      id: m.id,
+      title: m.title || "",
+      image:
+        m.image && m.image.startsWith("/") ? apiHost + m.image : m.image || "",
+    })),
   };
 };
 
