@@ -17,21 +17,31 @@
 import { computed, ref, watch } from "vue";
 import { useRoute, navigateTo, useHead, useRuntimeConfig } from "#app";
 
+interface Badge {
+  id: number;
+  title: string;
+}
+
+interface SameModel {
+  id: number;
+  title: string;
+  image: string;
+}
+
 interface Product {
   id: number;
   name: string;
   title: string;
-  price: number;
-  oldPrice?: number;
-  discount?: string;
-  badge?: string;
-  badgeType?: string;
   image: string;
   hoverImage?: string;
-  colors?: string[];
-  category?: string;
+  price: number;
+  fullPrice: number;
+  discount: number;
+  badge?: Badge[];
+  badgeType?: string;
   endDate?: string;
-  sameModels?: { id: number; title: string; image: string }[];
+  category?: string;
+  sameModels?: SameModel[];
 }
 
 interface ProductsResponse {
@@ -76,14 +86,13 @@ const normalizeProduct = (product: any): Product => {
     id: product.id,
     name: product.name || "",
     title: product.title || "",
-    price: product.price || 0,
-    oldPrice: product.fullPrice,
-    discount: product.discount,
-    badge: product.badge,
-    badgeType: product.badgeType,
     image: image,
     hoverImage: hoverImage || undefined,
-    colors: product.colors,
+    price: product.price || 0,
+    fullPrice: product.fullPrice || product.price || 0,
+    discount: product.discount || 0,
+    badge: product.badge,
+    badgeType: product.badgeType,
     category: product.category,
     endDate: product.endDate,
     sameModels: (product.sameModels || []).map((m: any) => ({

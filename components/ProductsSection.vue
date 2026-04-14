@@ -272,15 +272,15 @@ interface Product {
   id: number;
   name: string;
   title: string;
-  price: number;
-  fullPrice?: number;
-  discount?: number;
-  badge?: Badge[];
   image: string;
   hoverImage?: string;
-  colors?: string[];
-  category?: string;
+  price: number;
+  fullPrice: number;
+  discount: number;
+  badge?: Badge[];
+  badgeType?: string;
   endDate?: string;
+  category?: string;
   sameModels?: SameModel[];
 }
 
